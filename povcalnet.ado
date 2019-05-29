@@ -1,12 +1,21 @@
-*********************************************************************************
-* povcalnet                                                              		*
-*! v1.0  		sept2018               by 	Jorge Soler Lopez					*
-*											Espen Beer Prydz					*
-*											Christoph Lakner					*
-*											Ruoxuan Wu							*
-*											Qinghua Zhao						*
-*											World Bank Group					*
-*********************************************************************************
+*! version 0.1.0  	<sept2018>
+/*===========================================================================
+Program Name: dotemplate.ado
+Author:		  Jorge Soler Lopez
+            Espen Beer Prydz	
+            Christoph Lakner	
+            Ruoxuan Wu				
+            Qinghua Zhao			
+            World Bank Group	
+
+project:	  Stata package to easily query the [PovcalNet API](http://iresearch.worldbank.org/PovcalNet/docs/PovcalNet%20API.pdf) 
+Dependencies: The World Bank - DEC
+---------------------------------------------------------------------------
+Creation Date: 		  Sept 2018
+References:	
+Output:		dta file
+===========================================================================*/
+
 
 program def povcalnet, rclass
 
