@@ -18,42 +18,57 @@ version 9.0
                         COUntry(string)    ///
 						REGion				///
 						AGGregate			///
-                 ]	
+            clear     ]	
 				 
 				 
 				 
-capture { 
+qui { 
 	***************************************************
 	* 1. Will load guidance database
 	***************************************************
-	local clear = "clear"
-	capture {
-		tempfile temp1000
-		cap: copy "http://iresearch.worldbank.org/PovcalNet/js/initCItem2014.js" `temp1000'
-		local rccopy = _rc
-		cap : import delim using `temp1000',  `clear' delim(",()") stringc(_all) stripq(yes) varnames(nonames)
-		local rcclear = _rc
-		drop if v2==""
-		drop v1
-		ren v2 code
-		gen countrycode=substr(code,1,3)
-		drop v14
-		drop v15
-		ren v3 regioncode
-		ren v4 uncode
-		ren v5 inc
-		ren v6 countryname
-		ren v7 coverage
-		ren v9 povline
-		ren v10 ppp
-		ren v12 pppimp
-		ren v13 years
-		drop v*
-		generate coveragename = ""
-		replace coveragename = "--Rural" if coverage == "R"
-		replace coveragename = "--Urban" if coverage == "U"
-		replace coveragename = "--National Aggregate" if coverage == "A"
+	
+	tempfile temp1000
+	cap copy "http://iresearch.worldbank.org/PovcalNet/js/initCItem2014.js" `temp1000'
+	local rccopy = _rc
+	cap import delim using `temp1000',  delim(",()") stringc(_all) /* 
+	 */                                stripq(yes) varnames(nonames)  `clear'
+	local rcclear = _rc
+	
+	* Drop unnecessary variables
+	drop v1
+	missings dropobs, force
+	missings dropvars, force
+	
+	*rename variables 
+	/* rename (v3 v4 v5 v6 v10 v12 v13) (wb_region un_region income_region country_name ppp pppimp year) */
+	
+	local vars1 v3 v4 v5 v6 v10 v12 v13
+	local vars2 wb_region un_region income_region country_name ppp pppimp year
+	
+	local i = 0
+	foreach var of local vars1 {
+		local ++i
+		rename `var' `: word `i' of `vars2''
 	}
+	
+	
+	gen country_code   = substr(v2,1,3)
+	gen coverage_code = substr(v2,-1,1)
+  
+	gen coverage_level = ""
+	replace coverage_level = "national" if inlist(v7, "N", "A")
+	replace coverage_level = "urban"    if        v7 == "U"
+	replace coverage_level = "rural"    if        v7 == "R"
+	
+	gen coverage_type = ""
+	replace coverage_type = "national" if v7 == "N"
+	replace coverage_type = "urban"    if v7 == "U"
+	replace coverage_type = "rural"    if v7 == "R"
+	replace coverage_type = "national aggregate" if v7 == "A"
+	
+	drop v*  // drop unneeded variables 
+	order country_code country_name wb_region un_region income_region coverage_level coverage_type coverage_code year
+	
 	
 	if (`rccopy' != 0) { //Use cache if error
 		cap:findfile _initCItem2014.dta
@@ -81,7 +96,7 @@ capture {
 	* 2. Inital listing with countries and regions
 	***************************************************
 	
-	qui cap generate codecoverage = countrycode + " (" + coverage+")"	
+	qui cap generate codecoverage = country_code + " (" + coverage+")"	
 	
 	if  ("`country'" == "") & ("`region'" == "") {
 		qui{
@@ -90,7 +105,7 @@ capture {
 	
 			noi disp in y  _n "{title: Countries}"  
 			
-			quietly levelsof countrycode /*if regioncode == "`i_reg'"*/, local(countries) 
+			quietly levelsof country_code , local(countries) 
 			local current_line = 0
 			foreach cccc of local countries{
 				local current_line = `current_line' + 1 
@@ -118,14 +133,14 @@ capture {
 		qui{
 			noi disp in y  _n "{title:Available Surveys for `country'}" 	
 			preserve
-			keep if countrycode == "`country'" | countrycode == upper("`country'")
+			keep if country_code == "`country'" | country_code == upper("`country'")
 			local link_detail = "http://iresearch.worldbank.org/PovcalNet/Docs/CountryDocs/`country'.htm"
 			noi display `"{browse "`link_detail'" : Detailed information (browser)}"'
 			quietly levelsof codecoverage , local(codecoverages)
 			local current_line = 0
 			local index_s = 1
 			foreach i_surv of local codecoverages{
-				noi disp in y  _n "`=countryname[`index_s']'`=coveragename[`index_s']'" 	
+				noi disp in y  _n "`=countryname[`index_s']'`=coverage_level[`index_s']'" 	
 				local years_current = "`=years[`index_s']'"
 				local coesp = "`=code[`index_s']'"
 				local years_current: subinstr local years_current "," " ", all 
@@ -179,5 +194,6 @@ capture {
 			break
 		}
 	}
-			
+}
+		
 end	

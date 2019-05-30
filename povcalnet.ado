@@ -1,5 +1,5 @@
 *! version 0.1.0  	<sept2018>
-/*===========================================================================
+/*=======================================================
 Program Name: dotemplate.ado
 Author:		  Jorge Soler Lopez
             Espen Beer Prydz	
@@ -10,11 +10,11 @@ Author:		  Jorge Soler Lopez
 
 project:	  Stata package to easily query the [PovcalNet API](http://iresearch.worldbank.org/PovcalNet/docs/PovcalNet%20API.pdf) 
 Dependencies: The World Bank - DEC
----------------------------------------------------------------------------
+-----------------------------------------------------------------------
 Creation Date: 		  Sept 2018
 References:	
 Output:		dta file
-===========================================================================*/
+=======================================================*/
 
 
 program def povcalnet, rclass
@@ -23,62 +23,91 @@ set checksum off //temporarily bypasses controls of files taken from internet
 
 version 9.0
 
-    syntax                                  			///
-                 [,                         			///
-                         COUNtry(string)    			/// 
-						 REGion(string)					///
-                         YEAR(string)					/// 
-						 POVline(numlist max=10 >=0) 	/// 
-						 PPP(numlist max=1)				/// 
-						 AGGregate						///
-						 COUNTRYEStimates				///
-						 CLEAR							///
-						 AUXiliary						///
-						 INFOrmation					///
-						 ISO							///Standard ISO codes
-						 SERVER(string)					///internal use
-						 COESP(passthru)				///internal use
-                 ]	
-				 
-* ==================================================================================================
-* ======================================= 0. Housekeeping  =========================================
-* ==================================================================================================
+ syntax [,                           ///
+        COUNtry(string)              /// 
+        REGion(string)               ///
+        YEAR(string)                 /// 
+        POVline(numlist max=10 >=0)  /// 
+        PPP(numlist max=1)           /// 
+        AGGregate                    ///
+        COUNTRYEStimates             ///
+        CLEAR                        ///
+        AUXiliary                    ///
+        INFOrmation                  ///
+        ISO                          ///Standard ISO codes
+        SERVER(string)               ///internal use
+        COESP(passthru)              ///internal use
+        ] 
+ 
+
+/*==================================================
+Defaults           
+==================================================*/
+
+*---------- Year
+if (wordcount("`year'")>10){
+	di  as err "Too many years specified."
+	exit 198
+}
+
+if ("`year'" == "") local year "all"
+* 
+
+
+if ("`povline'" == "") local povline = 1.9
+ 
+ 
+* =============================================================
+* ==================== 0. Housekeeping  =======================
+* =============================================================
+
+/*==================================================
+  Dependencies         
+==================================================*/
+local cmds missings
+
+foreach cmd of local cmds {
+	capture which `cmd'
+	if (_rc != 0) ssc install `cmd'
+}
+
+adoupdate `cmds', ssconly
+if ("`r(pkglist)'" != "") adoupdate `r(pkglist)', update ssconly
+
+
+/*==================================================
+	Housekeeping
+==================================================*/
 	
-	if  ("`country'" == "") & ("`region'" == "") & ("`year'"=="") & ("`aggregate'" == "") & ("`information'" == ""){
-        di  as err "{p 4 4 2} You did not provide any information. You could use the {stata povcalnet_info: guided selection} instead. {p_end}"
-	   exit 
-    }
-	
-	if ("`information'" != ""){
-		povcalnet_info
-		exit
-	}
-	
-	if ("`aggregate'" != "") {
-		if ("`ppp'" != ""){
-			di  as err "Option PPP cannot be combined with aggregate."
-			exit 198
-		}
-		local agg_display = "Aggregation in base year(s) `year'"
-    }
-	
-	if (wordcount("`country'")>2) {
-		if ("`ppp'" != ""){
-			di  as err "Option PPP can only be used with one country."
-			exit 198
-		}
-    }
-	
-	if (wordcount("`year'")>10){
-		di  as err "Too many years specified."
+if  ("`country'" == "") & ("`region'" == "") & ("`year'"=="") & ("`aggregate'" == "") & ("`information'" == ""){
+       di  as err "{p 4 4 2} You did not provide any information. You could use the {stata povcalnet_info: guided selection} instead. {p_end}"
+   exit 
+   }
+
+if ("`information'" != ""){
+	povcalnet_info, `clear'
+	exit
+}
+
+if ("`aggregate'" != "") {
+	if ("`ppp'" != ""){
+		di  as err "Option PPP cannot be combined with aggregate."
 		exit 198
 	}
+	local agg_display = "Aggregation in base year(s) `year'"
+   }
+
+if (wordcount("`country'")>2) {
+	if ("`ppp'" != ""){
+		di  as err "Option PPP can only be used with one country."
+		exit 198
+	}
+}
+
 	
-	if ("`povline'" == "") local povline = 1.9
-	
-* ==================================================================================================
-* =======================================    1. Execution  =========================================
-* ==================================================================================================	
+* ======================================================================
+* =============================    1. Execution  =======================
+* ======================================================================	
 	
 quietly {
 	local commanduse = "povcalnet_query"
