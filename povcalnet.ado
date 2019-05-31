@@ -23,20 +23,21 @@ set checksum off //temporarily bypasses controls of files taken from internet
 
 version 9.0
 
- syntax [,                           ///
-        COUNtry(string)              /// 
-        REGion(string)               ///
-        YEAR(string)                 /// 
-        POVline(numlist max=10 >=0)  /// 
-        PPP(numlist max=1)           /// 
-        AGGregate                    ///
-        COUNTRYEStimates             ///
-        CLEAR                        ///
-        AUXiliary                    ///
-        INFOrmation                  ///
-        ISO                          ///Standard ISO codes
-        SERVER(string)               ///internal use
-        COESP(passthru)              ///internal use
+ syntax [,                             ///
+          COUNtry(string)              /// 
+          REGion(string)               ///
+          YEAR(string)                 /// 
+          POVline(numlist max=10 >=0)  /// 
+          PPP(numlist max=1)           /// 
+          AGGregate                    ///
+          COUNTRYEStimates             ///
+          CLEAR                        ///
+          AUXiliary                    ///
+          INFOrmation                  ///
+          ISO                          /// Standard ISO codes
+          SERVER(string)               /// internal use
+          COESP(passthru)              /// internal use
+					groupedby(passthru)          /// internal use
         ] 
  
 
@@ -120,23 +121,25 @@ qui {
 
 	foreach i_povline of local povline {	
 		tempfile file`f'
-		noi `commanduse',   country("`country'")		///
-							region("`region'")        	///
-							year("`year'")             	///
-							povline("`i_povline'")		///
-							ppp("`ppp'") 				///
-							server("`server'")			///
-							`coesp'						///
-							`auxiliary'	                ///
-							`clear'                     ///
-							`information'				///
-							`countryestimates'			///
-							`iso'						///
-							`original'
-		local queryfull`f'  "`r(queryfull)'"
-		save `file`f''
-		local f = `f'+1
-		
+		noi `commanduse',   country("`country'")  ///
+       region("`region'")                     ///
+       year("`year'")                         ///
+       povline("`i_povline'")                 ///
+       ppp("`ppp'")                           ///
+       server("`server'")                     ///
+       `coesp'                                ///
+       `auxiliary'                            ///
+       `clear'                                ///
+       `information'                          ///
+       `countryestimates'                     ///
+       `iso'                                  ///
+       `original'                             ///
+       `groupedby'
+
+  local queryfull`f'  "`r(queryfull)'"
+  save `file`f''
+  local f = `f'+1
+  
   }
 
   local f = `f'-1
