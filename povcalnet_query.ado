@@ -27,6 +27,7 @@ version 9.0
         COUNTRYEStimates  ///
         COESP(string)     ///
         SERVER(string)    ///
+				groupedby(string) ///
       ]     
 
 quietly {
@@ -55,6 +56,7 @@ quietly {
 	
 	if ("`ppp'" != "") local ppp_condition = "&PPP0=`ppp'"
 	
+	local region = upper("`region'")
 	
 	***************************************************
 	* 1. Will load guidance database
@@ -65,30 +67,30 @@ quietly {
 	***************************************************
 	* 2. Keep selected countries and save codes
 	***************************************************
-	gen keep_this = 0
-	local country = lower("`country'")
-	replace countrycode = lower(countrycode)
 	
-	if  ("`country'" != ""){
-		foreach country_l of local country {
-			replace keep_this = 1 if countrycode == "`country_l'"
-		}
-		if "`country'" == "all" replace keep_this = 1
+	*---------- Keep selected country
+	gen keep_this = 0
+	if ("`country'" != "") {
+		local country_l = `""`country'""'
+		local country_l: subinstr local country_l " " `"", ""', all
+
+		replace keep_this = 1 if inlist(country_code, `country_l')
+		if lower("`country'") == "all" replace keep_this = 1
 	}
 	
+	*---------- Group by wb, un, or income region
 	local groupedby = lower("`groupedby'")
-	local region_type = "regioncode"
-	if ("`groupedby'" == "un")  local region_type = "uncode"
-	if (inlist("`groupedby'","income","in","inc")) local region_type = "inc"
+	local region_type = "wb_region"
+	if ("`groupedby'" == "un")  local region_type = "un_region"
+	if (inlist("`groupedby'","income","in","inc")) local region_type = "income_region"
 	
+	* If region is selected instead of countries
+	if  ("`region'" != "") {		
+		local region_l = `""`region'""'
+		local region_l: subinstr local region_l " " `"", ""', all
 
-	if  ("`region'" != ""){
-	local region = lower("`region'")
-	replace `region_type'  = lower(`region_type')
-		foreach region_l of local region{
-			replace keep_this = 1 if `region_type' == "`region_l'"
-		}
-		if "`region'" == "all" replace keep_this = 1
+		replace keep_this = 1 if inlist(`region_type', `region_l')
+		if lower("`region'") == "all" replace keep_this = 1
 	}
 	
 	keep if keep_this == 1
@@ -96,18 +98,20 @@ quietly {
 	
 	local obs = _N
 	if (`obs' == 0) {
-        di  as err "{p 4 4 2}No surveys found matching your criteria. You could use the {stata povcalnet_info: guided selection} instead. {p_end}"
-		exit 
-		break
-    }
+		di  as err "{p 4 4 2}No surveys found matching your criteria. You could use the {stata povcalnet_info: guided selection} instead. {p_end}"
+		error
+  }
+	
 	***************************************************
 	* 3. Keep selected years and construct the request
 	***************************************************
-	if "`auxiliary'" == ""{
-		bys countrycode: gen number = _N
-		gen tag_delete = 1 if (number>2 & inlist(coverage,"R","U"))
+	
+	if "`auxiliary'" == "" {
+		bys country_code: gen number = _N
+		gen tag_delete = 1 if (number>2 & inlist(coverage_level,"rural","urban"))
 		drop if tag_delete == 1
 	}
+	
 	local y_comma: subinstr local year " " ",", all
 	if ("`year'" == "last") local y_comma = "all"
 	if ("`countryestimates'" == "") local year_param = "surveyyears=`y_comma'"	
@@ -117,7 +121,7 @@ quietly {
 	forvalues i_obs = 1/`obs'{
 		local country_v = "`=code[`i_obs']',"+"`country_v'"
 		foreach i_year of local year{
-			local position = strpos("`=years[`i_obs']'","`i_year'")
+			local position = strpos("`=year[`i_obs']'","`i_year'")
 				if `position'>0 {
 					local year_ok = `year_ok'+1
 				}
@@ -197,6 +201,8 @@ quietly {
 
 	order countrycode countryname regioncode coveragetype requestyear datayear datatype isinterpolated usemicrodata
 	
+	
+	
 	if "`iso'"!="" {
 		cap replace countrycode="XKX" if countrycode=="KSV"
 		cap replace countrycode="TLS" if countrycode=="TMP"
@@ -254,7 +260,7 @@ quietly {
 	qui cap label var mld "Mean Log Deviation"
 	qui cap label var reqyearpopulation "Population in year"
 	
-	cap sort countrycode requestyear
+	cap sort country_code requestyear
 	
 	return local queryfull  "`queryfull'"
 }		
