@@ -11,23 +11,24 @@ program def povcalnet_query, rclass
 
 version 9.0
 
-    syntax                ///
-      [,                  ///
-        COUntry(string)   ///
-        REGion(string)    ///
-        YEAR(string)      ///
-        POVLine(string)   ///
-        PPP(string)       ///
-        NOSUMmary         ///
-        ISO               ///
-        CLEAR             ///
-        AUXiliary         ///
-        ORIginal          ///
-        INFOrmation       ///
-        COUNTRYEStimates  ///
-        COESP(string)     ///
-        SERVER(string)    ///
-				groupedby(string) ///
+    syntax                     ///
+      [,                       ///
+        COUntry(string)        ///
+        REGion(string)         ///
+        YEAR(string)           ///
+        POVLine(string)        ///
+        PPP(string)            ///
+        NOSUMmary              ///
+        ISO                    ///
+        CLEAR                  ///
+        AUXiliary              ///
+        ORIginal               ///
+        INFOrmation            ///
+        COUNTRYEStimates       ///
+        COESP(string)          ///
+        SERVER(string)         ///
+				groupedby(string)      ///
+				coverage(string)       ///
       ]
 
 quietly {
@@ -105,13 +106,20 @@ quietly {
 	***************************************************
 	* 3. Keep selected years and construct the request
 	***************************************************
-
+	 /* 
 	if "`auxiliary'" == "" {
 		bys country_code: gen number = _N
 		gen tag_delete = 1 if (number>2 & inlist(coverage_level,"rural","urban"))
 		drop if tag_delete == 1
 	}
-
+  */
+	
+	if ("`coverage'" != "all") {
+		* bys country_code: gen number = _N
+		* drop if (number >= 2 & coverage_level != "`coverage'")
+		drop if coverage_level != "`coverage'"
+	}
+	
 	local y_comma: subinstr local year " " ",", all
 	if ("`year'" == "last") local y_comma = "all"
 	if ("`countryestimates'" == "") local year_param = "surveyyears=`y_comma'"

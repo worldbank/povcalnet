@@ -34,6 +34,7 @@ version 9.0
           CLEAR                        ///
           AUXiliary                    ///
           INFOrmation                  ///
+					coverage(string)             ///
           ISO                          /// Standard ISO codes
           SERVER(string)               /// internal use
           COESP(passthru)              /// internal use
@@ -53,8 +54,15 @@ qui {
 
 	if ("`year'" == "") local year "all"
 	* 
-
-
+	
+	*---------- Coverage
+	if ("`coverage'" == "") local coverage = "all"
+	if !inlist("`coverage'", "national", "rural", "urban", "all") {
+		noi disp in red `"option {it:coverage()} must be "national", "rural",  "urban" or "all" "'
+		error
+	}
+	
+	*---------- Poverty line
 	if ("`povline'" == "") local povline = 1.9
 	 
 	/*==================================================
@@ -129,7 +137,8 @@ qui {
        `countryestimates'                     ///
        `iso'                                  ///
        `original'                             ///
-       `groupedby'
+       `groupedby'                            ///
+			 coverage(`coverage')
 
   local queryfull`f'  "`r(queryfull)'"
   save `file`f''
