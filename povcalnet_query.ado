@@ -237,38 +237,38 @@ quietly {
 	label define datatype 1 "Consumption" 2 "Income"
 	label values datatype datatype
 
-	label var isinterpolated "Data is interpolated"
-	label var countrycode "Country/Economy Code"
-	label var usemicrodata "Data comes from grouped or microdata"
-	label var countryname "Country/Economy Name"
-	label var regioncode "Region Code"
-	label var region "Region Name"
-	label var coveragetype "Coverage"
-	label var requestyear "Year you requested"
-	label var datayear "Survey year"
-	label var datatype "Welfare measured by income or consumption"
-	label var ppp "Purchasing Power Parity"
-	label var povertyline "Poverty line in PPP$ (per capita per day)"
-	label var mean "Average monthly per capita income/consumption in PPP$"
-	label var headcount "Poverty Headcount"
-	label var povgap "Poverty Gap."
-	label var povgapsqr "Squared poverty gap."
-	label var watts "Watts index"
-	label var gini "Gini index"
-	label var median "Median monthly income or expenditure in PPP$"
-	label var mld "Mean Log Deviation"
+	label var isinterpolated    "Data is interpolated"
+	label var countrycode       "Country/Economy Code"
+	label var usemicrodata      "Data comes from grouped or microdata"
+	label var countryname       "Country/Economy Name"
+	label var regioncode        "Region Code"
+	label var region            "Region Name"
+	label var coveragetype      "Coverage"
+	label var requestyear       "Year you requested"
+	label var datayear          "Survey year"
+	label var datatype          "Welfare measured by income or consumption"
+	label var ppp               "Purchasing Power Parity"
+	label var povertyline       "Poverty line in PPP$ (per capita per day)"
+	label var mean              "Average monthly per capita income/consumption in PPP$"
+	label var headcount         "Poverty Headcount"
+	label var povgap            "Poverty Gap."
+	label var povgapsqr         "Squared poverty gap."
+	label var watts             "Watts index"
+	label var gini              "Gini index"
+	label var median            "Median monthly income or expenditure in PPP$"
+	label var mld               "Mean Log Deviation"
 	label var reqyearpopulation "Population in year"
 
 
 	* Standardize names with R package
 
 	local Snames countrycode countryname regioncode coveragetype requestyear /* 
-	 */ datayear datatype isinterpolated usemicrodata povertyline mean /* 
-	 */ headcount povgap povgapsqr watts gini median  reqyearpopulation 
+	 */ datayear datatype isinterpolated usemicrodata povertyline /* 
+	 */ povgap povgapsqr reqyearpopulation 
 
 	local Rnames country_code country_name region_code coverage_type request_year /*
-	 */ data_year data_type is_interpolated use_microdata poverty_line mean    /*
-	 */ headcount poverty_gap poverty_gap_sq watts gini median  population 
+	 */ data_year data_type is_interpolated use_microdata poverty_line    /*
+	 */ poverty_gap poverty_gap_sq  population 
 
 	local i = 0
 	foreach var of local Snames {

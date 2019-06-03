@@ -51,55 +51,7 @@ quietly {
 	* 1. Will load guidance database
 	***************************************************
 	
-	capture {
-		tempfile temp1000
-		cap: copy "http://iresearch.worldbank.org/PovcalNet/js/initCItem2014.js" `temp1000'
-		local rccopy = _rc
-		cap : import delim using `temp1000',  `clear' delim(",()") stringc(_all) stripq(yes) varnames(nonames)
-		local rcclear = _rc
-		drop if v2==""
-		drop v1
-		ren v2 code
-		gen countrycode=substr(code,1,3)
-		drop v14
-		drop v15
-		ren v3 regioncode
-		ren v4 uncode
-		ren v5 inc
-		ren v6 countryname
-		ren v7 coverage
-		ren v9 povline
-		ren v10 ppp
-		ren v12 pppimp
-		ren v13 years
-		drop v*
-		generate coveragename = ""
-		replace coveragename = "--Rural" if coverage == "R"
-		replace coveragename = "--Urban" if coverage == "U"
-		replace coveragename = "--National Aggregate" if coverage == "A"
-	}
-	
-	if (`rccopy' != 0) { //Use cache if error
-		cap:findfile _initCItem2014.dta
-		local file `"`r(fn)'"'
-		local wd : environment HOME
-		if strpos(`"`file'"', "~") == 1 & !missing(`"`wd'"') {
-			local file : subinstr local file"~" "`wd'"
-        }
-		cap: use `"`file'"', `clear'
-		noi di  as result "Guidance file couldn't be updated, using local one."
-		noi di  as result "Last version saved: `_dta[note1]'"
-	}
-	
-	
-	if (`rcclear' != 0) {
-		noi di ""
-		di  as err "You must start with an empty dataset; or enable the clear option."
-		noi di ""
-		exit `rcclear'
-		noi di ""
-		break
-	}
+	povcalnet_info, clear justdata 
 	
 	***************************************************
 	* 2. Keep selected countries and save codes
