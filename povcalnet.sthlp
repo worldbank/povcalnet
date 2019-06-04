@@ -18,9 +18,9 @@ help for {hi:povcalnet}{right:World Bank}
 {synoptset 27 tabbed}{...}
 {synopthdr:Parameters}
 {synoptline}
-{synopt :{opt coun:try:}(acronym)}list of country code (accepts multiples) or {it:all}. 
+{synopt :{opt coun:try:}(ISO code)}list of country code (accepts multiples) or {it:all}. 
 Cannot be used with option {it:region()}{p_end}
-{synopt :{opt reg:ion}(acronym)}list of region code (accepts multiple) or {it:all}. 
+{synopt :{opt reg:ion}(WB code)}list of region code (accepts multiple) or {it:all}. 
 Cannot be used with option {it:country()}{p_end}
 {synopt :{opt year:}(numlist|string)}list of years (accepts up to 10),  or {it:all}, or {it:last}. Default "all".{p_end}
 {synopt :{opt pov:line:}(#)}list of poverty lines (in 2011 PPP-adjusted USD) to calculate
@@ -339,11 +339,11 @@ We would especially warn that estimates of the densities near the bottom and top
 	
 {marker regions}{...}
 {p 40 20 2}(Go up to {it:{help povcalnet##sections:Sections Menu}}){p_end}
-{title:Region Acronyms}
+{title:Region Codes}
 
 {synoptset 33 tabbed}{...}
 {synopthdr: Regions}
-{synoptline}
+{col 6}{hline 70}
 {synopt:{opt  EAP }} East Asia and Pacific{p_end}
 {synopt:{opt  ECA }} Europe and Central Asia{p_end}
 {synopt:{opt  HIC }} Other High Income{p_end}
@@ -351,7 +351,9 @@ We would especially warn that estimates of the densities near the bottom and top
 {synopt:{opt  MNA }} Middle East and North Africa{p_end}
 {synopt:{opt  SAS }} South Asia{p_end}
 {synopt:{opt  SSA }} Sub-Saharan Africa{p_end}
-{p 8 12}Note: {it:Other High Income} includes the advanced economies; all other economies are included in geographic regions, as defined by the World Bank.{p_end}
+{col 6}{hline 70}
+{p 6 6 0 76}{err:Note}: {it:Other High Income} includes the advanced economies; 
+all other economies are included in geographic regions, as defined by the World Bank.{p_end}
 
 
 	
@@ -531,19 +533,28 @@ We would especially warn that estimates of the densities near the bottom and top
 {title:Acknowledgements}
 {p 40 20 2}(Go up to {it:{help povcalnet##sections:Sections Menu}}){p_end}
 
-    {p 4 4 2}The authors would like to thank R. Andres Castaneda Aguilar, Kihoon Lee and Minh Cong Nguyen for comments received on earlier versions of this code. 
-	{p_end}
- {p 4 4 2}In developing this code, we closely followed the example of wbopendata developed by Joao Pedro Azevedo. 
-{p_end} 
+{p 4 4 2}The authors would like to thank R. Andres Castaneda Aguilar, Kihoon Lee and Minh Cong Nguyen for comments received on earlier versions of this code.{p_end}
+{p 4 4 2}In developing this code, we closely followed the example of wbopendata developed by Joao Pedro Azevedo. {p_end} 
 
+
+{p 40 20 2}(Go up to {it:{help povcalnet##sections:Sections Menu}}){p_end}
 {marker authors}{...}
 {title:Authors}
-{p 40 20 2}(Go up to {it:{help povcalnet##sections:Sections Menu}}){p_end}
 	{p 4 4 2}Christoph Lakner, Espen Beer Prydz, Jorge Soler Lopez, Ruoxuan Wu, Qinghua Zhao{p_end}
 	{p 4 4 2}Any questions or suggestions for improvements should be directed to Data at worldbank.org{p_end}
-											
-{title:Also see}
 
+{title:contributor}
+{p 4 4 4}R.Andres Castaneda, The World Bank{p_end}
+{p 6 6 4}Email: {browse "acastanedaa@worldbank.org":  acastanedaa@worldbank.org}{p_end}
+{p 6 6 4}GitHub:{browse "https://github.com/randrescastaneda": randrescastaneda }{p_end}
+
+{title:contact}
+{phang}
+Any comment, suggestion, or bug can be reported in the 
+{browse "https://github.com/worldbank/povcalnet/issues" :GitHub issues page}.
+All the files are avaialble in the {browse "https://github.com/worldbank/povcalnet": GitHub repository}
+	
+{title:Also see}
 {psee}
-Online:  {helpb wbopendata}  (if installed)
+Online:  {help wbopendata}  (if installed)
 {p_end}
