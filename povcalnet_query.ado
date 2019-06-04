@@ -67,7 +67,7 @@ quietly {
 	* 1. Will load guidance database
 	***************************************************
 
-	povcalnet_info, clear justdata
+	povcalnet_info, clear justdata `pause'
 
 	***************************************************
 	* 2. Keep selected countries and save codes

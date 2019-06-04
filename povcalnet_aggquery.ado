@@ -41,22 +41,17 @@ quietly {
 		local base="`server'/PovcalNetAPI.ashx"
 	} 
     
-	if  ("`country'" != "") & ("`region'" != ""){
-        di  as err "Either provide country or region, but not both. Please try again."
-        exit 198
-    }
-	
 	if  ("`country'" == "") & ("`region'" == ""){
-        di  as err "Either provide country(ies) or region(s), or all. Please try again."
-        exit 198
-    }
+    di  as err "Either provide country(ies) or region(s), or all. Please try again."
+    exit 198
+  }
 
 	
 	***************************************************
 	* 1. Will load guidance database
 	***************************************************
 	
-	povcalnet_info, clear justdata 
+	povcalnet_info, clear justdata `pause'
 	
 	***************************************************
 	* 2. Keep selected countries and save codes
@@ -77,7 +72,7 @@ quietly {
 			di  as err "{p 4 4 2}No surveys found matching your criteria. You could use the {stata povcalnet_info: guided selection} instead. {p_end}"
 			error
 		}
-		levelsof code, local(country_f) sep(,) 
+		levelsof code, local(country_f) sep(,) clean
 	}
 	
 	***************************************************
@@ -86,34 +81,40 @@ quietly {
 	
 	local y_comma: subinstr local year " " ",", all
 	if "`year'" == "last" local y_comma = "all"
-	if ("`country'" != "") local country_query = "Countries=`country_f'&GroupedBy=Customized&"
-	if ("`region'" != "") local country_query = "Countries=all&GroupedBy=WB&"
-	local region = lower("`region'")
+	
+	if ("`country'" != "") {
+		local country_query = "Countries=`country_f'&GroupedBy=Customized&"
+	}
+	if ("`region'" != "") {
+		local country_query = "Countries=all&GroupedBy=WB&"
+	}
+	
 	tempfile temp1
 	local queryfull = "`country_query'YearSelected=`y_comma'&PovertyLine=`povline'&format=csv"
 	copy "`base'?`queryfull'" `temp1'
-	noi cap insheet using `temp1', `clear' name
-	
+	cap noi insheet using `temp1', `clear' name
+
 	pause aggquery - after loading data 
 	
 	local rc3 = _rc
 	if (`rc3' != 0) {
-		noi di ""
 		di  as err "You must start with an empty dataset; or enable the clear option."
-		noi di ""
-		exit `rc3'
-		noi di ""
-		break
+		error `rc3'
 	}
-	gen to_keep = 0
-	foreach i_reg of local region{
-		replace to_keep = 1 if lower(regioncid) == "`i_reg'"
+	
+	if  ("`region'" != "") {
+		tempvar keep_this
+		gen `keep_this' = 0
+		local region_l = `""`region'""'
+		local region_l: subinstr local region_l " " `"", ""', all
+
+		replace `keep_this' = 1 if inlist(regioncid, `region_l')
+		if lower("`region'") == "all" replace `keep_this' = 1
+		keep if `keep_this' == 1 
 	}
-	if ("`region'" == "all" | "`region'" == "") replace to_keep = 1 
-	qui cap keep if to_keep == 1
-	qui cap drop to_keep
-
-
+	
+	pause aggquery - after droping by region 
+	
 	local obs = _N
 	if (`obs' == 0){
 		noi di ""
@@ -122,14 +123,13 @@ quietly {
 		noi dis as text "{p 4 4 2} Please check that all parameters are correct and try again. {p_end}"
 		noi dis as text  `"{p 4 4 2} References year can only be 1981, 1984, 1987, 1990, 1993, 1996, 1999, 2002, 2005, 2008, 2010, 2011, 2012, 2013 and 2015 (As of Sep 2018). Due to the constant updating of the PovCalNet databases, using the option {it:last} or {it:all} will load the years most updated year(s). {p_end}"'
 		noi di ""
-		break
-		exit 20
+		error 20
 	}
 	
 	if  ("`year'" == "last"){
-		bys regioncid: egen maximum_y = max(requestyear)
-		keep if maximum_y ==  requestyear
-		drop maximum_y
+		tempvar `maximum_y'
+		bys regioncid: egen `maximum_y' = max(requestyear)
+		keep if `maximum_y' ==  requestyear
 	}
 	
 	***************************************************
