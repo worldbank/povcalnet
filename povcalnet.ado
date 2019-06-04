@@ -30,7 +30,6 @@ version 9.0
           POVline(numlist max=10 >=0)  /// 
           PPP(numlist max=1)           /// 
           AGGregate                    ///
-          COUNTRYEStimates             ///
           CLEAR                        ///
           AUXiliary                    ///
           INFOrmation                  ///
@@ -39,7 +38,8 @@ version 9.0
           SERVER(string)               /// internal use
           COESP(passthru)              /// internal use
 					groupedby(passthru)          /// internal use
-					pause                        /// debuggin 
+					pause                        /// debugging
+					FILLgaps                     ///
         ] 
 
 if ("`pause'" == "pause") pause on
@@ -152,9 +152,9 @@ qui {
        `auxiliary'                            ///
        `clear'                                ///
        `information'                          ///
-       `countryestimates'                     ///
        `iso'                                  ///
        `original'                             ///
+       `fillgaps'                             ///
        `pause'                                ///
        `groupedby'                            ///
 			 coverage(`coverage')

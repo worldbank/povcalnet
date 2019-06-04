@@ -21,7 +21,7 @@ version 9.0
 				CLEAR                 ///
 				NOSUMmary             ///
 				PPP(string)           ///
-				COUNTRYEStimates      ///
+				fillgaps      ///
 				SERVER(string)        ///
 				coverage(string)      /// just for compatibility witn povcalnt_query
 				pause                 /// for debugging

@@ -24,12 +24,12 @@ version 9.0
         AUXiliary              ///
         ORIginal               ///
         INFOrmation            ///
-        COUNTRYEStimates       ///
         COESP(string)          ///
         SERVER(string)         ///
 				groupedby(string)      ///
 				coverage(string)       ///
 				pause                  /// for debugging
+				fillgaps               ///
       ]
 
 if ("`pause'" == "pause") pause on
@@ -126,8 +126,8 @@ quietly {
 	
 	local y_comma: subinstr local year " " ",", all
 	if ("`year'" == "last") local y_comma = "all"
-	if ("`countryestimates'" == "") local year_param = "surveyyears=`y_comma'"
-	if ("`countryestimates'" != "") local year_param = "refyears=`y_comma'&display=c&groupedby=wb&"
+	if ("`fillgaps'" == "") local year_param = "surveyyears=`y_comma'"
+	if ("`fillgaps'" != "") local year_param = "refyears=`y_comma'&display=c&"
 	local obs = _N
 	local year_ok = 0
 	forvalues i_obs = 1/`obs'{
@@ -141,12 +141,11 @@ quietly {
 		}
 	}
 
-	if ("`countryestimates'"!="") local year_ok = 1
+	if ("`fillgaps'"!="") local year_ok = 1
 
 	if (`year_ok' == 0) {
         di  as err "{p 4 4 2}No surveys found matching your criteria. You could use the {stata povcalnet_info: guided selection} instead. {p_end}"
-		exit 20
-		break
+		error 20
     }
 
 	local parameter =	"`year_param'&Countries=`country_v'&"
@@ -229,8 +228,10 @@ quietly {
 
 	cap drop if ppp==""
 	cap drop  svyinfoid
+	
+	pause query - after replacing invalid values to missing values
+	
 	* cap drop  polarization
-	if ("`countryestimates'"!="") qui cap drop median gini mld decile*
 	qui count
 	local obs=`r(N)'
 
@@ -288,9 +289,13 @@ quietly {
 		rename `var' `: word `i' of `Rnames''
 	}
 	 
-	sort country_code request_year
+	sort country_code request_year coverage_type
 
+	*if ("`fillgaps'"!="") drop median gini mld decile*  // why dropping this?
+	
 	return local queryfull  "`queryfull'"
+	
+	
 } // end of qui
 
 end

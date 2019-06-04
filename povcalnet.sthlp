@@ -32,7 +32,7 @@ Cannot be used with option {it:country()}{p_end}
 {synopt :{opt clear}} replace data in memory.{p_end}
 {synopt :{opt agg:regate}} calculates poverty measures for regions instead of countries.{p_end}
 {synopt :{opt coverage(string)}} loads coverage level ("national", "urban", "rural", "all"). Default "all".{p_end}
-{synopt :{opt countryest:imates}} loads all countries used to create regional aggregates.{p_end}
+{synopt :{opt fill:gaps}} loads all countries used to create regional aggregates.{p_end}
 {synopt :{opt info:rmation}} presents a clickable version of the available surveys, countries and regions.{p_end}
 {synopt :{opt iso}} uses ISO3 for country/economy codes in the output. {p_end}
 {synopt :{opt ppp}{cmd:(#)}} allows the selection of an specific PPP. {p_end}
@@ -103,7 +103,7 @@ Countries without a survey in the reference-year have been extrapolated or inter
 
 {phang}
 {err:Note}:  Choosing option  {it:aggregate}  displays regional (population-weighted) 
-averages. While option {it:countryestimates} reports the underlying lined-up estimates 
+averages. While option {it:fillgaps} reports the underlying lined-up estimates 
 at the country-level. Poverty measures calculated in the country-year and aggregates 
 option will include Headocount, Poverty Gap, Squared Poverty Gap. Inequality measures 
 including the Gini coefficient, Watts index, Mean log Deviation and Decile Distibution 
@@ -147,7 +147,9 @@ Poverty lines are expressed in 2011 PPP-adjusted USD per capita per day.
 Due to the constant updating of the PovCalNet databases, using the option {it:last} or {it:all} will load the years most updated year(s).{p_end}
 
 {phang}
-{opt countryestimates} Loads all country-level estimates that are used to create the  aggregates in the reference years. This means that estimates should use the same years as aggregates. 
+{opt fillgaps} Loads all country-level estimates that are used to create the  
+aggregates in the reference years. This means that estimates use the same reference 
+years as aggregate estimates. 
 
 {p 8 8 2}{err:Note}: It is important to note that countries without a survey in the reference-year have been extrapolated or interpolated using national accounts growth rates  
 (see Chapter 6{browse "https://openknowledge.worldbank.org/bitstream/handle/10986/20384/9781464803611.pdf": here}).

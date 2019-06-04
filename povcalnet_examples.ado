@@ -46,7 +46,7 @@ end
 *  ----------------------------------------------------------------------------
 capture program drop example02
 program example02
-	povcalnet, region(lac) year(last) povline(3.2 5.5 15) countryestimates clear 
+	povcalnet, region(lac) year(last) povline(3.2 5.5 15) fillgaps clear 
 	*povcalnet, region(lac) year(last) povline(3.2 5.5 15) clear 
 	keep if datatype==2 & datayear>=2014 // keep income surveys
 	keep povertyline countrycode countryname requestyear headcount
