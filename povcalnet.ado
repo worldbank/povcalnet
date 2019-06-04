@@ -64,6 +64,8 @@ qui {
 	
 	*---------- Poverty line
 	if ("`povline'" == "") local povline = 1.9
+	
+	
 	 
 	/*==================================================
 		Dependencies         
@@ -71,10 +73,16 @@ qui {
 
 	if ("${pcn_cmds_ssc}" == "") {
 		local cmds missings
-
+		
+		noi disp in y "Note: " in w "{cmd:povcalnet} requires the packages below: " /* 
+		 */ _n in g "`cmds'"
+		 
 		foreach cmd of local cmds {
 			capture which `cmd'
-			if (_rc != 0) ssc install `cmd'
+			if (_rc != 0) {
+				ssc install `cmd'
+				noi disp in g "{cmd:`cmd'} " in w _col(15) "installed"
+			}
 		}
 
 		adoupdate `cmds', ssconly
@@ -84,18 +92,19 @@ qui {
 
 
 	/*==================================================
-		Housekeeping
+		Main conditions
 	==================================================*/
 		
 	if  ("`country'" == "") & ("`region'" == "") & ("`year'"=="") & /* 
 	 */ ("`aggregate'" == "") & ("`information'" == ""){
-			noi di  as err "{p 4 4 2} You did not provide any information. You could use the {stata povcalnet_info: guided selection} instead. {p_end}"
-		 error 
-		 }
-
-	if ("`information'" != ""){
-		povcalnet_info, `clear'
-		exit
+		noi di  as err "{p 4 4 2} You did not provide any information. You could use the {stata povcalnet_info: guided selection} instead. {p_end}"
+		error 
+	}
+	
+	*---------- Country and region
+	if  ("`country'" != "") & ("`region'" != "") {
+		noi disp in r "options {it:country()} and {it:region()} are mutally exclusive"
+		error
 	}
 
 	if ("`aggregate'" != "") {
@@ -114,9 +123,15 @@ qui {
 	}
 
 	
-* ======================================================================
-* =============================    1. Execution  =======================
-* ======================================================================	
+	/*==================================================
+					1. Execution 
+	==================================================*/
+	
+	if ("`information'" != ""){
+		povcalnet_info, `clear'
+		exit
+	}
+	
 	local commanduse = "povcalnet_query"
 	if  ("`aggregate'" != "") local commanduse = "povcalnet_aggquery" 
 	
