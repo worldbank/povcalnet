@@ -39,8 +39,11 @@ version 9.0
           SERVER(string)               /// internal use
           COESP(passthru)              /// internal use
 					groupedby(passthru)          /// internal use
+					pause                        /// debuggin 
         ] 
- 
+
+if ("`pause'" == "pause") pause on
+else                      pause off
 
 /*==================================================
 Defaults           
@@ -113,7 +116,7 @@ qui {
 			error 198
 		}
 		local agg_display = "Aggregation in base year(s) `year'"
-		 }
+	}
 
 	if (wordcount("`country'")>2) {
 		if ("`ppp'" != ""){
@@ -128,14 +131,14 @@ qui {
 	==================================================*/
 	
 	if ("`information'" != ""){
-		povcalnet_info, `clear'
+		povcalnet_info, `clear' `pause'
 		exit
 	}
 	
-	local commanduse = "povcalnet_query"
-	if  ("`aggregate'" != "") local commanduse = "povcalnet_aggquery" 
+	if  ("`aggregate'" == "") local commanduse = "povcalnet_query"
+	else                      local commanduse = "povcalnet_aggquery" 
 	
-    local f = 1
+  local f = 1
 
 	foreach i_povline of local povline {	
 		tempfile file`f'
@@ -152,14 +155,15 @@ qui {
        `countryestimates'                     ///
        `iso'                                  ///
        `original'                             ///
+       `pause'                                ///
        `groupedby'                            ///
 			 coverage(`coverage')
 
-  local queryfull`f'  "`r(queryfull)'"
-  save `file`f''
-  local f = `f'+1
+		local queryfull`f'  "`r(queryfull)'"
+		save `file`f''
+		local f = `f'+1
   
-  }
+  } // end of foreach loop
 
   local f = `f'-1
   

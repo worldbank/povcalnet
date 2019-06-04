@@ -19,8 +19,12 @@ version 9.0
       AGGregate          ///
       clear              ///
 			justdata           /// programmers option
+			pause              /// debuggin
 			] 
-     
+
+if ("`pause'" == "pause") pause on
+else                      pause off
+
 qui {
 
 	local url "http://iresearch.worldbank.org/PovcalNet"

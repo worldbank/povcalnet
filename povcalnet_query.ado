@@ -29,8 +29,12 @@ version 9.0
         SERVER(string)         ///
 				groupedby(string)      ///
 				coverage(string)       ///
+				pause                  /// for debugging
       ]
 
+if ("`pause'" == "pause") pause on
+else                      pause off
+			
 quietly {
 
 	************************************************

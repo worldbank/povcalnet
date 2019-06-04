@@ -12,19 +12,24 @@ program def povcalnet_aggquery, rclass
 
 version 9.0
 
-    syntax                                  ///
-                 [,                         ///
-                        COUntry(string)    ///
-						REGion(string)		///
-                        YEAR(string)		///
-						POVLine(string) 	///
-						NOSUMmary			///
-						CLEAR				///
-						PPP(string)			///
-						COUNTRYEStimates  	///
-						SERVER(string)		///
-                 ]				 
-				 
+    syntax                    ///
+      [,                      ///
+				COUntry(string)       ///
+				REGion(string)        ///
+				YEAR(string)          ///
+				POVLine(string)       ///
+				CLEAR                 ///
+				NOSUMmary             ///
+				PPP(string)           ///
+				COUNTRYEStimates      ///
+				SERVER(string)        ///
+				coverage(string)      /// just for compatibility witn povcalnt_query
+				pause                 /// for debugging
+      ]     
+
+if ("`pause'" == "pause") pause on
+else                      pause off
+			
 quietly {
 	***************************************************
 	* 0. Housekeeping
@@ -57,28 +62,22 @@ quietly {
 	* 2. Keep selected countries and save codes
 	***************************************************
 	
-	if  ("`country'" != ""){
-	gen keep_this = 0
-	local country = lower("`country'")
-	replace countrycode = lower(countrycode)
-	
-	foreach country_l of local country{
-		replace keep_this = 1 if countrycode == "`country_l'"
-	}
-	if "`country'" == "all" replace keep_this = 1
-	
-	keep if keep_this == 1
-	
-	local obs = _N
-	if (`obs' == 0) {
-        di  as err "{p 4 4 2}No surveys found matching your criteria. You could use the {stata povcalnet_info: guided selection} instead. {p_end}"
-		exit 
-		break
-    }
+	if ("`country'" != "") {
+		gen keep_this = 0
+		local country_l = `""`country'""'
+		local country_l: subinstr local country_l " " `"", ""', all
 
-	forvalues i_obs = 1/`obs'{
-		local country_f = "`country_f'"+"`=code[`i_obs']'"+","
-	}
+		replace keep_this = 1 if inlist(country_code, `country_l')
+		if lower("`country'") == "all" replace keep_this = 1
+		
+		keep if keep_this == 1
+		
+		local obs = _N
+		if (`obs' == 0) {
+			di  as err "{p 4 4 2}No surveys found matching your criteria. You could use the {stata povcalnet_info: guided selection} instead. {p_end}"
+			error
+		}
+		levelsof code, local(country_f) sep(,) 
 	}
 	
 	***************************************************
@@ -93,7 +92,10 @@ quietly {
 	tempfile temp1
 	local queryfull = "`country_query'YearSelected=`y_comma'&PovertyLine=`povline'&format=csv"
 	copy "`base'?`queryfull'" `temp1'
-	cap : insheet using `temp1', `clear' name
+	noi cap insheet using `temp1', `clear' name
+	
+	pause aggquery - after loading data 
+	
 	local rc3 = _rc
 	if (`rc3' != 0) {
 		noi di ""
