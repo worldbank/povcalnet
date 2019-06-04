@@ -1,0 +1,12 @@
+v 3
+d 'POVCALNET': PovcalNet
+d 
+d Distribution-Date: 04jun2019
+d License: MIT
+d 
+F povcalnet.ado
+F povcalnet.sthlp
+F povcalnet_aggquery.ado
+F povcalnet_examples.ado
+F povcalnet_info.ado
+F povcalnet_query.ado
