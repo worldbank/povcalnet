@@ -12,19 +12,24 @@ program def povcalnet_aggquery, rclass
 
 version 9.0
 
-    syntax                                  ///
-                 [,                         ///
-                        COUntry(string)    ///
-						REGion(string)		///
-                        YEAR(string)		///
-						POVLine(string) 	///
-						NOSUMmary			///
-						CLEAR				///
-						PPP(string)			///
-						COUNTRYEStimates  	///
-						SERVER(string)		///
-                 ]				 
-				 
+    syntax                    ///
+      [,                      ///
+				COUntry(string)       ///
+				REGion(string)        ///
+				YEAR(string)          ///
+				POVLine(string)       ///
+				CLEAR                 ///
+				NOSUMmary             ///
+				PPP(string)           ///
+				fillgaps      ///
+				SERVER(string)        ///
+				coverage(string)      /// just for compatibility witn povcalnt_query
+				pause                 /// for debugging
+      ]     
+
+if ("`pause'" == "pause") pause on
+else                      pause off
+			
 quietly {
 	***************************************************
 	* 0. Housekeeping
@@ -36,97 +41,38 @@ quietly {
 		local base="`server'/PovcalNetAPI.ashx"
 	} 
     
-	if  ("`country'" != "") & ("`region'" != ""){
-        di  as err "Either provide country or region, but not both. Please try again."
-        exit 198
-    }
-	
 	if  ("`country'" == "") & ("`region'" == ""){
-        di  as err "Either provide country(ies) or region(s), or all. Please try again."
-        exit 198
-    }
+    di  as err "Either provide country(ies) or region(s), or all. Please try again."
+    exit 198
+  }
 
 	
 	***************************************************
 	* 1. Will load guidance database
 	***************************************************
 	
-	capture {
-		tempfile temp1000
-		cap: copy "http://iresearch.worldbank.org/PovcalNet/js/initCItem2014.js" `temp1000'
-		local rccopy = _rc
-		cap : import delim using `temp1000',  `clear' delim(",()") stringc(_all) stripq(yes) varnames(nonames)
-		local rcclear = _rc
-		drop if v2==""
-		drop v1
-		ren v2 code
-		gen countrycode=substr(code,1,3)
-		drop v14
-		drop v15
-		ren v3 regioncode
-		ren v4 uncode
-		ren v5 inc
-		ren v6 countryname
-		ren v7 coverage
-		ren v9 povline
-		ren v10 ppp
-		ren v12 pppimp
-		ren v13 years
-		drop v*
-		generate coveragename = ""
-		replace coveragename = "--Rural" if coverage == "R"
-		replace coveragename = "--Urban" if coverage == "U"
-		replace coveragename = "--National Aggregate" if coverage == "A"
-	}
-	
-	if (`rccopy' != 0) { //Use cache if error
-		cap:findfile _initCItem2014.dta
-		local file `"`r(fn)'"'
-		local wd : environment HOME
-		if strpos(`"`file'"', "~") == 1 & !missing(`"`wd'"') {
-			local file : subinstr local file"~" "`wd'"
-        }
-		cap: use `"`file'"', `clear'
-		noi di  as result "Guidance file couldn't be updated, using local one."
-		noi di  as result "Last version saved: `_dta[note1]'"
-	}
-	
-	
-	if (`rcclear' != 0) {
-		noi di ""
-		di  as err "You must start with an empty dataset; or enable the clear option."
-		noi di ""
-		exit `rcclear'
-		noi di ""
-		break
-	}
+	povcalnet_info, clear justdata `pause'
 	
 	***************************************************
 	* 2. Keep selected countries and save codes
 	***************************************************
 	
-	if  ("`country'" != ""){
-	gen keep_this = 0
-	local country = lower("`country'")
-	replace countrycode = lower(countrycode)
-	
-	foreach country_l of local country{
-		replace keep_this = 1 if countrycode == "`country_l'"
-	}
-	if "`country'" == "all" replace keep_this = 1
-	
-	keep if keep_this == 1
-	
-	local obs = _N
-	if (`obs' == 0) {
-        di  as err "{p 4 4 2}No surveys found matching your criteria. You could use the {stata povcalnet_info: guided selection} instead. {p_end}"
-		exit 
-		break
-    }
+	if ("`country'" != "") {
+		gen keep_this = 0
+		local country_l = `""`country'""'
+		local country_l: subinstr local country_l " " `"", ""', all
 
-	forvalues i_obs = 1/`obs'{
-		local country_f = "`country_f'"+"`=code[`i_obs']'"+","
-	}
+		replace keep_this = 1 if inlist(country_code, `country_l')
+		if lower("`country'") == "all" replace keep_this = 1
+		
+		keep if keep_this == 1
+		
+		local obs = _N
+		if (`obs' == 0) {
+			di  as err "{p 4 4 2}No surveys found matching your criteria. You could use the {stata povcalnet_info: guided selection} instead. {p_end}"
+			error
+		}
+		levelsof code, local(country_f) sep(,) clean
 	}
 	
 	***************************************************
@@ -135,31 +81,40 @@ quietly {
 	
 	local y_comma: subinstr local year " " ",", all
 	if "`year'" == "last" local y_comma = "all"
-	if ("`country'" != "") local country_query = "Countries=`country_f'&GroupedBy=Customized&"
-	if ("`region'" != "") local country_query = "Countries=all&GroupedBy=WB&"
-	local region = lower("`region'")
+	
+	if ("`country'" != "") {
+		local country_query = "Countries=`country_f'&GroupedBy=Customized&"
+	}
+	if ("`region'" != "") {
+		local country_query = "Countries=all&GroupedBy=WB&"
+	}
+	
 	tempfile temp1
 	local queryfull = "`country_query'YearSelected=`y_comma'&PovertyLine=`povline'&format=csv"
 	copy "`base'?`queryfull'" `temp1'
-	cap : insheet using `temp1', `clear' name
+	cap noi insheet using `temp1', `clear' name
+
+	pause aggquery - after loading data 
+	
 	local rc3 = _rc
 	if (`rc3' != 0) {
-		noi di ""
 		di  as err "You must start with an empty dataset; or enable the clear option."
-		noi di ""
-		exit `rc3'
-		noi di ""
-		break
+		error `rc3'
 	}
-	gen to_keep = 0
-	foreach i_reg of local region{
-		replace to_keep = 1 if lower(regioncid) == "`i_reg'"
+	
+	if  ("`region'" != "") {
+		tempvar keep_this
+		gen `keep_this' = 0
+		local region_l = `""`region'""'
+		local region_l: subinstr local region_l " " `"", ""', all
+
+		replace `keep_this' = 1 if inlist(regioncid, `region_l')
+		if lower("`region'") == "all" replace `keep_this' = 1
+		keep if `keep_this' == 1 
 	}
-	if ("`region'" == "all" | "`region'" == "") replace to_keep = 1 
-	qui cap keep if to_keep == 1
-	qui cap drop to_keep
-
-
+	
+	pause aggquery - after droping by region 
+	
 	local obs = _N
 	if (`obs' == 0){
 		noi di ""
@@ -168,14 +123,13 @@ quietly {
 		noi dis as text "{p 4 4 2} Please check that all parameters are correct and try again. {p_end}"
 		noi dis as text  `"{p 4 4 2} References year can only be 1981, 1984, 1987, 1990, 1993, 1996, 1999, 2002, 2005, 2008, 2010, 2011, 2012, 2013 and 2015 (As of Sep 2018). Due to the constant updating of the PovCalNet databases, using the option {it:last} or {it:all} will load the years most updated year(s). {p_end}"'
 		noi di ""
-		break
-		exit 20
+		error 20
 	}
 	
 	if  ("`year'" == "last"){
-		bys regioncid: egen maximum_y = max(requestyear)
-		keep if maximum_y ==  requestyear
-		drop maximum_y
+		tempvar `maximum_y'
+		bys regioncid: egen `maximum_y' = max(requestyear)
+		keep if `maximum_y' ==  requestyear
 	}
 	
 	***************************************************

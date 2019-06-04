@@ -1,0 +1,7 @@
+v 3
+d Materials by Christoph Lakner, Espen Beer Prydz, Jorge Soler Lopez, Ruoxuan Wu, Qinghua Zhao, R.Andres Castaneda
+d The World Bank
+d 
+d https://github.com/worldbank/povcalnet
+ 
+p povcalnet
