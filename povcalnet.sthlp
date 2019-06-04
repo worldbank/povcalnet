@@ -18,20 +18,20 @@ help for {hi:povcalnet}{right:World Bank}
 {synoptset 27 tabbed}{...}
 {synopthdr:Parameters}
 {synoptline}
-{synopt :{opt coun:try:}(acronym)}list of country code (accepts multiples) or {it:all}{p_end}
-{p 20 20 6}{it:(or)}{p_end}
-{synopt :{opt reg:ion}(acronym)}list of region code (accepts multiple) or {it:all}{p_end}
-{p 20 20 6}{it:(and)}{p_end}
-{synopt :{opt year:}(#)}list of years (accepts up to 10), or {it:all}, or {it:last}{p_end}
-{p 20 20 6}{it:(and)}{p_end}
-{synopt :{opt pov:line:}(#)}list of poverty lines (in 2011 PPP-adjusted USD) to calculate poverty measures (accepts up to 5). Default is $1.9.{p_end}
+{synopt :{opt coun:try:}(acronym)}list of country code (accepts multiples) or {it:all}. 
+Cannot be used with option {it:region()}{p_end}
+{synopt :{opt reg:ion}(acronym)}list of region code (accepts multiple) or {it:all}. 
+Cannot be used with option {it:country()}{p_end}
+{synopt :{opt year:}(numlist|string)}list of years (accepts up to 10),  or {it:all}, or {it:last}. Default "all".{p_end}
+{synopt :{opt pov:line:}(#)}list of poverty lines (in 2011 PPP-adjusted USD) to calculate
+ poverty measures (accepts up to 5). Default is 1.9.{p_end}
 
 {synoptset 27 tabbed}{...}
 {synopthdr:Options}
 {synoptline}
 {synopt :{opt clear}} replace data in memory.{p_end}
 {synopt :{opt agg:regate}} calculates poverty measures for regions instead of countries.{p_end}
-{synopt :{opt aux:iliary}} loads auxiliary surveys (urban/rural).{p_end}
+{synopt :{opt coverage(string)}} loads coverage level ("national", "urban", "rural", "all"). Default "all".{p_end}
 {synopt :{opt countryest:imates}} loads all countries used to create regional aggregates.{p_end}
 {synopt :{opt info:rmation}} presents a clickable version of the available surveys, countries and regions.{p_end}
 {synopt :{opt iso}} uses ISO3 for country/economy codes in the output. {p_end}
@@ -62,45 +62,53 @@ Sections are presented under the following headings:
 {title:Description}
 {pstd}
 
-{p 4 4 2} The {cmd:povcalnet} commands allows Stata users to compute poverty and inequality indicators for more than 160 countries and regions the World Bank's database of household surveys.
-It has the same functionality as the PovcalNet website.
-{p_end}
+{p 8 4 2} The {cmd:povcalnet} commands allows Stata users to compute poverty and inequality
+ indicators for more than 160 countries and regions the World Bank's database of household
+ surveys. It has the same functionality as the PovcalNet website. PovcalNet is a 
+ computational tool that allows users to estimate poverty rates for regions, sets of 
+ countries or individual countries, over time and at any poverty line. {p_end}
 
-{p 4 4 2} PovcalNet is a computational tool that allows users to estimate poverty rates for regions, sets of countries or individual countries, over time and at any poverty line.
-{p_end}
-{p 4 4 2}PovcalNet is managed jointly by the Data and Research Group in the World Bank's Development Economics Division.
-{p_end}
-{p 4 4 2} It draws heavily upon a strong collaboration with the Poverty and Equity Global Practice, which is responsible for the gathering and harmonization of the underlying survey data. 
-{p_end}
-{p 4 4 2} {cmd:povcalnet} reports the following measures at the chosen poverty line: Headcount ratio, Poverty Gap, Squared Poverty Gap and Watts index.
-It also reports these inequality measures: the Gini index, mean log deviation and decile shares. 
-{p_end}
-{p 4 4 2}The underlying welfare aggregate is per capita household income or consumption expressed in 2011 PPP-adjusted USD.
-{p_end}
-{p 4 4 2}Poverty lines are expressed in daily amounts, while means and medians are monthly. For more information on the definition of the indicators, {browse "http://iresearch.worldbank.org/PovcalNet/Docs/dictionary.html": click here} 
-{p_end}
-{p 4 4 2}For more information on the methodology,{browse "http://iresearch.worldbank.org/PovcalNet/methodology.aspx": click here}{p_end}
+{p 8 4 2}PovcalNet is managed jointly by the Data and Research Group in the World Bank's
+ Development Economics Division. It draws heavily upon a strong collaboration with the 
+ Poverty and Equity Global Practice, which is responsible for the gathering and 
+ harmonization of the underlying survey data. {p_end}
 
-{p 4 4 2}Two types of calculations are possible{p_end}
+{p 8 4 2} {cmd:povcalnet} reports the following measures at the chosen poverty line and 
+these inequality measures:{p_end}
 
-{synopt:{opt Survey-year}} Will load poverty and inequality measures for one or several countries, at the survey-year, without aggregation. Each observation is a country-survey-year. This is the default query.{p_end}
-{synopt:{opt reference-year}}  Will load poverty and inequality measures for reference years that are common across countries.
-Countries without a survey in the reference-year have been extrapolated or interpolated using national accounts growth rates.
-{p_end}
+		Poverty measures{col 40}Inequality measures
+		{hline 45}
+		Headcount        {col 40}Gini index
+		Poverty gap      {col 40}Mean log deviations
+		Poverty severity {col 40}decile shares
+		Watts index      {col 40}
+		{hline 45}
 
-{p 30 25 2}Note:  Choosing option  {cmd:aggregate}  displays regional (population-weighted) averages. While option {cmd:countryestimates} reports the underlying lined-up estimates at the country-level. 
-{p_end}
+{p 8 4 2}The underlying welfare aggregate is per capita household income or consumption
+ expressed in 2011 PPP-adjusted USD. Poverty lines are expressed in daily amounts, while 
+ means and medians are monthly. For more information on the definition of the indicators,
+ {browse "http://iresearch.worldbank.org/PovcalNet/Docs/dictionary.html": click here}. 
+ For more information on the methodology,{browse "http://iresearch.worldbank.org/PovcalNet/methodology.aspx": click here}{p_end}
 
+{marker types}{...}
+{title:Type of calculations}:
 
-{p 4 4 2}Poverty measures calculated in the country-year and aggregates option will include Headocount, Poverty Gap, Squared Poverty Gap. 
-{p_end} 
-{p 4 4 2}Inequality measures including the Gini coefficient, Watts index, Mean log Deviation and Decile Distibution are calculated only for country-years where micro data is available.
+{phang}
+{opt Survey-year}: Will load poverty and inequality measures for one or several countries, at the survey-year, without aggregation. Each observation is a country-survey-year. This is the default query.
+
+{phang}
+{opt reference-year}: Will load poverty and inequality measures for reference years that are common across countries.
+Countries without a survey in the reference-year have been extrapolated or interpolated using
+ national accounts growth rates.
+
+{phang}
+{err:Note}:  Choosing option  {it:aggregate}  displays regional (population-weighted) 
+averages. While option {it:countryestimates} reports the underlying lined-up estimates 
+at the country-level. Poverty measures calculated in the country-year and aggregates 
+option will include Headocount, Poverty Gap, Squared Poverty Gap. Inequality measures 
+including the Gini coefficient, Watts index, Mean log Deviation and Decile Distibution 
+are calculated only for country-years where micro data is available.
 Inequality measures are not reported for reference year.
-{p_end}
-
-
-
-
 
 {marker param}{...}
 {p 40 20 2}(Go up to {it:{help povcalnet##sections:Sections Menu}}){p_end}
@@ -132,35 +140,43 @@ Poverty lines are expressed in 2011 PPP-adjusted USD per capita per day.
 {title:Options description}
 
 {dlgtab:Options}
+{phang}
+{opt aggregate} Will calculate the aggregated poverty measures for the given set of countries or regions.
 
-{synopt:{opt aggregate}} Will calculate the aggregated poverty measures for the given set of countries or regions.   {p_end}
-{p 20 20 2}Note: Aggregation can only be done for 1981, 1984, 1987, 1990, 1993, 1996, 1999, 2002, 2005, 2008, 2010, 2011, 2012, 2013 and 2015 (As of Sep 2018). 
-Due to the constant updating of the PovCalNet databases, using the option {it:last} or {it:all} will load the years most updated year(s).
-{p_end}
+{p 8 8 2}{err:Note}: Aggregation can only be done for 1981, 1984, 1987, 1990, 1993, 1996, 1999, 2002, 2005, 2008, 2010, 2011, 2012, 2013 and 2015 (As of Sep 2018). 
+Due to the constant updating of the PovCalNet databases, using the option {it:last} or {it:all} will load the years most updated year(s).{p_end}
 
-{synopt :{opt countryestimates}} Loads all country-level estimates that are used to create the  aggregates in the reference years. This means that estimates should use the same years as aggregates. {p_end}
-{p 20 20 2}Note: It is important to note that countries without a survey in the reference-year have been extrapolated or interpolated using national accounts growth rates  
+{phang}
+{opt countryestimates} Loads all country-level estimates that are used to create the  aggregates in the reference years. This means that estimates should use the same years as aggregates. 
+
+{p 8 8 2}{err:Note}: It is important to note that countries without a survey in the reference-year have been extrapolated or interpolated using national accounts growth rates  
 (see Chapter 6{browse "https://openknowledge.worldbank.org/bitstream/handle/10986/20384/9781464803611.pdf": here}).
 Therefore, changes at the country-level from one reference year to the next need to be interpreted carefully and may not be the result of a new household survey.{p_end}
 
-{synopt:{opt clear}} replace data in memory.{p_end}
+{phang}
+{opt iso} uses ISO3 for country/economy codes in output. Users should use {help povcalnet##countries:Countries and Economies Abbreviations and Acronyms} when calling the command.
 
-{synopt :{opt iso}} uses ISO3 for country/economy codes in output. Users should use {help povcalnet##countries:Countries and Economies Abbreviations and Acronyms} when calling the command. {p_end}
+{phang}
+{opt PPP}{cmd:(#)} allows the selection of an specific PPP. This option will only work if only one country is selected.
 
-{synopt :{opt PPP}{cmd:(#)}} allows the selection of an specific PPP. This option will only work if only one country is selected. {p_end}
+{phang}
+{opt coverage(string)} (replaces option {it:auxiliary}) Selects coverage level of estimates. 
+By default all coverage levels are loaded, but the user may select "national", "urban", or "rural" level. For now, only one level of covarege can be selected. 
 
-{synopt :{opt auxiliary}} In countries where national aggregates are estimated by creating a weighted sum of urban and rural surveys, the national estimate is reported by default.
-Specifying  {opt auxiliary} will load the underlying urban and rural surveys.{p_end}
-{p 30 30 2}  Note: As of September 2018, this applies to China, India and Indonesia. Distributional statistics (e.g. Gini, decile shares) are typically reported only for the urban and rural distributions separately,
+{phang}
+{opt auxiliary} ({err:Not longer available}) In countries where national aggregates are
+ estimated by creating a weighted sum of urban and rural surveys, the national estimate is reported by default.
+Specifying  {opt auxiliary} will load the underlying urban and rural surveys.
+
+{p 8 8 2}{err:Note}: As of September 2018, this applies to China, India and Indonesia. Distributional statistics (e.g. Gini, decile shares) are typically reported only for the urban and rural distributions separately,
 so auxiliary needs to specified to obtain these estimates.{p_end}
 
-{synopt :{opt information}} Presents a clickable version of the available surveys, countries and regions. Selecting countries from the menu loads the survey-year estimates.
-Choosing regions loads the regional aggregates in the reference years.{p_end}
+{phang}
+{opt information} Presents a clickable version of the available surveys, countries and regions. Selecting countries from the menu loads the survey-year estimates.
+Choosing regions loads the regional aggregates in the reference years.
 
-
-
-    
-
+{phang}
+{opt clear} replace data in memory.
 
 
 {marker Examples}{...}
@@ -168,11 +184,14 @@ Choosing regions loads the regional aggregates in the reference years.{p_end}
 {p 40 20 2}(Go up to {it:{help povcalnet##sections:Sections Menu}}){p_end}
 
 {p 8 12}Load latest available survey-year estimates for Colombia and Argentina{p_end}
-{p 8 12}{stata "povcalnet, country(col arg) year(last) clear" :. povcalnet, country(col arg) year(last) clear}{p_end}
+{p 8 12}{stata povcalnet, country(col arg) year(last) clear}{p_end}
+
 {p 8 12}Load clickable menu{p_end}
-{p 8 12}{stata "povcalnet, info" :. povcalnet, info}{p_end}
-{p 8 12}Load survey-year estimates for India at $1.5, $2 and $4 poverty lines in all years, separately for urban and rural areas{p_end}
-{p 8 12}{stata "povcalnet, povline(1.5 2 4) country(ind) year(all) auxiliary clear" :. povcalnet, povline(1.5 2 4) country(ind) year(all) auxiliary clear}{p_end} 
+{p 8 12}{stata povcalnet, info}{p_end}
+
+{p 8 12}Load only urban coverage level{p_end}
+{p 8 12}{stata povcalnet, country(all) coverage("urban") clear}{p_end} 
+
 {p 8 12}Graph of trend in poverty headcount ratio and number of poor for the world
 
 {cmd}
