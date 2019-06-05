@@ -158,23 +158,13 @@ quietly {
 	local queryfull = "`parameter'PovertyLine=`povline'&format=csv"
 	cap : copy "`base'?`parameter'PovertyLine=`povline'&format=csv" `tempcopy'
 	local rccopy = _rc
-	cap : insheet using `tempcopy', clear name
-	local rc3 = _rc
-
-	if (`rc3' != 0) {
-		noi di ""
-		di  as err "You must start with an empty dataset; or enable the clear option."
-		noi di ""
-		exit `rc3'
-		noi di ""
-		break
-	}
+	insheet using `tempcopy', clear name
 
 	local obs = _N
 
 	if ("`rccopy'" == "") {
 		noi di ""
-		noi di as err "{p 4 4 2} There was no data downloaded. {p_end}"
+		noi di as err "{p 4 4 2} It was not possible to download data from the PovcalNet API. {p_end}"
 		noi di ""
 		noi dis as text `"{p 4 4 2} (1) Please check your internet connection by {browse "http://iresearch.worldbank.org/PovcalNet/home.aspx" :clicking here}{p_end}"'
 		noi dis as text `"{p 4 4 2} (3) Please consider ajusting your Stata timeout parameters. For more details see {help netio}. {p_end}"'

@@ -97,7 +97,15 @@ qui {
 	/*==================================================
 		Main conditions
 	==================================================*/
-		
+	
+	if (c(N) != 0 & "`clear'" == "") {
+		noi di as err "You must start with an empty dataset; or enable the option {it:clear}."
+		error 4
+	}
+	else {
+		drop _all
+	}
+
 	if  ("`country'" == "") & ("`region'" == "") & ("`year'"=="") & /* 
 	 */ ("`aggregate'" == "") & ("`information'" == ""){
 		noi di  as err "{p 4 4 2} You did not provide any information. You could use the {stata povcalnet_info: guided selection} instead. {p_end}"
@@ -139,7 +147,7 @@ qui {
 	else                      local commanduse = "povcalnet_aggquery" 
 	
   local f = 1
-
+	
 	foreach i_povline of local povline {	
 		tempfile file`f'
 		noi `commanduse',   country("`country'")  ///

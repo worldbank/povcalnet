@@ -92,15 +92,9 @@ quietly {
 	tempfile temp1
 	local queryfull = "`country_query'YearSelected=`y_comma'&PovertyLine=`povline'&format=csv"
 	copy "`base'?`queryfull'" `temp1'
-	cap noi insheet using `temp1', `clear' name
+	insheet using `temp1', `clear' name
 
 	pause aggquery - after loading data 
-	
-	local rc3 = _rc
-	if (`rc3' != 0) {
-		di  as err "You must start with an empty dataset; or enable the clear option."
-		error `rc3'
-	}
 	
 	if  ("`region'" != "") {
 		tempvar keep_this
