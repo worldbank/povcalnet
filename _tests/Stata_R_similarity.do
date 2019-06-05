@@ -11,6 +11,8 @@ povcalnet, country("ALB CHN") clear
 * Change poverty line
 povcalnet, country("ALB CHN") povline(10) clear
 
+povcalnet, country("ALB CHN") povline(5 10) clear
+
 * Select specific years
 
 povcalnet, country("ALB") year("2002 2012") clear

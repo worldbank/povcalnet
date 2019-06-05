@@ -27,8 +27,8 @@ version 9.0
           COUNtry(string)              /// 
           REGion(string)               ///
           YEAR(string)                 /// 
-          POVline(numlist max=10 >=0)  /// 
-          PPP(numlist max=1)           /// 
+          POVline(numlist max=10)      /// 
+          PPP(numlist max=10)          /// 
           AGGregate                    ///
           CLEAR                        ///
           AUXiliary                    ///
@@ -68,7 +68,8 @@ qui {
 	*---------- Poverty line
 	if ("`povline'" == "") local povline = 1.9
 	
-	
+	*---------- Country
+	if ("`country'" == "") local country "all"
 	 
 	/*==================================================
 		Dependencies         
@@ -146,48 +147,44 @@ qui {
 	if  ("`aggregate'" == "") local commanduse = "povcalnet_query"
 	else                      local commanduse = "povcalnet_aggquery" 
 	
-  local f = 1
+  
+	tempfile povcalf
+	save `povcalf', empty 
+	
+	local f = 0
 	
 	foreach i_povline of local povline {	
-		tempfile file`f'
+		local ++f 
 		noi `commanduse',   country("`country'")  ///
-       region("`region'")                     ///
-       year("`year'")                         ///
-       povline("`i_povline'")                 ///
-       ppp("`ppp'")                           ///
-       server("`server'")                     ///
-       `coesp'                                ///
-       `auxiliary'                            ///
-       `clear'                                ///
-       `information'                          ///
-       `iso'                                  ///
-       `original'                             ///
-       `fillgaps'                             ///
-       `pause'                                ///
-       `groupedby'                            ///
+			 region("`region'")                     ///
+			 year("`year'")                         ///
+			 povline("`i_povline'")                 ///
+			 ppp("`i_ppp'")                         ///
+			 server("`server'")                     ///
+			 `coesp'                                ///
+			 `auxiliary'                            ///
+			 `clear'                                ///
+			 `information'                          ///
+			 `iso'                                  ///
+			 `original'                             ///
+			 `fillgaps'                             ///
+			 `pause'                                ///
+			 `groupedby'                            ///
 			 coverage(`coverage')
 
-		local queryfull`f'  "`r(queryfull)'"
-		save `file`f''
-		local f = `f'+1
-  
-  } // end of foreach loop
-
-  local f = `f'-1
-  
-  if (`f' != 0) {
-		use `file1'
-		forvalues i = 2(1)`f'  {
-			append using `file`i''
-		}
-  }
+		append using `povcalf'
+		save `povcalf', replace
+	
+		* local queryfull`f'  "`r(queryfull)'"
+	
+	} // end of povline loop
 	
 	local obs = _N 
 	if (`obs' != 0) {
 		noi di as result "{p 4 4 2}Succesfully loaded `obs' observations.{p_end}"
 	}
 	
-	return local queryfull  "`queryfull1'"
+	* return local queryfull  "`queryfull1'"
 	
 
 } // end of qui

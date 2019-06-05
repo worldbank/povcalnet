@@ -11,11 +11,11 @@ program def povcalnet_query, rclass
 
 version 9.0
 
-    syntax                     ///
-      [,                       ///
-        COUntry(string)        ///
+    syntax ,                   ///
+      YEAR(string)             ///
+      COUntry(string)          ///
+      [                       ///
         REGion(string)         ///
-        YEAR(string)           ///
         POVLine(string)        ///
         PPP(string)            ///
         NOSUMmary              ///
@@ -46,16 +46,6 @@ quietly {
 	if "`server'"!=""  {
 		local base="`server'/PovcalNetAPI.ashx"
 	}
-
-	if  ("`country'" != "") & ("`region'" != ""){
-        di  as err "Either provide country or region, but not both. Please try again."
-        exit 198
-    }
-
-	if  ("`year'" == ""){
-        di  as err "Provide a year, set of years; or all for all years. Please try again."
-        exit 198
-    }
 
 	if ("`coesp'" != "") local auxiliary = "auxiliary"
 
