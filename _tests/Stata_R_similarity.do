@@ -1,6 +1,6 @@
 * Retrieve ONE country with default parameters
 
-povcalnet, country("ALB")
+povcalnet, country("ALB") clear
 
 * Retrieve MULTIPLE countries with default parameters
 
@@ -30,10 +30,18 @@ povcalnet, country("ALB CHN") aggregate clear
 
 * Fill gaps when surveys are missing for specific year
 
-povcalnet, country("ALB CHN") fillgaps 
+povcalnet, country("ALB CHN") fillgaps clear 
 povcalnet, country("ALB CHN") fillgaps coverage("national")
 
 * PPP
 
 povcalnet, country("ALB CHN") ppp(50 100) clear
 
+
+
+povcalnet cl, country("ALB CHN")       /*
+            */	povline(1.9 2.0)          /*
+            */  year(2002 2002)           /*
+            */  ppp(40 30) clear
+
+						

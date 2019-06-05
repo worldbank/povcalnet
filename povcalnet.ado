@@ -23,7 +23,8 @@ set checksum off //temporarily bypasses controls of files taken from internet
 
 version 9.0
 
- syntax [,                             ///
+ syntax [anything(name=module)]        ///
+        [,                             ///
           COUNtry(string)              /// 
           REGion(string)               ///
           YEAR(string)                 /// 
@@ -45,10 +46,11 @@ version 9.0
 if ("`pause'" == "pause") pause on
 else                      pause off
 
-/*==================================================
-Defaults           
-==================================================*/
 qui {
+
+	/*==================================================
+        	Defaults           
+	==================================================*/
 	*---------- Year
 	if (wordcount("`year'") > 10){
 		noi disp as err "Too many years specified."
@@ -72,7 +74,7 @@ qui {
 	if ("`country'" == "") local country "all"
 	 
 	/*==================================================
-		Dependencies         
+		    Dependencies         
 	==================================================*/
 
 	if ("${pcn_cmds_ssc}" == "") {
@@ -96,7 +98,7 @@ qui {
 
 
 	/*==================================================
-		Main conditions
+		     Main conditions
 	==================================================*/
 	
 	if (c(N) != 0 & "`clear'" == "") {
@@ -105,14 +107,7 @@ qui {
 	}
 	else {
 		drop _all
-	}
-
-	if  ("`country'" == "") & ("`region'" == "") & ("`year'"=="") & /* 
-	 */ ("`aggregate'" == "") & ("`information'" == ""){
-		noi di  as err "{p 4 4 2} You did not provide any information. You could use the {stata povcalnet_info: guided selection} instead. {p_end}"
-		error 
-	}
-	
+	}	
 	*---------- Country and region
 	if  ("`country'" != "") & ("`region'" != "") {
 		noi disp in r "options {it:country()} and {it:region()} are mutally exclusive"
@@ -136,18 +131,35 @@ qui {
 
 	
 	/*==================================================
-					1. Execution 
+					     Execution 
 	==================================================*/
 	
-	if ("`information'" != ""){
+	*---------- Information
+	if ("`information'" != "" | regexm("`module'", "^info")){
 		povcalnet_info, `clear' `pause'
 		exit
 	}
 	
+	*---------- Country Level
+	if inlist("`module'", "cl", "countryl", "countrylevel") {
+		povcalnet_cl, country("`country'")  ///
+			 year("`year'")                   ///
+			 povline("`povline'")             ///
+			 ppp("`ppp'")                     ///
+			 server("`server'")               ///
+			 coverage(`coverage')             /// 
+			 `clear'                          ///
+			 `iso'                            ///
+			 `pause'
+		return add
+		exit
+	}
+	
+	
+	*---------- Regular query and Aggregate Query
 	if  ("`aggregate'" == "") local commanduse = "povcalnet_query"
 	else                      local commanduse = "povcalnet_aggquery" 
 	
-  
 	tempfile povcalf
 	save `povcalf', empty 
 	
