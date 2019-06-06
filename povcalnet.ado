@@ -62,9 +62,12 @@ qui {
 	
 	*---------- Coverage
 	if ("`coverage'" == "") local coverage = "all"
-	if !inlist("`coverage'", "national", "rural", "urban", "all") {
-		noi disp in red `"option {it:coverage()} must be "national", "rural",  "urban" or "all" "'
-		error
+	
+	foreach c of local coverage {	
+		if !inlist("`c'", "national", "rural", "urban", "all") {
+			noi disp in red `"option {it:coverage()} must be "national", "rural",  "urban" or "all" "'
+			error
+		}
 	}
 	
 	*---------- Poverty line
@@ -183,10 +186,11 @@ qui {
 			 `pause'                                ///
 			 `groupedby'                            ///
 			 coverage(`coverage')
-
+		return add
+		
 		append using `povcalf'
 		save `povcalf', replace
-	
+		
 		* local queryfull`f'  "`r(queryfull)'"
 	
 	} // end of povline loop

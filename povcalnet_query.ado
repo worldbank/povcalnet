@@ -63,6 +63,13 @@ quietly {
 	* 2. Keep selected countries and save codes
 	***************************************************
 
+	*---------- keep if coverage is selected
+	if ("`coverage'" != "all") {
+		local cv_comma = `""`coverage'""'
+		local cv_comma: subinstr local cv_comma " " `"", ""', all
+		keep if inlist(coverage_level, `cv_comma')
+	}
+	
 	*---------- Keep selected country
 	gen keep_this = 0
 	if ("`country'" != "") {
@@ -108,10 +115,10 @@ quietly {
 	}
   */
 	
-	if ("`coverage'" != "all") {
-		* bys country_code: gen number = _N
-		* drop if (number >= 2 & coverage_level != "`coverage'")
-		drop if coverage_level != "`coverage'"
+	
+	if ("`i_year'"=="all") | ("`i_year'"=="last") | ("`fillgaps'"!="") {
+	 local year_ok = 1
+	}
 	}
 	
 	local y_comma: subinstr local year " " ",", all
