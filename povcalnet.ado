@@ -51,6 +51,10 @@ qui {
 	/*==================================================
         	Defaults           
 	==================================================*/
+	
+	*---------- Info
+	if regexm("`subcommand'", "^info")	local information = "information"
+	
 	*---------- Year
 	if (wordcount("`year'") > 10){
 		noi disp as err "Too many years specified."
@@ -62,9 +66,10 @@ qui {
 	
 	*---------- Coverage
 	if ("`coverage'" == "") local coverage = "all"
+	local coverage = lower("`coverage'")
 	
 	foreach c of local coverage {	
-		if !inlist("`c'", "national", "rural", "urban", "all") {
+		if !inlist(lower("`c'"), "national", "rural", "urban", "all") {
 			noi disp in red `"option {it:coverage()} must be "national", "rural",  "urban" or "all" "'
 			error
 		}
@@ -75,6 +80,14 @@ qui {
 	
 	*---------- Country
 	if ("`country'" == "" & "`region'" == "") local country "all"
+	
+	*---------- subcommand
+	if inlist("`subcommand'", "cl", "countryl", "countrylevel") & /* 
+ */	(lower("`country'") == "all") {
+		noi disp in red "you cannot use option {it:countr(all)} with subcommand {it:cl}"
+		error 197
+  }
+	
 	 
 	/*==================================================
 		    Dependencies         
@@ -104,9 +117,9 @@ qui {
 		     Main conditions
 	==================================================*/
 	
-	if ("`information'" == "" & !regexm("`subcommand'", "^info")) {
+	if ("`information'" == "") {
 		if (c(N) != 0 & "`clear'" == "" & /* 
-		 */ "`information'" == "" & !regexm("`subcommand'", "^info")) {
+		 */ "`information'" == "") {
 			noi di as err "You must start with an empty dataset; or enable the option {it:clear}."
 			error 4
 		}
@@ -141,7 +154,7 @@ qui {
 	pause povcalnet - before execution
 	
 	*---------- Information
-	if ("`information'" != "" | regexm("`subcommand'", "^info")){
+	if ("`information'" != ""){
 		noi povcalnet_info, `clear' `pause'
 		exit
 	}

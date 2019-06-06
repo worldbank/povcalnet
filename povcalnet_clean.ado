@@ -20,7 +20,7 @@ syntax anything(name=type),      ///
 								year(string)     ///
 								region(string)   ///
 								iso              ///
-								rccopy(numlist)  ///
+								rc(string)  ///
              ]
 
 
@@ -33,7 +33,7 @@ if ("`type'" == "1") {
 	
 	local obs = _N
 
-	if ("`rccopy'" != "0") {
+	if ("`rc'" == "copy") {
 		noi di ""
 		noi di as err "{p 4 4 2} It was not possible to download data from the PovcalNet API. {p_end}"
 		noi di ""
@@ -45,14 +45,13 @@ if ("`type'" == "1") {
 		noi di ""
 		noi di ""
 		break
-		exit 20
+		exit
 	}
 
-	if (`obs' == 0){
+	if ("`rc'" == "in" | c(N) == 0) {
 		noi di ""
-		noi di as err "{p 4 4 2} There was no data downloaded. {p_end}"
-		noi di ""
-		noi dis as text "{p 4 4 2} Please check that all parameters are correct and try again. {p_end}"
+		noi di as err "There was a problem laoding the downloaded data." /* 
+		 */ _n "Check that all parameters are correct and try again."
 		noi dis as text  `"{p 4 4 2} You could use the {stata povcalnet_info:guided selection} instead. {p_end}"'
 		noi dis as text  `"{p 4 4 2} References year can only be 1981, 1984, 1987, 1990, 1993, 1996, 1999, 2002, 2005, 2008, 2010, 2011, 2012, 2013 and 2015 (As of Sep 2018). Due to the constant updating of the PovCalNet databases, using the option {it:last} or {it:all} will load the years most updated year(s). {p_end}"'
 		noi di ""

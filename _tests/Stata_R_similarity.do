@@ -44,10 +44,26 @@ povcalnet, country("ALB CHN") fillgaps coverage("national")
 povcalnet, country("ALB CHN") ppp(50 100) clear
 
 
-
+* Country level (one-on-one) request
 povcalnet cl, country("ALB CHN")       /*
             */	povline(1.9 2.0)          /*
-            */  year(2002 2002)           /*
+            */  year("all")           /*
             */  ppp(40 30) clear
 
 						
+povcalnet cl, country("DOL DOM")           /*  get info only for DOM
+            */	coverage("national")      /*
+            */  year(2002)             /*
+            */  povline(10) clear
+
+						
+povcalnet cl, country("COL DOM")           /*  get info only for DOM
+            */	coverage("national")      /*
+            */  year(all)             /*
+            */  povline(4) clear
+
+						
+povcalnet cl, country("COL DOM")           /*  get info only for DOM
+            */	coverage("urban national")      /*
+            */  year(all)             /*
+            */  povline(4) clear

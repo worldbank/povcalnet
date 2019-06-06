@@ -47,7 +47,31 @@ if ("`povline'" == "")  local povline  1.9
 if ("`ppp'" == "")      local ppp      -1
 if ("`coverage'" == "") local coverage -1
 
-local ct = "`country'" 
+*---------- download guidence data
+povcalnet_info, clear justdata `pause'
+levelsof country_code, local(countries) clean
+
+if (lower("`country'") != "all") {
+	local ncountries: list country - countries
+	local countries:  list countries & country
+}
+
+if ("`ncountries'" != "") {
+	if wordcount("`ncountries'") == 1 local be "is"
+	if wordcount("`ncountries'") > 1 local be "are"
+
+	noi disp as err "Warning: " in w "`ncountries' `be' not part of the country list "  /* 
+	 */ "available in PovcalNet. See {stata povcalnet info}"
+	 
+}	
+
+if ("`countries'" == "") {
+	noi disp in red "None of the countries provided in {it:country()} is available in Povcalnet"
+	error
+}
+
+*---------- alternative macros
+local ct = "`countries'" 
 local pl = "`povline'" 
 local pp = "`ppp'"     
 local yr = "`year'"    
@@ -67,7 +91,7 @@ local ncv = wordcount("`cv'")  // number of coverage
 
 matrix A = `nct' \ `npl' \ `npp' \ `nyr' \ `ncv'
 mata:  A = st_matrix("A"); /* 
- */    B = (A :== A[1]) + (A :== 1); /* 
+ */    B = ((A :== A[1]) + (A :== 1) :>= 1); /* 
  */    st_local("m", strofreal(mean(B)))
 
 if (`m' != 1) {
@@ -88,12 +112,13 @@ foreach o in pl pp yr cv {
             2: Create query
 ==================================================*/
 
-*----------2.1: create query in loop
+
+*----------create query in loop
 
 local j = 0
 local n = 1
 local query = ""   // whole query
-foreach ict of local country {
+foreach ict of local countries {
 	
 	* corresponding element to each country
 	foreach o in pl yr pp cv {
@@ -109,10 +134,8 @@ foreach ict of local country {
 	
 	local qct = "C`j'=`ict'`qcv'"  // query country
 	local qpl = "PL`j'=`ipl'"      // query poverty line
-	
-	if ("`iyr'" == "all")   local qyr = ""            // query year
-	else                  	local qyr = "&Y`j'=`iyr'"       
-	
+	local qyr = "&Y`j'=`iyr'"      // query year
+	 
 	if ("`ipp'" == "-1") {         // query  ppp
 		local qpp ""
 	}
@@ -139,13 +162,20 @@ return local query = "`query'"
 *----------3.1:
 tempfile clfile
 local queryfull "`base'?`query'"
+local rc = 0
+
 cap copy "`queryfull'" `clfile'
-local rccopy = _rc
-insheet using `clfile', clear name
+if (_rc == 0) {
+	cap insheet using `clfile', clear name
+	if (_rc != 0) local rc "in"
+} 
+else {
+	local rc "copy"
+} 
 
 *----------3.2: clean data
 
-povcalnet_clean 1, year("`year'") `iso' rccopy(`rccopy')
+povcalnet_clean 1, year("`year'") `iso' rc(`rc')
 
 return local queryfull = "`queryfull'"
 
