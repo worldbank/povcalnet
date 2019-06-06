@@ -79,7 +79,8 @@ quietly {
 		replace keep_this = 1 if inlist(country_code, `country_l')
 		if lower("`country'") == "all" replace keep_this = 1
 	}
-
+	
+	
 	*---------- Group by wb, un, or income region
 	local groupedby = lower("`groupedby'")
 	local region_type = "wb_region"
@@ -119,31 +120,34 @@ quietly {
 	if ("`i_year'"=="all") | ("`i_year'"=="last") | ("`fillgaps'"!="") {
 	 local year_ok = 1
 	}
+	else {
+		split year, parse(,) gen(yr)
+		putmata Y=(yr*), replace
+		drop yr*
+		mata: y = tokens(st_local("year"));     /* 
+		 */	 c = 0;                             /* 
+		 */	 for (i = 1; i <= cols(y); i++) {;  /* 
+		 */	 		c = c + anyof(Y, y[i]);         /*  
+		 */	 };                                 /* 
+		 */	 st_local("year_ok", strofreal(c))
 	}
+	
+	if (`year_ok' == 0) {
+		di  as err "years selected do not match any survey year for any country." _n /* 
+		*/	"You could type {stata povcalnet info} to check availability."
+		error 20
+   }
+	
 	
 	local y_comma: subinstr local year " " ",", all
 	if ("`year'" == "last") local y_comma = "all"
 	if ("`fillgaps'" == "") local year_param = "surveyyears=`y_comma'"
 	if ("`fillgaps'" != "") local year_param = "refyears=`y_comma'&display=c&"
+	
 	local obs = _N
-	local year_ok = 0
 	forvalues i_obs = 1/`obs'{
 		local country_v = "`=code[`i_obs']',"+"`country_v'"
-		foreach i_year of local year{
-			local position = strpos("`=year[`i_obs']'","`i_year'")
-				if `position'>0 {
-					local year_ok = `year_ok'+1
-				}
-			if ("`i_year'"=="all") | ("`i_year'"=="last") local year_ok = 1
-		}
 	}
-
-	if ("`fillgaps'"!="") local year_ok = 1
-
-	if (`year_ok' == 0) {
-        di  as err "{p 4 4 2}No surveys found matching your criteria. You could use the {stata povcalnet_info: guided selection} instead. {p_end}"
-		error 20
-    }
 
 	local parameter =	"`year_param'&Countries=`country_v'&"
 
