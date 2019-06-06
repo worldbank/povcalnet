@@ -74,7 +74,7 @@ qui {
 	if ("`povline'" == "") local povline = 1.9
 	
 	*---------- Country
-	if ("`country'" == "") local country "all"
+	if ("`country'" == "" & "`region'" == "") local country "all"
 	 
 	/*==================================================
 		    Dependencies         
