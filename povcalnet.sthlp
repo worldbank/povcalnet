@@ -12,7 +12,8 @@ help for {hi:povcalnet}{right:World Bank}
 {title:Syntax}
 
 {p 6 16 2}
-{cmd:povcalnet}{cmd:,} [{it:{help povcalnet##Options2:Parameters}} {it:{help povcalnet##options:Options}}]
+{cmd:povcalnet} [{it:subcommand}]{cmd:,} 
+[{it:{help povcalnet##Options2:Parameters}} {it:{help povcalnet##options:Options}}]
 
 
 {synoptset 27 tabbed}{...}
@@ -36,9 +37,19 @@ Cannot be used with option {it:country()}{p_end}
 {synopt :{opt info:rmation}} presents a clickable version of the available surveys, countries and regions.{p_end}
 {synopt :{opt iso}} uses ISO3 for country/economy codes in the output. {p_end}
 {synopt :{opt ppp}{cmd:(#)}} allows the selection of an specific PPP. {p_end}
+
+{synoptset 27 tabbed}{...}
+{synopthdr:subcommands}
 {synoptline}
-{p 4 6 2}
-{cmd:povcalnet} requires a connection to the internet.
+{synopt :{opt info:rmation}}presents a clickable version of the available surveys, 
+countries and regions. Same as option{it:information}{p_end}
+{synopt :{opt cl}}parses the parameters of the query in a one-on-one correspondance of 
+rather than the default combinational query. See{help povcalnet##typesq: bellow} 
+for a detailed explanation.{p_end}
+{synoptline}
+
+{pstd}
+{err:Note}: {cmd:povcalnet} requires internet connection.
 
 {marker sections}{...}
 {title:Sections}
@@ -60,55 +71,69 @@ Sections are presented under the following headings:
 {marker desc}{...}
 {p 40 20 2}(Go up to {it:{help povcalnet##sections:Sections Menu}}){p_end}
 {title:Description}
-{pstd}
 
-{p 8 4 2} The {cmd:povcalnet} commands allows Stata users to compute poverty and inequality
+{pstd}
+The {cmd:povcalnet} commands allows Stata users to compute poverty and inequality
  indicators for more than 160 countries and regions the World Bank's database of household
  surveys. It has the same functionality as the PovcalNet website. PovcalNet is a 
  computational tool that allows users to estimate poverty rates for regions, sets of 
- countries or individual countries, over time and at any poverty line. {p_end}
+ countries or individual countries, over time and at any poverty line.
 
-{p 8 4 2}PovcalNet is managed jointly by the Data and Research Group in the World Bank's
+{pstd}
+PovcalNet is managed jointly by the Data and Research Group in the World Bank's
  Development Economics Division. It draws heavily upon a strong collaboration with the 
  Poverty and Equity Global Practice, which is responsible for the gathering and 
- harmonization of the underlying survey data. {p_end}
+ harmonization of the underlying survey data. 
 
-{p 8 4 2} {cmd:povcalnet} reports the following measures at the chosen poverty line and 
-these inequality measures:{p_end}
+{pstd}
+{cmd:povcalnet} reports the following measures at the chosen poverty line and 
+these inequality measures:
 
+		{hline 43}
 		Poverty measures{col 40}Inequality measures
-		{hline 45}
+		{hline 20}{col 40}{hline 20}
 		Headcount        {col 40}Gini index
 		Poverty gap      {col 40}Mean log deviations
 		Poverty severity {col 40}decile shares
 		Watts index      {col 40}
-		{hline 45}
+		{hline 43}
 
-{p 8 4 2}The underlying welfare aggregate is per capita household income or consumption
+{pstd}
+The underlying welfare aggregate is per capita household income or consumption
  expressed in 2011 PPP-adjusted USD. Poverty lines are expressed in daily amounts, while 
  means and medians are monthly. For more information on the definition of the indicators,
  {browse "http://iresearch.worldbank.org/PovcalNet/Docs/dictionary.html": click here}. 
- For more information on the methodology,{browse "http://iresearch.worldbank.org/PovcalNet/methodology.aspx": click here}{p_end}
+ For more information on the methodology,{browse "http://iresearch.worldbank.org/PovcalNet/methodology.aspx": click here}
 
-{marker types}{...}
+{marker typesc}{...}
 {title:Type of calculations}:
+{pstd}
+The PovcalNet API allows two type of calculations:
 
 {phang}
-{opt Survey-year}: Will load poverty and inequality measures for one or several countries, at the survey-year, without aggregation. Each observation is a country-survey-year. This is the default query.
+{opt Survey-year}: Will load poverty and inequality measures for one or several 
+countries, at the survey-year, without aggregation. Each observation is a 
+country-survey-year. This is the default query.
 
 {phang}
-{opt reference-year}: Will load poverty and inequality measures for reference years that are common across countries.
-Countries without a survey in the reference-year have been extrapolated or interpolated using
- national accounts growth rates.
+{opt reference-year}: Will load poverty measures for reference years 
+that are common across most countries. Regional and global aggregates are calculated 
+only in reference-years. Countries without a survey in the reference-year 
+are extrapolated or interpolated using national accounts growth rates. 
 
-{phang}
-{err:Note}:  Choosing option  {it:aggregate}  displays regional (population-weighted) 
-averages. While option {it:fillgaps} reports the underlying lined-up estimates 
-at the country-level. Poverty measures calculated in the country-year and aggregates 
-option will include Headocount, Poverty Gap, Squared Poverty Gap. Inequality measures 
-including the Gini coefficient, Watts index, Mean log Deviation and Decile Distibution 
-are calculated only for country-years where micro data is available.
-Inequality measures are not reported for reference year.
+{pin}
+{err:Important}: Choosing option  {it:aggregate}  displays regional (population-weighted) 
+averages. While option {it:fillgaps} reports the underlying lined-up estimates to the 
+reference year at the country level. Poverty measures calculated in the {cmd:survey-year} and 
+{cmd:reference-year} types of calculation will include Headocount, Poverty Gap, Squared Poverty Gap. 
+Inequality measures, including the Gini coefficient, Watts index, Mean log Deviation 
+and Decile Distibution, are calculated only in {cmd:survey-year} where micro data is available.
+Inequality measures are not reported for {cmd:reference-year}.
+
+{marker typesq}{...}
+{title:Combinatorial and one-on-one queries}:
+{pstd}
+dddd
 
 {marker param}{...}
 {p 40 20 2}(Go up to {it:{help povcalnet##sections:Sections Menu}}){p_end}
@@ -151,8 +176,8 @@ Due to the constant updating of the PovCalNet databases, using the option {it:la
 aggregates in the reference years. This means that estimates use the same reference 
 years as aggregate estimates. 
 
-{p 8 8 2}{err:Note}: It is important to note that countries without a survey in the reference-year have been extrapolated or interpolated using national accounts growth rates  
-(see Chapter 6{browse "https://openknowledge.worldbank.org/bitstream/handle/10986/20384/9781464803611.pdf": here}).
+{p 8 8 2}{err:Note}: Countries without a survey in the reference-year have been extrapolated or interpolated using national accounts growth rates (see Chapter 6
+{browse "https://openknowledge.worldbank.org/bitstream/handle/10986/20384/9781464803611.pdf":here}).
 Therefore, changes at the country-level from one reference year to the next need to be interpreted carefully and may not be the result of a new household survey.{p_end}
 
 {phang}
