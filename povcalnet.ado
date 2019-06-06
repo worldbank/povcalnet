@@ -104,13 +104,15 @@ qui {
 		     Main conditions
 	==================================================*/
 	
-	if (c(N) != 0 & "`clear'" == "") {
-		noi di as err "You must start with an empty dataset; or enable the option {it:clear}."
-		error 4
-	}
-	else {
+	if ("`information'" == "" & !regexm("`subcommand'", "^info")) {
+		if (c(N) != 0 & "`clear'" == "" & /* 
+		 */ "`information'" == "" & !regexm("`subcommand'", "^info")) {
+			noi di as err "You must start with an empty dataset; or enable the option {it:clear}."
+			error 4
+		}
 		drop _all
-	}	
+	}
+		
 	*---------- Country and region
 	if  ("`country'" != "") & ("`region'" != "") {
 		noi disp in r "options {it:country()} and {it:region()} are mutally exclusive"
@@ -136,10 +138,11 @@ qui {
 	/*==================================================
 					     Execution 
 	==================================================*/
+	pause povcalnet - before execution
 	
 	*---------- Information
 	if ("`information'" != "" | regexm("`subcommand'", "^info")){
-		povcalnet_info, `clear' `pause'
+		noi povcalnet_info, `clear' `pause'
 		exit
 	}
 	
