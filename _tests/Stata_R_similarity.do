@@ -16,6 +16,8 @@ povcalnet, country("ALB CHN") povline(5 10) clear
 * Select specific years
 
 povcalnet, country("ALB") year("2002 2012") clear
+povcalnet, country("ALB") year("2002 2020") clear  // just 2002
+povcalnet, country("ALB") year("2020") clear       // error
 
 povcalnet, country("ALB") year("2002") clear
 
@@ -24,6 +26,10 @@ povcalnet, country("ALB") year("2002") clear
 povcalnet, country("all") coverage("urban") clear
 
 povcalnet, country("all") coverage("rural") clear
+
+povcalnet, country("all") coverage("national") clear
+
+povcalnet, country("all") coverage("rural national") clear
 
 * Aggregation
 povcalnet, country("ALB CHN") aggregate clear
