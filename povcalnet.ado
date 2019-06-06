@@ -23,7 +23,7 @@ set checksum off //temporarily bypasses controls of files taken from internet
 
 version 9.0
 
- syntax [anything(name=module)]        ///
+ syntax [anything(name=subcommand)]        ///
         [,                             ///
           COUNtry(string)              /// 
           REGion(string)               ///
@@ -135,13 +135,13 @@ qui {
 	==================================================*/
 	
 	*---------- Information
-	if ("`information'" != "" | regexm("`module'", "^info")){
+	if ("`information'" != "" | regexm("`subcommand'", "^info")){
 		povcalnet_info, `clear' `pause'
 		exit
 	}
 	
 	*---------- Country Level
-	if inlist("`module'", "cl", "countryl", "countrylevel") {
+	if inlist("`subcommand'", "cl", "countryl", "countrylevel") {
 		povcalnet_cl, country("`country'")  ///
 			 year("`year'")                   ///
 			 povline("`povline'")             ///

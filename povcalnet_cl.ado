@@ -108,17 +108,19 @@ foreach ict of local country {
 	
 	
 	local qct = "C`j'=`ict'`qcv'"  // query country
-	local qpl = "PL`j'=`ipl'"      // query year
-	local qyr = "Y`j'=`iyr'"       // query year
+	local qpl = "PL`j'=`ipl'"      // query poverty line
 	
-	if ("`ipp'" == "-1") {    // query  ppp
+	if ("`iyr'" == "all")   local qyr = ""            // query year
+	else                  	local qyr = "&Y`j'=`iyr'"       
+	
+	if ("`ipp'" == "-1") {         // query  ppp
 		local qpp ""
 	}
 	else {
 		local qpp "&PPP`j'=`ipp'"
 	}
 	
-	local query "`query'&`qct'&`qpl'&`qyr'`qpp'"
+	local query "`query'&`qct'&`qpl'`qyr'`qpp'"
 	
 	
 	local ++j
