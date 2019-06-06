@@ -107,6 +107,7 @@ The underlying welfare aggregate is per capita household income or consumption
 
 {marker typesc}{...}
 {title:Type of calculations}:
+
 {pstd}
 The PovcalNet API allows two type of calculations:
 
@@ -132,33 +133,52 @@ Inequality measures are not reported for {cmd:reference-year}.
 
 {marker typesq}{...}
 {title:Combinatorial and one-on-one queries}:
+
 {pstd}
-dddd
+Be default, {cmd:povcalnet} creates a combinatorial query of the parameters selected, 
+so that the output contains all the possible combinations between {it:country()}, 
+{it:povline()}, {it:year()}, and {it:coverage()}. Option {it:ppp()} is not part of the 
+combinatorial query. Alternatively, the user may select the subcommand {it:cl} to parse a 
+one-on-one, or country by country request. In this case, the first country listed in 
+{it:country()} will be combined with the first year in {it:year()}, the first poverty lines
+in {it:povline()} and the first coverage area in {it:coverage()}, and so on a so forth 
+with subsequent countries. If only one element is added to parameters 
+{it:povline()}, {it:year()}, or {it:coverage()}, it would be replicated as many times 
+as elements parameter {it:countr()} has. {err:caution}: if only one element is added 
+to option {it:ppp()}, it would be rippled to all the countries in {it:country()}. 
 
 {marker param}{...}
 {p 40 20 2}(Go up to {it:{help povcalnet##sections:Sections Menu}}){p_end}
 {title:Parameters description}
 
 {dlgtab: Parameters}
-
-{synopt:{opt country(string)}}{help povcalnet##countries:Countries and Economies Abbreviations and Acronyms}. If specified with {opt year(string)},
+{phang}
+{opt country(string)}{help povcalnet##countries:Countries and Economies Abbreviations and Acronyms}. 
+If specified with {opt year(string)},
 this option will return all the specific countries and years for which there is actual survey data. 
-When selecting multiple countries please use the three letters code with spaces. The option {it:all} is as shorthand for calling all countries.{p_end}
+When selecting multiple countries please use the three letters code with spaces. The option 
+{it:all} is as shorthand for calling all countries.
 
-{synopt:{opt region(string)}}{help povcalnet##regions:Regions Abbreviations and Acronyms}  If specified with {opt year(string)}, this option will return all the specific countries and years that belong to the specified region(s). 
-For example, {opt region(LAC)} will bring all countries in Latin America and the Caribbean for which there's an actual survey in the given years. 
-When selecting multiple regions please use the three letters code with spaces. The option {it:all} is as shorthand for calling all regions, which is equivalent to calling all countries.
-{p_end}
+{phang}
+{opt region(string)}{help povcalnet##regions:Regions Abbreviations and Acronyms}  If 
+specified with {opt year(string)}, this option will return all the specific countries 
+and years that belong to the specified region(s). 
+For example, {opt region(LAC)} will bring all countries in Latin America and the 
+Caribbean for which there's an actual survey in the given years. 
+When selecting multiple regions please use the three letters code with spaces. The 
+option {it:all} is as shorthand for calling all regions, which is equivalent to calling all countries.
 
-{synopt:{opt year(#)}} Four digit years are accepted. When selecting multiple years please separate each with spaces. 
-The option {it:all} is a shorthand for calling all possible years, while the {it:last} option will download the latest available year for each country.
-{p_end}
+{phang}
+{opt year(#)} Four digit years are accepted. When selecting multiple years 
+please separate each with spaces. The option {it:all} is a shorthand for calling all 
+possible years, while the {it:last} option will download the latest available year 
+for each country.
 
-{synopt:{opt povline(#)}} The poverty lines for which the poverty calculations will be done. When selecting multiple poverty lines please use less than 4 decimals and separate each line with spaces.
-If left empty, the default poverty line of $1.9 is used.
-Poverty lines are expressed in 2011 PPP-adjusted USD per capita per day. 
-{p_end}
-
+{phang}
+{opt povline(#)} The poverty lines for which the poverty calculations will be done. 
+When selecting multiple poverty lines please use less than 4 decimals and separate 
+each line with spaces. If left empty, the default poverty line of $1.9 is used.
+Poverty lines are expressed in 2011 PPP-adjusted USD per capita per day.
 
 {marker options}{...}
 {p 40 20 2}(Go up to {it:{help povcalnet##sections:Sections Menu}}){p_end}
