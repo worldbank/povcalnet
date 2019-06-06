@@ -92,15 +92,9 @@ quietly {
 	tempfile temp1
 	local queryfull = "`country_query'YearSelected=`y_comma'&PovertyLine=`povline'&format=csv"
 	copy "`base'?`queryfull'" `temp1'
-	cap noi insheet using `temp1', `clear' name
+	insheet using `temp1', `clear' name
 
 	pause aggquery - after loading data 
-	
-	local rc3 = _rc
-	if (`rc3' != 0) {
-		di  as err "You must start with an empty dataset; or enable the clear option."
-		error `rc3'
-	}
 	
 	if  ("`region'" != "") {
 		tempvar keep_this
@@ -151,7 +145,23 @@ quietly {
 	label var povgap "Poverty Gap"
 	label var povgapsqr "Squared poverty gap"
 	label var reqyearpopulation "Population in year"
+	
+	
+	local Snames region regioncode requestyear  povertyline /* 
+	 */ povgap povgapsqr reqyearpopulation 
 
+	local Rnames region_title region_code request_year poverty_line  /* 
+	 */ poverty_gap poverty_gap_sq population
+	 
+	local i = 0
+	foreach var of local Snames {
+		local ++i
+		rename `var' `: word `i' of `Rnames''
+	}
+	
+	order region_title region_code request_year poverty_line mean /* 
+	 */ headcount poverty_gap poverty_gap_sq population
+	
 	return local queryfull  "`queryfull'"
 }
 

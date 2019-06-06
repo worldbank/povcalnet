@@ -26,7 +26,8 @@ if ("`pause'" == "pause") pause on
 else                      pause off
 
 qui {
-
+	
+	if ("``clear''" == "") preserve
 	local url "http://iresearch.worldbank.org/PovcalNet"
 	***************************************************
 	* 1. Load guidance database
@@ -36,7 +37,7 @@ qui {
 	cap copy "`url'/js/initCItem2014.js" `temp1000'
 	local rccopy = _rc
 	cap import delim using `temp1000',  delim(",()") stringc(_all) /* 
-	 */                                stripq(yes) varnames(nonames)  `clear'
+	 */                                stripq(yes) varnames(nonames)  clear
 	local rcclear = _rc
 	
 	
