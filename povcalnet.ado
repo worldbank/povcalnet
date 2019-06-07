@@ -88,6 +88,12 @@ qui {
 		error 197
   }
 	
+	*---------- PPP
+	if (lower("`country'") == "all" & "`ppp'" != "") {
+		noi disp as err "Option {it:ppp()} is not allowed with {it:country(all)}"
+		error
+	}
+	
 	 
 	/*==================================================
 		    Dependencies         
@@ -159,7 +165,7 @@ qui {
 		exit
 	}
 	
-	*---------- Country Level
+	*---------- Country Level (one-on-one query)
 	if inlist("`subcommand'", "cl", "countryl", "countrylevel") {
 		povcalnet_cl, country("`country'")  ///
 			 year("`year'")                   ///
@@ -216,7 +222,6 @@ qui {
 		noi di as result "{p 4 4 2}Succesfully loaded `obs' observations.{p_end}"
 	}
 	
-	* return local queryfull  "`queryfull1'"
 	
 
 } // end of qui
