@@ -108,16 +108,9 @@ quietly {
 	***************************************************
 	* 3. Keep selected years and construct the request
 	***************************************************
-	 /* 
-	if "`auxiliary'" == "" {
-		bys country_code: gen number = _N
-		gen tag_delete = 1 if (number>2 & inlist(coverage_level,"rural","urban"))
-		drop if tag_delete == 1
-	}
-  */
 	
-	
-	if ("`i_year'"=="all") | ("`i_year'"=="last") | ("`fillgaps'"!="") {
+	*---------- Check that at least one year is available
+	if ("`year'"=="all") | ("`year'"=="last") | ("`fillgaps'"!="") {
 	 local year_ok = 1
 	}
 	else {
@@ -134,39 +127,57 @@ quietly {
 	
 	if (`year_ok' == 0) {
 		di  as err "years selected do not match any survey year for any country." _n /* 
-		*/	"You could type {stata povcalnet info} to check availability."
+		  */	"You could type {stata povcalnet info} to check availability."
 		error 20
-   }
+  }
 	
 	
+	/*==================================================
+           Create Queries
+	==================================================*/
+	
+	*---------- Year query
 	local y_comma: subinstr local year " " ",", all
 	if ("`year'" == "last") local y_comma = "all"
-	if ("`fillgaps'" == "") local year_param = "surveyyears=`y_comma'"
-	if ("`fillgaps'" != "") local year_param = "refyears=`y_comma'&display=c&"
+	if ("`fillgaps'" == "") local year_q = "surveyyears=`y_comma'"
+	if ("`fillgaps'" != "") local year_q = "refyears=`y_comma'&display=c"
 	
-	local obs = _N
-	forvalues i_obs = 1/`obs'{
-		local country_v = "`=code[`i_obs']',"+"`country_v'"
-	}
-
-	local parameter =	"`year_param'&Countries=`country_v'&"
-
+	*---------- Country query
+	levelsof code, local(country_q) sep(,) clean
+	local country_q = "Countries=`country_q'"
+	
+	
+	*---------- Poverty lines query
+	local povline_q = "PovertyLine=`povline'"
+	
+	*---------- Full Query
+	local query = "`year_q'&`country_q'&`povline_q'&format=csv"
+	return local query  "`query'"
+	
 	***************************************************
 	* 4. Request and copying
 	***************************************************
 	
-	*---------- download the data
-	tempfile finalfile
-	tempfile tempcopy
-	local queryfull = "`parameter'PovertyLine=`povline'&format=csv"
-	cap copy "`base'?`parameter'PovertyLine=`povline'&format=csv" `tempcopy'
-	local rccopy = _rc
-	insheet using `tempcopy', clear name
+	*---------- download data
+	tempfile clfile
+	local queryfull "`base'?`query'"
+	return local queryfull = "`queryfull'"
+	
+	
+	local rc = 0
+
+	cap copy "`queryfull'" `clfile'
+	if (_rc == 0) {
+		cap insheet using `clfile', clear name
+		if (_rc != 0) local rc "in"
+	} 
+	else {
+		local rc "copy"
+	} 
 
 	*---------- Clean data
-	povcalnet_clean 1, year("`year'") `iso' region(`region') rccopy(`rccopy')
-	
-	return local queryfull  "`queryfull'"
+	povcalnet_clean 1, year("`year'") `iso' rc(`rc')
+
 	
 	
 } // end of qui

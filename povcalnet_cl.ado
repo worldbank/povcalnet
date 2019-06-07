@@ -162,6 +162,8 @@ return local query = "`query'"
 *----------3.1:
 tempfile clfile
 local queryfull "`base'?`query'"
+return local queryfull = "`queryfull'"
+
 local rc = 0
 
 cap copy "`queryfull'" `clfile'
@@ -177,7 +179,6 @@ else {
 
 povcalnet_clean 1, year("`year'") `iso' rc(`rc')
 
-return local queryfull = "`queryfull'"
 
 end
 exit
