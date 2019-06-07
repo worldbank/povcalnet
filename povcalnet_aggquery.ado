@@ -89,7 +89,7 @@ quietly {
 	if ("`country'" != "") {
 		local country_q = "Countries=`country_f'&GroupedBy=Customized"
 	}
-	if ("`region'" != "") {
+	else {  // ("`region'" != "")
 		local country_q = "Countries=all&GroupedBy=WB"
 	}
 	
