@@ -17,7 +17,7 @@ povcalnet, country("ALB CHN") povline(5 10) clear
 
 povcalnet, country("ALB") year("2002 2012") clear
 povcalnet, country("ALB") year("2002 2020") clear  // just 2002
-povcalnet, country("ALB") year("2020") clear       // error
+cap noi povcalnet, country("ALB") year("2020") clear       // error
 
 povcalnet, country("ALB") year("2002") clear
 
@@ -34,10 +34,17 @@ povcalnet, country("all") coverage("rural national") clear
 * Aggregation
 povcalnet, country("ALB CHN") aggregate clear
 
+povcalnet, country("all")  aggregate clear 
+povcalnet, country("all")  aggregate year(last) clear 
+povcalnet, aggregate region(LAC) clear 
+povcalnet, aggregate region(all) clear 
+
+
+
 * Fill gaps when surveys are missing for specific year
 
 povcalnet, country("ALB CHN") fillgaps clear 
-povcalnet, country("ALB CHN") fillgaps coverage("national")
+povcalnet, country("ALB CHN") fillgaps coverage("national") clear
 
 * PPP
 
@@ -57,13 +64,13 @@ povcalnet cl, country("DOL DOM")           /*  get info only for DOM
             */  povline(10) clear
 
 						
-povcalnet cl, country("COL DOM")           /*  get info only for DOM
+povcalnet cl, country("COL DOM")           /*  get info only both
             */	coverage("national")      /*
             */  year(all)             /*
             */  povline(4) clear
 
 						
-povcalnet cl, country("COL DOM")           /*  get info only for DOM
-            */	coverage("urban national")      /*
-            */  year(all)             /*
+povcalnet cl, country("COL DOM")            /*  
+            */	coverage("urban national")  /*
+            */  year(all)                   /*
             */  povline(4) clear
