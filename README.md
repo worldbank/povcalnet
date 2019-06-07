@@ -34,7 +34,7 @@ Then, type the following in Stata:
 github install worldbank/povcalnet
 ```
 
-### Examples
+## Examples
 
 ```
 * Retrieve ONE country with default parameters
