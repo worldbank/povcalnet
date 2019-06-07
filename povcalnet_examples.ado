@@ -28,13 +28,13 @@ end
 capture program drop example01
 program example01
 	povcalnet, region(all) year(all) povline(1.9 3.2 5.5) clear aggregate
-	drop if regioncode == "OHI" | requestyear<1990 | regioncode == "WLD"
-	keep povertyline region requestyear headcount
-	replace povertyline = povertyline*100
+	drop if region_code == "OHI" | request_year<1990 | region_code == "WLD"
+	keep poverty_line region_title request_year headcount
+	replace poverty_line = poverty_line*100
 	replace headcount = headcount*100
-	tostring povertyline, replace format(%12.0f) force
-	reshape wide  headcount,i(requestyear region ) j(povertyline) string
-	twoway (sc headcount190 requestyear, c(l) msiz(small)) (sc headcount320 requestyear, c(l) msiz(small)) (sc headcount550 requestyear, c(l) msiz(small)) ///
+	tostring poverty_line, replace format(%12.0f) force
+	reshape wide  headcount,i(request_year region_title ) j(poverty_line) string
+	twoway (sc headcount190 request_year, c(l) msiz(small)) (sc headcount320 request_year, c(l) msiz(small)) (sc headcount550 request_year, c(l) msiz(small)) ///
 		, by(reg,  title("Poverty Headcount Ratio (1990-2015), by region", si(med)) note("Source: PovcalNet", si(vsmall)) graphregion(c(white))) ///
 		xlab(1990(5)2015 , labsi(vsmall)) xti("Year", si(vsmall)) ///
 		ylab(0(25)100, labsi(vsmall) angle(0)) yti("Poverty headcount (%)", si(vsmall)) ///
@@ -48,23 +48,23 @@ capture program drop example02
 program example02
 	povcalnet, region(lac) year(last) povline(3.2 5.5 15) fillgaps clear 
 	*povcalnet, region(lac) year(last) povline(3.2 5.5 15) clear 
-	keep if datatype==2 & datayear>=2014 // keep income surveys
-	keep povertyline countrycode countryname requestyear headcount
-	replace povertyline = povertyline*100
+	keep if data_type==2 & data_year>=2014 // keep income surveys
+	keep poverty_line country_code country_name request_year headcount
+	replace poverty_line = poverty_line*100
 	replace headcount = headcount*100
-	tostring povertyline, replace format(%12.0f) force
-	reshape wide  headcount,i(requestyear countrycode countryname ) j(povertyline) string
+	tostring poverty_line, replace format(%12.0f) force
+	reshape wide  headcount,i(request_year country_code country_name ) j(poverty_line) string
 	gen percentage_0 = headcount320
 	gen percentage_1 = headcount550 - headcount320
 	gen percentage_2 = headcount1500 - headcount550
 	gen percentage_3 = 100 - headcount1500
-	keep countrycode countryname requestyear  percentage_*
-	reshape long  percentage_,i(requestyear countrycode countryname ) j(category) 
+	keep country_code country_name request_year  percentage_*
+	reshape long  percentage_,i(request_year country_code country_name ) j(category) 
 	la define category 0 "Poor LMI (<$3.2)" 1 "Poor UMI ($3.2-$5.5)" ///
 		2 "Vulnerable ($5.5-$15)" 3 "Middle class (>$15)"
 	la val category category
 	la var category ""
-	graph bar (mean) percentage, inten(*0.7) o(category) o(countrycode, lab(labsi(small) angle(vertical))) stack asy /// 
+	graph bar (mean) percentage, inten(*0.7) o(category) o(country_code, lab(labsi(small) angle(vertical))) stack asy /// 
 		blab(bar, pos(center) format(%3.1f) si(tiny)) /// 
 		ti("Distribution of Income in Latin America and Caribbean, by country", si(small)) ///
 		note("Source: PovCalNet, using the latest survey after 2014 for each country. ", si(*.7)) ///
@@ -78,12 +78,12 @@ end
 capture program drop example03
 program example03
 	povcalnet, povline(1.9) region(all) year(all) aggregate clear
-	keep if requestyear > 1989
-	gen poorpop = headcount*reqyearpopulation 
+	keep if request_year > 1989
+	gen poorpop = headcount*population 
 	gen hcpercent = round(headcount*100, 0.1) 
 	gen poorpopround = round(poorpop, 1)
-	twoway (sc hcpercent requestyear if regioncode == "WLD", yaxis(1) mlab(hcpercent) mlabpos(7) c(l)) ///
-		(sc poorpopround requestyear if regioncode == "WLD", yaxis(2) mlab(poorpopround) mlabpos(1) c(l)) ///
+	twoway (sc hcpercent request_year if region_code == "WLD", yaxis(1) mlab(hcpercent) mlabpos(7) c(l)) ///
+		(sc poorpopround request_year if region_code == "WLD", yaxis(2) mlab(poorpopround) mlabpos(1) c(l)) ///
 		, yti("Poverty Rate (%)" " ", size(small) axis(1))  ///
 		ylab(0(10)40,labs(small) nogrid angle(0) axis(1))  ///
 		yti("Number of Poor (million)", size(small) axis(2)) ///
@@ -101,32 +101,32 @@ end
 capture program drop example04
 program example04
 	povcalnet, povline(1.9) region(all) year(all) aggregate clear
-	keep if requestyear > 1989
-	gen poorpop = headcount * reqyearpopulation 
+	keep if request_year > 1989
+	gen poorpop = headcount * population 
 	gen hcpercent = round(headcount*100, 0.1) 
 	gen poorpopround = round(poorpop, 1)
-	keep requestyear regioncode region poorpop
-	gen 	rid=1 if regioncode=="OHI"
-	replace rid=2 if regioncode=="ECA"
-	replace rid=3 if regioncode=="MNA"
-	replace rid=4 if regioncode=="LAC"
-	replace rid=5 if regioncode=="EAP"
-	replace rid=6 if regioncode=="SAS"
-	replace rid=7 if regioncode=="SSA"
-	replace rid=8 if regioncode=="WLD"
-	keep requestyear rid poorpop
-	reshape wide poorpop,i(requestyear) j(rid)
+	keep request_year region_code region_title poorpop
+	gen 	rid=1 if region_code=="OHI"
+	replace rid=2 if region_code=="ECA"
+	replace rid=3 if region_code=="MNA"
+	replace rid=4 if region_code=="LAC"
+	replace rid=5 if region_code=="EAP"
+	replace rid=6 if region_code=="SAS"
+	replace rid=7 if region_code=="SSA"
+	replace rid=8 if region_code=="WLD"
+	keep request_year rid poorpop
+	reshape wide poorpop,i(request_year) j(rid)
 	foreach i of numlist 2(1)7{
 		egen poorpopacc`i'=rowtotal(poorpop1 - poorpop`i')
 	}
-	twoway (area poorpop1 requestyear) ///
-		(rarea poorpopacc2 poorpop1 requestyear) ///
-		(rarea poorpopacc3 poorpopacc2 requestyear) ///
-		(rarea poorpopacc4 poorpopacc3 requestyear) ///
-		(rarea poorpopacc5 poorpopacc4 requestyear) ///
-		(rarea poorpopacc6 poorpopacc5 requestyear) ///
-		(rarea poorpopacc7 poorpopacc6 requestyear) ///
-		(line poorpopacc7 requestyear, lwidth(midthick) lcolor(gs0)), ///
+	twoway (area poorpop1 request_year) ///
+		(rarea poorpopacc2 poorpop1 request_year) ///
+		(rarea poorpopacc3 poorpopacc2 request_year) ///
+		(rarea poorpopacc4 poorpopacc3 request_year) ///
+		(rarea poorpopacc5 poorpopacc4 request_year) ///
+		(rarea poorpopacc6 poorpopacc5 request_year) ///
+		(rarea poorpopacc7 poorpopacc6 request_year) ///
+		(line poorpopacc7 request_year, lwidth(midthick) lcolor(gs0)), ///
 		ytitle("Millions of Poor" " ", size(small))  ///
 		xtitle(" " "", size(small))  ///
 		graphregion(c(white)) ysize(7) xsize(8)  ///
@@ -149,15 +149,16 @@ capture program drop example05
 program example05
 	set checksum off
 	wbopendata, indicator(NY.GDP.PCAP.PP.KD) long clear
+	rename countrycode country_code
 	tempfile PerCapitaGDP
 	save `PerCapitaGDP', replace
 	
 	povcalnet, povline(1.9) country(all) year(last) clear iso
-	keep countrycode countryname requestyear gini
-	rename requestyear year
+	keep country_code country_name request_year gini
+	rename request_year year
 	drop if gini == -1
 	* Merge Gini coefficient with per capita GDP
-	merge m:1 countrycode year using `PerCapitaGDP'
+	merge m:1 country_code year using `PerCapitaGDP'
 	keep if _merge == 3
 	drop _merge
 	replace gini = gini * 100
@@ -177,9 +178,9 @@ capture program drop example06
 program example06
 	povcalnet, country(arg gha tha) year(all) clear
 	replace gini = gini * 100
-	twoway (connected gini datayear if countrycode == "ARG" & datayear > 1989)  ///
-		(connected gini datayear if countrycode == "GHA" & datayear > 1989)  ///
-		(connected gini datayear if countrycode == "THA" & datayear > 1989),  /// 
+	twoway (connected gini data_year if country_code == "ARG" & data_year > 1989)  ///
+		(connected gini data_year if country_code == "GHA" & data_year > 1989)  ///
+		(connected gini data_year if country_code == "THA" & data_year > 1989),  /// 
 		ytitle("Gini Index" " ", size(small)) xtitle(" " "", size(small))  ///
 		ylabel(,labs(small) nogrid angle(verticle)) xlabel(,labs(small)) ///
 		graphregion(c(white))   ///
@@ -192,17 +193,17 @@ end
 capture program drop example07
 program example07	   
 	povcalnet, country(arg gha tha) year(all)  clear
-	reshape long decile, i(countrycode datayear) j(dec)
-	egen panelid=group(countrycode dec)
-	replace datayear=int(datayear)
-	xtset panelid datayear
+	reshape long decile, i(country_code data_year) j(dec)
+	egen panelid=group(country_code dec)
+	replace data_year=int(data_year)
+	xtset panelid data_year
 	replace decile=10*decile*mean
 	gen g=(((decile/L5.decile)^(1/5))-1)*100
-	replace g=(((decile/L7.decile)^(1/7))-1)*100 if countrycode=="GHA"
+	replace g=(((decile/L7.decile)^(1/7))-1)*100 if country_code=="GHA"
 	replace dec=10*dec
-	twoway 	(sc g dec if datayear==2016 & countrycode=="ARG", c(l)) ///
-			(sc g dec if datayear==2005 & countrycode=="GHA", c(l)) ///
-			(sc g dec if datayear==2015 & countrycode=="THA", c(l)) ///
+	twoway 	(sc g dec if data_year==2016 & country_code=="ARG", c(l)) ///
+			(sc g dec if data_year==2005 & country_code=="GHA", c(l)) ///
+			(sc g dec if data_year==2015 & country_code=="THA", c(l)) ///
 			, yti("Annual growth in decile average income (%)" " ", size(small))  ///
 			xlabel(0(10)100,labs(small)) xtitle("Decile group", size(small))  ///
 			graphregion(c(white)) ///
