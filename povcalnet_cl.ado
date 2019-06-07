@@ -60,8 +60,9 @@ if ("`ncountries'" != "") {
 	if wordcount("`ncountries'") == 1 local be "is"
 	if wordcount("`ncountries'") > 1 local be "are"
 
-	noi disp as err "Warning: " in w "`ncountries' `be' not part of the country list "  /* 
-	 */ "available in PovcalNet. See {stata povcalnet info}"
+	noi disp as err "Warning: " _c
+	noi disp as input `"`ncountries' `be' not part of the country list"' /* 
+	 */ _n "available in PovcalNet. See {stata povcalnet info}"
 	 
 }	
 
