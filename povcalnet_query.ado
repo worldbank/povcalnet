@@ -13,8 +13,8 @@ version 9.0
 
     syntax ,                   ///
       YEAR(string)             ///
-      COUntry(string)          ///
       [                       ///
+				COUntry(string)       ///
         REGion(string)         ///
         POVLine(string)        ///
         PPP(string)            ///

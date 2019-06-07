@@ -80,6 +80,10 @@ qui {
 	
 	*---------- Country
 	if ("`country'" == "" & "`region'" == "") local country "all"
+	if ("`country'" != "") {
+		if (lower("`country'") != "all") local country = upper("`country'")
+		else                             local country "all"
+	}
 	
 	*---------- subcommand
 	if inlist("`subcommand'", "cl", "countryl", "countrylevel") & /* 

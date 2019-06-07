@@ -35,10 +35,12 @@ povcalnet, country("all") coverage("rural national") clear
 povcalnet, country("ALB CHN") aggregate clear
 
 povcalnet, country("all")  aggregate clear 
-povcalnet, country("all")  aggregate year(last) clear 
-povcalnet, aggregate region(LAC) clear 
-povcalnet, aggregate region(all) clear 
 
+povcalnet, country("all")  aggregate year(last) clear 
+
+povcalnet, aggregate region(LAC) clear 
+
+povcalnet, aggregate region(all) clear 
 
 
 * Fill gaps when surveys are missing for specific year
@@ -64,7 +66,7 @@ povcalnet cl, country("DOL DOM")           /*  get info only for DOM
             */  povline(10) clear
 
 						
-povcalnet cl, country("COL DOM")           /*  get info only both
+povcalnet cl, country("COL DOM")           /*  get info for both
             */	coverage("national")      /*
             */  year(all)             /*
             */  povline(4) clear
