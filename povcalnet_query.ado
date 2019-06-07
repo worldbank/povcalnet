@@ -47,7 +47,6 @@ quietly {
 		local base="`server'/PovcalNetAPI.ashx"
 	}
 
-	if ("`coesp'" != "") local auxiliary = "auxiliary"
 
 	if ("`ppp'" != "") local ppp_condition = "&PPP0=`ppp'"
 
