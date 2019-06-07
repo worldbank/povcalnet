@@ -34,6 +34,13 @@ povcalnet, country("all") coverage("rural national") clear
 * Aggregation
 povcalnet, country("ALB CHN") aggregate clear
 
+povcalnet, country("all")  aggregate clear 
+povcalnet, country("all")  aggregate year(last) clear 
+povcalnet, aggregate region(LAC) clear 
+povcalnet, aggregate region(all) clear 
+
+
+
 * Fill gaps when surveys are missing for specific year
 
 povcalnet, country("ALB CHN") fillgaps clear 
