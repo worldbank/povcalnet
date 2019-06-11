@@ -174,7 +174,7 @@ qui {
 				foreach ind_y of local years_current {
 					local current_line = `current_line' + 1 
 					local ind_y_c=substr("`ind_y'",1,4)
-					local display_this = "{stata  povcalnet, country(`country') year(`ind_y_c') coesp(`coesp')   clear: `ind_y_c'}"		
+					local display_this = "{stata  povcalnet, country(`country') year(`ind_y') coesp(`coesp')   clear: `ind_y_c'}"		
 					if (`current_line' < 10) noi display in y `"`display_this'"' _continue 
 					else{
 						noi display in y `"`display_this'"' 
