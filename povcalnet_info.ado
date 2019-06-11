@@ -165,7 +165,8 @@ qui {
 			
 			foreach n of numlist 1/`nobs' {
 			
-				noi disp in y  _n "`=country_name[`index_s']' (`=coverage_level[`index_s']')" 	
+				noi disp in y  _n "`=country_name[`index_s']'-`=coverage_level[`index_s']'" 	
+				noi disp in y  "reference year (survey year)" 	
 				local years_current = "`=year[`index_s']'"
 				local coesp = "`=code[`index_s']'"
 				local years_current: subinstr local years_current "," " ", all 
@@ -174,7 +175,7 @@ qui {
 				foreach ind_y of local years_current {
 					local current_line = `current_line' + 1 
 					local ind_y_c=substr("`ind_y'",1,4)
-					local display_this = "{stata  povcalnet, country(`country') year(`ind_y') coesp(`coesp')   clear: `ind_y_c'}"		
+					local display_this = "{stata  povcalnet, country(`country') year(`ind_y') coesp(`coesp')   clear: `ind_y_c'(`ind_y')}"		
 					if (`current_line' < 10) noi display in y `"`display_this'"' _continue 
 					else{
 						noi display in y `"`display_this'"' 
