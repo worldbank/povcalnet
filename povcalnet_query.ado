@@ -116,7 +116,8 @@ quietly {
 
 	local obs = _N
 	if (`obs' == 0) {
-		di  as err "{p 4 4 2}No surveys found matching your criteria. You could use the {stata povcalnet_info: guided selection} instead. {p_end}"
+		di  as err "No surveys found matching your criteria. You could use the " /*  
+	  */ " {stata povcalnet_info: guided selection} instead."
 		error
   }
 
@@ -161,7 +162,7 @@ quietly {
 		local year_q = "SurveyYears=`y_comma'"
 		local disp_q = ""
 	}
-	else ("`fillgaps'" != "")  {
+	else  {
 		local year_q = "YearSelected=`y_comma'" 
 		local disp_q = "&display=c"
 	}
@@ -187,47 +188,28 @@ quietly {
 		levelsof code, local(country_q) sep(,) clean
 		local country_q = "Countries=`country_q'"
 	}
+	return local query_ct = "`country_q'"
 	
 	*---------- Poverty lines query
 	local povline_q = "PovertyLine=`povline'"
+	return local query_pl = "`povline_q'"
 	
-	*---------- Full Query
-	local query = "`year_q'&`country_q'&`povline_q'&format=csv"
-	return local query  "`query'"
-	
-	scalar pcn_query = "`query'"
-	***************************************************
-	* 4. Request and copying
-	***************************************************
-	
-	*---------- download data
-	tempfile clfile
-	local queryfull "`base'?`query'"
-	return local queryfull = "`queryfull'"
-	
-	
-	local rc = 0
-
-	cap copy "`queryfull'" `clfile'
-	if (_rc == 0) {
-		cap insheet using `clfile', clear name
-		if (_rc != 0) local rc "in"
-	} 
-	else {
-		local rc "copy"
-	} 
-
-	if ("`aggregate'" == "" & "`wb'" == "") {
-		 local rtype 1
-	}
-	else {
-		local rtype 2
-	}
-	
-	*---------- Clean data
-	povcalnet_clean `rtype', year("`year'") `iso' rc(`rc') region(`region')
 	
 } // end of qui
 
 end
+
+exit
+/* End of do-file */
+
+><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><
+
+Notes:
+1.
+2.
+3.
+
+
+Version Control:
+
 

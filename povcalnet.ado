@@ -258,36 +258,68 @@ qui {
 			 year("`year'")                         ///
 			 povline("`i_povline'")                 ///
 			 ppp("`i_ppp'")                         ///
-			 server("`server'")                     ///
-			 `coesp'                                ///
-			 `auxiliary'                            ///
+			 coverage(`coverage')                   ///
 			 `clear'                                ///
 			 `information'                          ///
 			 `iso'                                  ///
-			 `original'                             ///
 			 `fillgaps'                             ///
 			 `aggregate'                            ///
 			 `wb'                                   ///
 			 `pause'                                ///
 			 `groupedby'                            ///
-			 coverage(`coverage')
 			
 			
 		local query_ys = "`r(query_ys)'"
-			
-		return add
+    local query_ct = "`r(query_ct)'"
+    local query_pl = "`r(query_pl)'"
+    local query_ds = "`r(query_ds)'"
+    local query_pp = "`r(query_pp)'"
+		
+		return local query_ys_`f' = "`query_ys'"
+		return local query_ct_`f' = "`query_ct'"
+		return local query_pl_`f' = "`query_pl'"
+		return local query_ds_`f' = "`query_ds'"
+		return local query_pp_`f' = "`query_pp'"
+		
+		*---------- Query
+		local query = "`query_ys'&`query_ct'&`query_pl'`query_pp'`query_ds'&format=csv"
+		return local query_`f' "`query'"
+
+		*---------- Base + query
+		local queryfull "`base'?`query'"
+		return local queryfull_`f' = "`queryfull'"
+		
 		
 	/*==================================================
-           Download data
+           Download  and clean data
 	==================================================*/
 		
+		*---------- download data
+		local rc = 0
+		tempfile clfile
+		cap copy "`queryfull'" `clfile'
+		if (_rc == 0) {
+			cap insheet using `clfile', clear name
+			if (_rc != 0) local rc "in"
+		} 
+		else {
+			local rc "copy"
+		} 
+
+		if ("`aggregate'" == "" & "`wb'" == "") {
+			 local rtype 1
+		}
+		else {
+			local rtype 2
+		}
 		
-		
-		
+		*---------- Clean data
+		povcalnet_clean `rtype', year("`year'") `iso' /* 
+		 */ rc(`rc') region(`region') `pause'
+	
 		
 	/*==================================================
-           Append 
-					 data
+           Append data
 	==================================================*/	
 		
 		
