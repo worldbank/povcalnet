@@ -80,12 +80,6 @@ quietly {
 	}
 	
 	
-	*---------- Group by wb, un, or income region
-	local groupedby = lower("`groupedby'")
-	local region_type = "wb_region"
-	if ("`groupedby'" == "un")  local region_type = "un_region"
-	if (inlist("`groupedby'","income","in","inc")) local region_type = "income_region"
-
 	* If region is selected instead of countries
 	if  ("`region'" != "") {
 		local region_l = `""`region'""'
