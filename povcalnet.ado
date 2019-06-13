@@ -100,6 +100,7 @@ qui {
 	
 	
 	*---------- Subcommand consistency 
+	local subcommand = lower("`subcommand'")
 	if !inlist("`subcommand'", "wb", "information", "cl", "") {
 		noi disp as err "subcommand must be either {it:wb}, {it:cl}, or {it:info}"
 		error 
@@ -248,7 +249,11 @@ qui {
 	
 	foreach i_povline of local povline {	
 		local ++f 
-		noi povcalnet_query,   country("`country'")  ///
+		
+	/*==================================================
+           Create Query
+	==================================================*/
+		povcalnet_query,   country("`country'")  ///
 			 region("`region'")                     ///
 			 year("`year'")                         ///
 			 povline("`i_povline'")                 ///
@@ -266,7 +271,25 @@ qui {
 			 `pause'                                ///
 			 `groupedby'                            ///
 			 coverage(`coverage')
+			
+			
+		local query_ys = "`r(query_ys)'"
+			
 		return add
+		
+	/*==================================================
+           Download data
+	==================================================*/
+		
+		
+		
+		
+		
+	/*==================================================
+           Append 
+					 data
+	==================================================*/	
+		
 		
 		append using `povcalf'
 		save `povcalf', replace
@@ -274,10 +297,14 @@ qui {
 		* local queryfull`f'  "`r(queryfull)'"
 	
 	} // end of povline loop
-	
+	pause after query
 	local obs = _N 
 	if (`obs' != 0) {
 		noi di as result "{p 4 4 2}Succesfully loaded `obs' observations.{p_end}"
+	}
+	
+	if ("`query'" == "") {
+		noi disp in y "{title:Available Surveys}: " in g "Select a country or region" 
 	}
 	
 	
@@ -286,3 +313,19 @@ qui {
 end
 
 
+exit
+/* End of do-file */
+
+><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><
+
+Notes:
+1.
+2.
+3.
+
+
+Version Control:
+
+
+disp as res "{hline 60}"
+disp as res "Year query:" as txt ""
