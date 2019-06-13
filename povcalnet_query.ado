@@ -50,8 +50,9 @@ quietly {
 	}
 
 
-	if ("`ppp'" != "") local ppp_condition = "&PPP0=`ppp'"
-
+	if ("`ppp'" != "") local ppp_q = "&PPP0=`ppp'"
+	return local query_pp = "`ppp_q'"
+	
 	local region = upper("`region'")
 	
 	*---------- Make sure at least one reference year is selected
@@ -151,15 +152,31 @@ quietly {
            Create Queries
 	==================================================*/
 	
-	*---------- Year query
+	*---------- Year and Disply query
 	local y_comma: subinstr  local year " " ",", all
 	if ("`year'" == "last")  local y_comma = "all"
 	
 	
-	if ("`fillgaps'" == "")  local year_q = "SurveyYears=`y_comma'"
-	if ("`fillgaps'" != "")  local year_q = "YearSelected=`y_comma'&display=c"
-	if ("`aggregate'" != "") local year_q = "YearSelected=`y_comma'&display=R"
-	if ("`wb'" != "")        local year_q = "YearSelected=`y_comma'&GroupedBy=WB"
+	if ("`fillgaps'" == "")  {
+		local year_q = "SurveyYears=`y_comma'"
+		local disp_q = ""
+	}
+	else ("`fillgaps'" != "")  {
+		local year_q = "YearSelected=`y_comma'" 
+		local disp_q = "&display=c"
+	}
+	
+	if ("`aggregate'" != "") {
+		local year_q = "YearSelected=`y_comma'" 
+		local disp_q = "&display=R"
+	}
+	if ("`wb'" != "") {
+		local year_q = "YearSelected=`y_comma'"
+		local disp_q = "&GroupedBy=WB"
+	}
+	
+	return local query_ys = "`year_q'"
+	return local query_ds = "`disp_q'"
 	
 	*---------- Country query
 	
