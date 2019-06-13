@@ -51,23 +51,21 @@ qui {
 	==================================================*/
 	
 	*---------- API defaults
-
-	local base="http://iresearch.worldbank.org/PovcalNet/PovcalNetAPI.ashx"
 	
-	local server    = "http://iresearch.worldbank.org"
-	local site_name = "PovcalNet"
-	local handler   = "PovcalNetAPI.ashx"
+	if "`server'"!=""  {
+		local base="`server'/PovcalNet/PovcalNetAPI.ashx"
+	} 
+	else {
+		local server    = "http://iresearch.worldbank.org"
+		local site_name = "PovcalNet"
+		local handler   = "PovcalNetAPI.ashx"		
+		local base      = "`server'/`site_name'/`handler'"
+	}
 	
 	return local server    = "`server'"
 	return local site_name = "`site_name'"
 	return local handler   = "`handler'"
-	
-	if "`server'"!=""  {
-		local base="`server'/PovcalNetAPI.ashx"
-	} else {
-		local base "`server'/`site_name'/`handler'"
-	}
-	return local base "`base'"
+	return local base      = "`base'"
 	
 	*---------- Info
 	if regexm("`subcommand'", "^info")	{
@@ -329,6 +327,8 @@ qui {
 		* local queryfull`f'  "`r(queryfull)'"
 	
 	} // end of povline loop
+	return local npl = `f'
+	
 	pause after query
 	local obs = _N 
 	if (`obs' != 0) {
