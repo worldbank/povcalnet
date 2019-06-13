@@ -110,7 +110,7 @@ qui {
 			error
 		}
 		noi disp as res "Note: " as txt "subcommand {it:wb} only accepts options " _n  /* 
-		 */ "{it:region() and {it:year()}"
+		 */ "{it:region()} and {it:year()}"
 	}
 	
 	

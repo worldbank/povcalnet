@@ -106,7 +106,7 @@ quietly {
 		local region_l = `""`region'""'
 		local region_l: subinstr local region_l " " `"", ""', all
 
-		replace keep_this = 1 if inlist(`region_type', `region_l')
+		replace keep_this = 1 if inlist(wb_region, `region_l')
 		if lower("`region'") == "all" replace keep_this = 1
 	}
 
@@ -200,14 +200,15 @@ quietly {
 		local rc "copy"
 	} 
 
-	if ("`aggregate'" == "") local rtype 1
-	else                     local rtype 2
-	
-	*---------- Clean data
-	if ("`wb'" == "") {
-		povcalnet_clean `rtype', year("`year'") `iso' rc(`rc')
+	if ("`aggregate'" == "" & "`wb'" == "") {
+		 local rtype 1
+	}
+	else {
+		local rtype 2
 	}
 	
+	*---------- Clean data
+	povcalnet_clean `rtype', year("`year'") `iso' rc(`rc') region(`region')
 	
 } // end of qui
 
