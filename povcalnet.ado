@@ -23,7 +23,7 @@ set checksum off //temporarily bypasses controls of files taken from internet
 
 version 9.0
 
- syntax [anything(name=subcommand)]        ///
+ syntax [anything(name=subcommand)]    ///
         [,                             ///
           COUNtry(string)              /// 
           REGion(string)               ///
@@ -51,8 +51,13 @@ qui {
         	Defaults           
 	==================================================*/
 	
+	local subcommand = lower("`subcommand'")
+	
 	*---------- Info
-	if regexm("`subcommand'", "^info")	local information = "information"
+	if regexm("`subcommand'", "^info")	{
+		local information = "information"
+		local subcommand  = "information"
+	}
 	
 	*---------- Year
 	if (wordcount("`year'") > 10){
@@ -77,16 +82,16 @@ qui {
 	*---------- Poverty line
 	if ("`povline'" == "") local povline = 1.9
 	
-	*---------- Country
-	if ("`country'" == "" & "`region'" == "") local country "all"
-	if ("`country'" != "") {
-		if (lower("`country'") != "all") local country = upper("`country'")
-		else                             local country "all"
+	
+	*---------- Subcommand consistency 
+	if !inlist("`subcommand'", "wb", "information", "cl", "") {
+		noi disp as err "subcommand must be either {it:wb}, {it:cl}, or {it:info}"
+		error 
 	}
 	
-	*---------- subcommand
-	if inlist("`subcommand'", "cl", "countryl", "countrylevel") & /* 
- */	(lower("`country'") == "all") {
+	
+	*---------- One-on-one execution
+	if ("`subcommand'" == "cl" & lower("`country'") == "all") {
 		noi disp in red "you cannot use option {it:countr(all)} with subcommand {it:cl}"
 		error 197
   }
@@ -97,7 +102,25 @@ qui {
 		error
 	}
 	
-	 
+	*---------- WB aggregate
+	
+	if ("`subcommand'" == "wb") {
+		if ("`country'" != "") {
+			noi disp as err "option {it:country()} is not allowed with subcommand {it:wb}"
+			error
+		}
+		noi disp as res "Note: " as txt "subcommand {it:wb} only accepts options " _n  /* 
+		 */ "{it:region() and {it:year()}"
+	}
+	
+	
+	*---------- Country
+	if ("`country'" == "" & "`region'" == "") local country "all"
+	if ("`country'" != "") {
+		if (lower("`country'") != "all") local country = upper("`country'")
+		else                             local country "all"
+	}
+	
 	/*==================================================
 		    Dependencies         
 	==================================================*/
@@ -168,8 +191,16 @@ qui {
 		exit
 	}
 	
+	*---------- WB
+	
+	
+	
+	*---------- Build Query
+	* povcalnet_build, 
+	
+	
 	*---------- Country Level (one-on-one query)
-	if inlist("`subcommand'", "cl", "countryl", "countrylevel") {
+	if ("`subcommand'" == "cl") {
 		povcalnet_cl, country("`country'")  ///
 			 year("`year'")                   ///
 			 povline("`povline'")             ///
@@ -188,6 +219,12 @@ qui {
 	if  ("`aggregate'" == "") local commanduse = "povcalnet_query"
 	else                      local commanduse = "povcalnet_aggquery" 
 	
+	if ("`subcommand'" == "wb") {
+		local wb "wb"
+	}
+	else local wb ""
+	
+	
 	tempfile povcalf
 	save `povcalf', empty 
 	
@@ -195,7 +232,7 @@ qui {
 	
 	foreach i_povline of local povline {	
 		local ++f 
-		noi `commanduse',   country("`country'")  ///
+		noi povcalnet_query,   country("`country'")  ///
 			 region("`region'")                     ///
 			 year("`year'")                         ///
 			 povline("`i_povline'")                 ///
@@ -208,6 +245,8 @@ qui {
 			 `iso'                                  ///
 			 `original'                             ///
 			 `fillgaps'                             ///
+			 `aggregate'                            ///
+			 `wb'                                   ///
 			 `pause'                                ///
 			 `groupedby'                            ///
 			 coverage(`coverage')
