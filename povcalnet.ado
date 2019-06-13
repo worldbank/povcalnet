@@ -32,14 +32,13 @@ version 9.0
           PPP(numlist max=10)          /// 
           AGGregate                    ///
           CLEAR                        ///
-          AUXiliary                    ///
           INFOrmation                  ///
 					coverage(string)             ///
           ISO                          /// Standard ISO codes
           SERVER(string)               /// internal use
-          COESP(passthru)              /// internal use
 					pause                        /// debugging
 					FILLgaps                     ///
+					noQUERY                      ///
         ] 
 
 if ("`pause'" == "pause") pause on
