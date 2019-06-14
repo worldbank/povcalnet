@@ -67,11 +67,17 @@ qui {
 	return local handler   = "`handler'"
 	return local base      = "`base'"
 	
-	*---------- Info
-	if regexm("`subcommand'", "^info")	{
-		local information = "information"
-		local subcommand  = "information"
+	*---------- lower case subcommand
+	local subcommand = lower("`subcommand'")
+	
+	*---------- Test
+	if ("`subcommand'" == "test") {
+		if (pcn_query == "") {
+			
+		}
+		exit
 	}
+	
 	
 	*---------- Year
 	if (wordcount("`year'") > 10){
@@ -96,9 +102,13 @@ qui {
 	*---------- Poverty line
 	if ("`povline'" == "") local povline = 1.9
 	
-	
+	*---------- Info
+	if regexm("`subcommand'", "^info")	{
+		local information = "information"
+		local subcommand  = "information"
+	}
+
 	*---------- Subcommand consistency 
-	local subcommand = lower("`subcommand'")
 	if !inlist("`subcommand'", "wb", "information", "cl", "") {
 		noi disp as err "subcommand must be either {it:wb}, {it:cl}, or {it:info}"
 		error 
@@ -271,7 +281,7 @@ qui {
 		*---------- Query
 		local query = "`query_ys'&`query_ct'&`query_pl'`query_pp'`query_ds'&format=csv"
 		return local query_`f' "`query'"
-		scalar pcn_query = "`query'"
+		global pcn_query = "`query'"
 
 		*---------- Base + query
 		local queryfull "`base'?`query'"

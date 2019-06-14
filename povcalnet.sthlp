@@ -291,7 +291,8 @@ poverty lines included in {it:povlines()}:
 {p2col 5 20 24 2: addtional info}{p_end}
 {synopt:{cmd:r(queryfull_{it:#})}}concatenation of base and query_{it:#} by "?"{p_end}
 {synopt:{cmd:r(npl)}}Number of poverty lines{p_end}
-{synopt:{cmd:pcn_query}}Scalar with query information in case {cmd:povcalnet} fails.{p_end}
+{synopt:{cmd:pcn_query}}global with query information in case {cmd:povcalnet} fails. 
+"${pcn_query}" to display {p_end}
 
 {marker Examples}{...}
 {title:Examples}{p 50 20 2}{p_end}
