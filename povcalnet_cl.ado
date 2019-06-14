@@ -154,7 +154,7 @@ foreach ict of local countries {
 *----------2.2: format query
 local query = substr("`query'", 2, .) + "&format=csv"
 return local query = "`query'"
-
+scalar pcn_query = "`query'"
 
 /*==================================================
             3:  Download data

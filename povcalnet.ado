@@ -271,6 +271,7 @@ qui {
 		*---------- Query
 		local query = "`query_ys'&`query_ct'&`query_pl'`query_pp'`query_ds'&format=csv"
 		return local query_`f' "`query'"
+		scalar pcn_query = "`query'"
 
 		*---------- Base + query
 		local queryfull "`base'?`query'"
