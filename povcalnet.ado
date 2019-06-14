@@ -23,7 +23,7 @@ set checksum off //temporarily bypasses controls of files taken from internet
 
 version 9.0
 
- syntax [anything(name=subcommand)]        ///
+ syntax [anything(name=subcommand)]    ///
         [,                             ///
           COUNtry(string)              /// 
           REGion(string)               ///
@@ -32,15 +32,13 @@ version 9.0
           PPP(numlist max=10)          /// 
           AGGregate                    ///
           CLEAR                        ///
-          AUXiliary                    ///
           INFOrmation                  ///
 					coverage(string)             ///
           ISO                          /// Standard ISO codes
           SERVER(string)               /// internal use
-          COESP(passthru)              /// internal use
-					groupedby(passthru)          /// internal use
 					pause                        /// debugging
 					FILLgaps                     ///
+					noDIPSQuery                  ///
         ] 
 
 if ("`pause'" == "pause") pause on
@@ -52,8 +50,28 @@ qui {
         	Defaults           
 	==================================================*/
 	
+	*---------- API defaults
+	
+	if "`server'"!=""  {
+		local base="`server'/PovcalNet/PovcalNetAPI.ashx"
+	} 
+	else {
+		local server    = "http://iresearch.worldbank.org"
+		local site_name = "PovcalNet"
+		local handler   = "PovcalNetAPI.ashx"		
+		local base      = "`server'/`site_name'/`handler'"
+	}
+	
+	return local server    = "`server'"
+	return local site_name = "`site_name'"
+	return local handler   = "`handler'"
+	return local base      = "`base'"
+	
 	*---------- Info
-	if regexm("`subcommand'", "^info")	local information = "information"
+	if regexm("`subcommand'", "^info")	{
+		local information = "information"
+		local subcommand  = "information"
+	}
 	
 	*---------- Year
 	if (wordcount("`year'") > 10){
@@ -78,16 +96,17 @@ qui {
 	*---------- Poverty line
 	if ("`povline'" == "") local povline = 1.9
 	
-	*---------- Country
-	if ("`country'" == "" & "`region'" == "") local country "all"
-	if ("`country'" != "") {
-		if (lower("`country'") != "all") local country = upper("`country'")
-		else                             local country "all"
+	
+	*---------- Subcommand consistency 
+	local subcommand = lower("`subcommand'")
+	if !inlist("`subcommand'", "wb", "information", "cl", "") {
+		noi disp as err "subcommand must be either {it:wb}, {it:cl}, or {it:info}"
+		error 
 	}
 	
-	*---------- subcommand
-	if inlist("`subcommand'", "cl", "countryl", "countrylevel") & /* 
- */	(lower("`country'") == "all") {
+	
+	*---------- One-on-one execution
+	if ("`subcommand'" == "cl" & lower("`country'") == "all") {
 		noi disp in red "you cannot use option {it:countr(all)} with subcommand {it:cl}"
 		error 197
   }
@@ -98,7 +117,25 @@ qui {
 		error
 	}
 	
-	 
+	*---------- WB aggregate
+	
+	if ("`subcommand'" == "wb") {
+		if ("`country'" != "") {
+			noi disp as err "option {it:country()} is not allowed with subcommand {it:wb}"
+			error
+		}
+		noi disp as res "Note: " as txt "subcommand {it:wb} only accepts options " _n  /* 
+		 */ "{it:region()} and {it:year()}"
+	}
+	
+	
+	*---------- Country
+	if ("`country'" == "" & "`region'" == "") local country "all"
+	if ("`country'" != "") {
+		if (lower("`country'") != "all") local country = upper("`country'")
+		else                             local country "all"
+	}
+	
 	/*==================================================
 		    Dependencies         
 	==================================================*/
@@ -167,10 +204,10 @@ qui {
 	if ("`information'" != ""){
 		noi povcalnet_info, `clear' `pause'
 		exit
-	}
-	
+	}	
+
 	*---------- Country Level (one-on-one query)
-	if inlist("`subcommand'", "cl", "countryl", "countrylevel") {
+	if ("`subcommand'" == "cl") {
 		povcalnet_cl, country("`country'")  ///
 			 year("`year'")                   ///
 			 povline("`povline'")             ///
@@ -186,8 +223,11 @@ qui {
 	
 	
 	*---------- Regular query and Aggregate Query
-	if  ("`aggregate'" == "") local commanduse = "povcalnet_query"
-	else                      local commanduse = "povcalnet_aggquery" 
+	if ("`subcommand'" == "wb") {
+		local wb "wb"
+	}
+	else local wb ""
+	
 	
 	tempfile povcalf
 	save `povcalf', empty 
@@ -196,23 +236,98 @@ qui {
 	
 	foreach i_povline of local povline {	
 		local ++f 
-		noi `commanduse',   country("`country'")  ///
+		
+	/*==================================================
+           Create Query
+	==================================================*/
+		povcalnet_query,   country("`country'")  ///
 			 region("`region'")                     ///
 			 year("`year'")                         ///
 			 povline("`i_povline'")                 ///
 			 ppp("`i_ppp'")                         ///
-			 server("`server'")                     ///
-			 `coesp'                                ///
-			 `auxiliary'                            ///
+			 coverage(`coverage')                   ///
 			 `clear'                                ///
 			 `information'                          ///
 			 `iso'                                  ///
-			 `original'                             ///
 			 `fillgaps'                             ///
+			 `aggregate'                            ///
+			 `wb'                                   ///
 			 `pause'                                ///
 			 `groupedby'                            ///
-			 coverage(`coverage')
-		return add
+			
+			
+		local query_ys = "`r(query_ys)'"
+    local query_ct = "`r(query_ct)'"
+    local query_pl = "`r(query_pl)'"
+    local query_ds = "`r(query_ds)'"
+    local query_pp = "`r(query_pp)'"
+		
+		return local query_ys_`f' = "`query_ys'"
+		return local query_ct_`f' = "`query_ct'"
+		return local query_pl_`f' = "`query_pl'"
+		return local query_ds_`f' = "`query_ds'"
+		return local query_pp_`f' = "`query_pp'"
+		
+		*---------- Query
+		local query = "`query_ys'&`query_ct'&`query_pl'`query_pp'`query_ds'&format=csv"
+		return local query_`f' "`query'"
+
+		*---------- Base + query
+		local queryfull "`base'?`query'"
+		return local queryfull_`f' = "`queryfull'"
+		
+		
+	/*==================================================
+           Download  and clean data
+	==================================================*/
+		
+		*---------- download data
+		local rc = 0
+		tempfile clfile
+		cap copy "`queryfull'" `clfile'
+		if (_rc == 0) {
+			cap insheet using `clfile', clear name
+			if (_rc != 0) local rc "in"
+		} 
+		else {
+			local rc "copy"
+		} 
+
+		if ("`aggregate'" == "" & "`wb'" == "") {
+			 local rtype 1
+		}
+		else {
+			local rtype 2
+		}
+		
+		pause after downdload
+		
+		*---------- Clean data
+		povcalnet_clean `rtype', year("`year'") `iso' /* 
+		 */ rc(`rc') region(`region') `pause'
+	
+		pause after cleaning
+		
+	/*==================================================
+           Display Query
+	==================================================*/
+		
+	if ("`dipsquery'" == "") {
+		noi di as res _n "{title: Query at \$`i_povline' poverty line}"
+		noi di as res "{hline}"
+		noi di as res "Year:"         as txt _col(20) "`query_ys'"
+		noi di as res "Country:"      as txt _col(20) "`query_ct'"
+		noi di as res "Poverty line:" as txt _col(20) "`query_pl'"
+		noi di as res "Aggregation:"  as txt _col(20) "`query_ds'"
+		noi di as res "PPP:"          as txt _col(20) "`query_pp'"
+		noi di as res _dup(20) "-"
+		noi di as res "No. Obs:"      as txt _col(20) c(N)
+		noi di as res "{hline}"
+	}
+	
+	/*==================================================
+           Append data
+	==================================================*/			
 		
 		append using `povcalf'
 		save `povcalf', replace
@@ -220,15 +335,22 @@ qui {
 		* local queryfull`f'  "`r(queryfull)'"
 	
 	} // end of povline loop
-	
-	local obs = _N 
-	if (`obs' != 0) {
-		noi di as result "{p 4 4 2}Succesfully loaded `obs' observations.{p_end}"
-	}
-	
+	return local npl = `f'
 	
 
 } // end of qui
 end
 
 
+exit
+/* End of do-file */
+
+><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><
+
+Notes:
+1.
+2.
+3.
+
+
+Version Control:

@@ -179,7 +179,7 @@ if ("`type'" == "2") {
 		keep if `keep_this' == 1 
 	}
 	
-	pause aggquery - after droping by region 
+	pause clean - after droping by region 
 	
 	if  ("`year'" == "last"){
 		tempvar maximum_y
@@ -221,15 +221,6 @@ if ("`type'" == "2") {
 	}
 	
 } // end of type 2
-
-
-
-
-/*==================================================
-              3: 
-==================================================*/
-
-
 
 
 

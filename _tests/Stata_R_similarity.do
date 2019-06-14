@@ -76,3 +76,23 @@ povcalnet cl, country("COL DOM")            /*
             */	coverage("urban national")  /*
             */  year(all)                   /*
             */  povline(4) clear
+
+						
+*----------  Understanding requests and aggregate
+* regular 
+povcalnet, country(COL BRA ARG IND) year(2015) clear 
+
+* fill gaps
+povcalnet, country(COL BRA ARG IND) year(2015) clear  fillgaps
+
+* Customized Aggregate
+povcalnet, country(COL BRA ARG IND) year(2015) clear  aggregate
+
+* WB aggregates
+povcalnet wb, clear  year(2015)
+povcalnet wb, clear  region(SAR LAC)
+povcalnet wb, clear             // all reference years
+
+* one-on-one query
+povcalnet cl, country(COL BRA ARG IND) year(2011) clear coverage("national national urban national")
+
