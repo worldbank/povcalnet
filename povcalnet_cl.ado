@@ -49,11 +49,12 @@ if ("`coverage'" == "") local coverage -1
 
 *---------- download guidence data
 povcalnet_info, clear justdata `pause'
+gen n = _n
 levelsof country_code, local(countries) clean
 
 if (lower("`country'") != "all") {
 	local ncountries: list country - countries
-	local countries:  list countries & country
+	local countries:  list country & countries 
 }
 
 if ("`ncountries'" != "") {
