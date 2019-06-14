@@ -46,6 +46,7 @@ countries and regions. Same as option{it:information}{p_end}
 {synopt :{opt cl}}parses the parameters of the query in a one-on-one correspondance of 
 rather than the default combinational query. See{help povcalnet##typesq: bellow} 
 for a detailed explanation.{p_end}
+{synopt :{opt wb}}download World Bank's regional and global aggegation{p_end}
 {synoptline}
 
 {pstd}
@@ -252,6 +253,18 @@ of surveys availability.{p_end}
 {phang}
 {opt cl} Changes combinatorial query of parameters for one-on-one correspondace of 
 parameters. See {help povcalnet##typesq:above} for detailes explanation. 
+
+{phang}
+{opt wb} Download World Bank's regional and global aggregation. This functions differes 
+from the option {it:aggregate} in two senses: [1] {it:wb} uses a predefined set of countries
+in each region, whereas option {it:aggregate} allows the user to select their own set 
+of countries for aggregation. [2] the number of poor is different between the two methods
+evern thought the set of countries is the same. This is so because, when using {it:wb} 
+the number of poor in each region is the product of the region’s headcount index and 
+total regional population. This assumes that the poverty rate for an economy without a household 
+survey is the regional average. In contrast, when using {it:aggregate}, the number of 
+poor is the product of the region’s headcount index and the total population of the 
+economies included in the aggregation. 
 
 {marker Examples}{...}
 {title:Examples}{p 50 20 2}{p_end}
