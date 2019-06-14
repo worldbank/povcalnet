@@ -38,7 +38,7 @@ version 9.0
           SERVER(string)               /// internal use
 					pause                        /// debugging
 					FILLgaps                     ///
-					noQUERY                      ///
+					noDIPSQuery                  ///
         ] 
 
 if ("`pause'" == "pause") pause on
@@ -311,15 +311,34 @@ qui {
 			local rtype 2
 		}
 		
+		pause after downdload
+		
 		*---------- Clean data
 		povcalnet_clean `rtype', year("`year'") `iso' /* 
 		 */ rc(`rc') region(`region') `pause'
 	
+		pause after cleaning
 		
 	/*==================================================
-           Append data
-	==================================================*/	
+           Display Query
+	==================================================*/
 		
+	if ("`dipsquery'" == "") {
+		noi di as res _n "{title: Query at \$`i_povline' poverty line}"
+		noi di as res "{hline}"
+		noi di as res "Year:"         as txt _col(20) "`query_ys'"
+		noi di as res "Country:"      as txt _col(20) "`query_ct'"
+		noi di as res "Poverty line:" as txt _col(20) "`query_pl'"
+		noi di as res "Aggregation:"  as txt _col(20) "`query_ds'"
+		noi di as res "PPP:"          as txt _col(20) "`query_pp'"
+		noi di as res _dup(20) "-"
+		noi di as res "No. Obs:"      as txt _col(20) c(N)
+		noi di as res "{hline}"
+	}
+	
+	/*==================================================
+           Append data
+	==================================================*/			
 		
 		append using `povcalf'
 		save `povcalf', replace
