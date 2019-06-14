@@ -140,7 +140,7 @@ Be default, {cmd:povcalnet} creates a combinatorial query of the parameters sele
 so that the output contains all the possible combinations between {it:country()}, 
 {it:povline()}, {it:year()}, and {it:coverage()}. Option {it:ppp()} is not part of the 
 combinatorial query. Alternatively, the user may select the subcommand {it:cl} to parse a 
-one-on-one, or country by country request. In this case, the first country listed in 
+one-on-one (i.e., country by country) request. In this case, the first country listed in 
 {it:country()} will be combined with the first year in {it:year()}, the first poverty lines
 in {it:povline()} and the first coverage area in {it:coverage()}, and so on a so forth 
 with subsequent countries. If only one element is added to parameters 
@@ -255,7 +255,7 @@ of surveys availability.{p_end}
 parameters. See {help povcalnet##typesq:above} for detailes explanation. 
 
 {phang}
-{opt wb} Download World Bank's regional and global aggregation. This functions differes 
+{opt wb} Downloads World Bank's regional and global aggregation. This functions differes 
 from the option {it:aggregate} in two senses: [1] {it:wb} uses a predefined set of countries
 in each region, whereas option {it:aggregate} allows the user to select their own set 
 of countries for aggregation. [2] the number of poor is different between the two methods
@@ -270,16 +270,69 @@ economies included in the aggregation.
 {title:Examples}{p 50 20 2}{p_end}
 {p 40 20 2}(Go up to {it:{help povcalnet##sections:Sections Menu}}){p_end}
 
-{p 8 12}Load latest available survey-year estimates for Colombia and Argentina{p_end}
-{p 8 12}{stata povcalnet, country(col arg) year(last) clear}{p_end}
+{dlgtab: 1. basic examples}
 
-{p 8 12}Load clickable menu{p_end}
-{p 8 12}{stata povcalnet, info}{p_end}
+{phang}
+1.1. Load latest available survey-year estimates for Colombia and Argentina
 
-{p 8 12}Load only urban coverage level{p_end}
-{p 8 12}{stata povcalnet, country(all) coverage("urban") clear}{p_end} 
+{phang2}
+{stata povcalnet, country(col arg) year(last) clear} 
 
-{p 8 12}Graph of trend in poverty headcount ratio and number of poor for the world
+{phang}
+1.2. Load clickable menu
+
+{phang2}
+{stata povcalnet, info}
+
+{phang}
+1.3. Load only urban coverage level
+
+{phang2}
+{stata povcalnet, country(all) coverage("urban") clear}
+
+
+{dlgtab: 2. Differences in queries}
+
+{phang}
+2.1. Country estimation at $1.9 in 2015. Since there is no survey in ARG and IND in 
+2015, only results are loaded for COL and BRA
+
+{phang2}
+{stata povcalnet, country(COL BRA ARG IND) year(2015) clear}
+
+{phang}
+2.2. fill gaps. Fill gaps for ARG and IND. Only works for reference years. 
+
+{phang2}
+{stata povcalnet, country(COL BRA ARG IND) year(2015) clear  fillgaps}
+
+{phang}
+2.3. Aggregate economies listed in {it:country()} as if they were one. 
+
+{phang2}
+{stata povcalnet, country(COL BRA ARG IND) year(2015) clear  aggregate}
+
+{phang}
+2.4. WB aggregates ({it:country()} is not avialable)
+
+{phang2}
+{stata povcalnet wb, clear  year(2015)}{p_end}
+{phang2}
+{stata povcalnet wb, clear  region(SAR LAC)}{p_end}
+{phang2}
+{stata povcalnet wb, clear}       // all reference years{p_end}
+
+{phang}
+2.5. one-on-one query. 
+
+{phang2}
+{stata povcalnet cl, country(COL BRA ARG IND) year(2011) clear coverage("national national urban national")}
+
+
+{dlgtab: 3. Analytical examples}
+
+{phang2}
+3.1.Graph of trend in poverty headcount ratio and number of poor for the world
 
 {cmd}
 	. povcalnet, povline(1.9) region(all) year(all) aggregate clear
