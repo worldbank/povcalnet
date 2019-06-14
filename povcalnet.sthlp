@@ -47,6 +47,8 @@ countries and regions. Same as option{it:information}{p_end}
 rather than the default combinational query. See{help povcalnet##typesq: bellow} 
 for a detailed explanation.{p_end}
 {synopt :{opt wb}}download World Bank's regional and global aggegation{p_end}
+{synopt :{opt test}}executes the last query in browser regardless of failure by 
+{cmd:povcalnet}.{p_end}
 {synoptline}
 
 {pstd}
@@ -267,6 +269,11 @@ total regional population. This assumes that the poverty rate for an economy wit
 survey is the regional average. In contrast, when using {it:aggregate}, the number of 
 poor is the product of the region’s headcount index and the total population of the 
 economies included in the aggregation. 
+
+{phang}
+{opt test} executes the last query in browser regardless of failure by 
+{cmd:povcalnet}. It makes use of the global "${pcn_query}".
+
 
 {marker return}{...}
 {title:Stored results}{p 50 20 2}{p_end}

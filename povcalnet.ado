@@ -72,9 +72,12 @@ qui {
 	
 	*---------- Test
 	if ("`subcommand'" == "test") {
-		if (pcn_query == "") {
-			
+		if ("${pcn_query}" == "") {
+			noi di as err "global pcn_query does not exist. You cannot test the query."
+			error
 		}
+		local fq = "`base'?${pcn_query}"
+		view browse "`fq'"
 		exit
 	}
 	
