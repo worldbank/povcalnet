@@ -56,13 +56,13 @@ qui {
 		local base="`server'/PovcalNet/PovcalNetAPI.ashx"
 	} 
 	else {
-		local server    = "http://iresearch.worldbank.org"
+		local serveri    = "http://iresearch.worldbank.org"
 		local site_name = "PovcalNet"
 		local handler   = "PovcalNetAPI.ashx"		
-		local base      = "`server'/`site_name'/`handler'"
+		local base      = "`serveri'/`site_name'/`handler'"
 	}
 	
-	return local server    = "`server'"
+	return local server    = "`serveri'`server'"
 	return local site_name = "`site_name'"
 	return local handler   = "`handler'"
 	return local base      = "`base'"
@@ -221,7 +221,7 @@ qui {
 
 	*---------- Country Level (one-on-one query)
 	if ("`subcommand'" == "cl") {
-		povcalnet_cl, country("`country'")  ///
+		noi povcalnet_cl, country("`country'")  ///
 			 year("`year'")                   ///
 			 povline("`povline'")             ///
 			 ppp("`ppp'")                     ///
