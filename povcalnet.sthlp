@@ -61,6 +61,8 @@ Sections are presented under the following headings:
 		{it:{help povcalnet##desc:Command description}}
 		{it:{help povcalnet##param:Parameters description}}
 		{it:{help povcalnet##options:Options description}}
+		{it:{help povcalnet##subcommands:Subcommands}}
+		{it:{help povcalnet##return:Stored results}}
 		{it:{help povcalnet##Examples:Examples}}
 		{it:{help povcalnet##disclaimer:Disclaimer}}
 		{it:{help povcalnet##howtocite:How to cite}}
@@ -265,6 +267,31 @@ total regional population. This assumes that the poverty rate for an economy wit
 survey is the regional average. In contrast, when using {it:aggregate}, the number of 
 poor is the product of the region’s headcount index and the total population of the 
 economies included in the aggregation. 
+
+{marker return}{...}
+{title:Stored results}{p 50 20 2}{p_end}
+
+{pstd}
+{cmd:povcalnet} stores the following in {cmd:r()}. Suffix _{it:#} refers to the number of 
+poverty lines included in {it:povlines()}:
+
+{p2col 5 20 24 2: queries}{p_end}
+{synopt:{cmd:r(query_ys_{it:#})}}Query of years{p_end}
+{synopt:{cmd:r(query_pl_{it:#})}}Query of poverty lines{p_end}
+{synopt:{cmd:r(query_ct_{it:#})}}Query of countries and coverages{p_end}
+{synopt:{cmd:r(query_ds_{it:#})}}Query of aggregation display{p_end}
+{synopt:{cmd:r(query_{it:#})}}concatenation of the queries above{p_end}
+
+{p2col 5 20 24 2: API parts}{p_end}
+{synopt:{cmd:r(server)}}Protocol (http://) and server name{p_end}
+{synopt:{cmd:r(site_name)}}Site names{p_end}
+{synopt:{cmd:r(handler)}}Action handler{p_end}
+{synopt:{cmd:r(base)}}concatenation of server, site_name, and handler{p_end}
+
+{p2col 5 20 24 2: addtional info}{p_end}
+{synopt:{cmd:r(queryfull_{it:#})}}concatenation of base and query_{it:#} by "?"{p_end}
+{synopt:{cmd:r(npl)}}Number of poverty lines{p_end}
+{synopt:{cmd:pcn_query}}Scalar with query information in case {cmd:povcalnet} fails.{p_end}
 
 {marker Examples}{...}
 {title:Examples}{p 50 20 2}{p_end}
