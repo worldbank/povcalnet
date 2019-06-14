@@ -56,22 +56,31 @@ qui {
 		local base="`server'/PovcalNet/PovcalNetAPI.ashx"
 	} 
 	else {
-		local server    = "http://iresearch.worldbank.org"
+		local serveri    = "http://iresearch.worldbank.org"
 		local site_name = "PovcalNet"
 		local handler   = "PovcalNetAPI.ashx"		
-		local base      = "`server'/`site_name'/`handler'"
+		local base      = "`serveri'/`site_name'/`handler'"
 	}
 	
-	return local server    = "`server'"
+	return local server    = "`serveri'`server'"
 	return local site_name = "`site_name'"
 	return local handler   = "`handler'"
 	return local base      = "`base'"
 	
-	*---------- Info
-	if regexm("`subcommand'", "^info")	{
-		local information = "information"
-		local subcommand  = "information"
+	*---------- lower case subcommand
+	local subcommand = lower("`subcommand'")
+	
+	*---------- Test
+	if ("`subcommand'" == "test") {
+		if ("${pcn_query}" == "") {
+			noi di as err "global pcn_query does not exist. You cannot test the query."
+			error
+		}
+		local fq = "`base'?${pcn_query}"
+		view browse "`fq'"
+		exit
 	}
+	
 	
 	*---------- Year
 	if (wordcount("`year'") > 10){
@@ -96,9 +105,13 @@ qui {
 	*---------- Poverty line
 	if ("`povline'" == "") local povline = 1.9
 	
-	
+	*---------- Info
+	if regexm("`subcommand'", "^info")	{
+		local information = "information"
+		local subcommand  = "information"
+	}
+
 	*---------- Subcommand consistency 
-	local subcommand = lower("`subcommand'")
 	if !inlist("`subcommand'", "wb", "information", "cl", "") {
 		noi disp as err "subcommand must be either {it:wb}, {it:cl}, or {it:info}"
 		error 
@@ -208,7 +221,7 @@ qui {
 
 	*---------- Country Level (one-on-one query)
 	if ("`subcommand'" == "cl") {
-		povcalnet_cl, country("`country'")  ///
+		noi povcalnet_cl, country("`country'")  ///
 			 year("`year'")                   ///
 			 povline("`povline'")             ///
 			 ppp("`ppp'")                     ///
@@ -271,7 +284,7 @@ qui {
 		*---------- Query
 		local query = "`query_ys'&`query_ct'&`query_pl'`query_pp'`query_ds'&format=csv"
 		return local query_`f' "`query'"
-		scalar pcn_query = "`query'"
+		global pcn_query = "`query'"
 
 		*---------- Base + query
 		local queryfull "`base'?`query'"

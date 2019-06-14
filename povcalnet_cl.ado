@@ -24,6 +24,7 @@ syntax , [                       ///
            clear                 ///
            pause                 /// 
            iso                   /// 
+           noDIPSQuery           /// 
          ]
 
 version 14
@@ -31,7 +32,7 @@ version 14
 if ("`pause'" == "pause") pause on
 else                      pause off
 
-
+qui {
 /*==================================================
            conditions and setup 
 ==================================================*/
@@ -49,11 +50,12 @@ if ("`coverage'" == "") local coverage -1
 
 *---------- download guidence data
 povcalnet_info, clear justdata `pause'
+gen n = _n
 levelsof country_code, local(countries) clean
 
 if (lower("`country'") != "all") {
 	local ncountries: list country - countries
-	local countries:  list countries & country
+	local countries:  list country & countries 
 }
 
 if ("`ncountries'" != "") {
@@ -128,10 +130,11 @@ foreach ict of local countries {
 	
 	*---------- 	query  coverage
 	if inlist("`icv'", "-1", "all") local qcv ""
-	if ("`icv'" == "rural")         local qcv "_1"
-	if ("`icv'" == "urban")         local qcv "_2"
-	if ("`icv'" == "national")      local qcv "_3"
-	
+	else {
+		sum n if country_code == "`ict'" & coverage_level == "`icv'", meanonly
+		local nobs = r(min)
+		local qcv = "_"+"`=coverage_code[`nobs']'"
+	}
 	
 	local qct = "C`j'=`ict'`qcv'"  // query country
 	local qpl = "PL`j'=`ipl'"      // query poverty line
@@ -146,6 +149,8 @@ foreach ict of local countries {
 	
 	local query "`query'&`qct'&`qpl'`qyr'`qpp'"
 	
+	local query_`j' = "`qct'&`qpl'`qyr'`qpp'"
+	return local query_`j' = "`query_`j''"
 	
 	local ++j
 	local ++n
@@ -154,7 +159,7 @@ foreach ict of local countries {
 *----------2.2: format query
 local query = substr("`query'", 2, .) + "&format=csv"
 return local query = "`query'"
-scalar pcn_query = "`query'"
+global pcn_query = "`query'"
 
 /*==================================================
             3:  Download data
@@ -180,7 +185,19 @@ else {
 
 povcalnet_clean 1, year("`year'") `iso' rc(`rc')
 
+if ("`dipsquery'" == "") {
 
+	noi di as res _n "{title: One-on-one query}"
+	noi di as res "{hline}"
+
+	foreach x of numlist 0/`=`j'-1' {
+		noi di as res "Query `x':" as txt _col(15) "`query_`x''"
+	}
+		noi di as res "{hline}"
+}
+
+
+}
 end
 exit
 /* End of do-file */
