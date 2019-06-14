@@ -204,16 +204,8 @@ qui {
 	if ("`information'" != ""){
 		noi povcalnet_info, `clear' `pause'
 		exit
-	}
-	
-	*---------- WB
-	
-	
-	
-	*---------- Build Query
-	* povcalnet_build, 
-	
-	
+	}	
+
 	*---------- Country Level (one-on-one query)
 	if ("`subcommand'" == "cl") {
 		povcalnet_cl, country("`country'")  ///
@@ -231,9 +223,6 @@ qui {
 	
 	
 	*---------- Regular query and Aggregate Query
-	if  ("`aggregate'" == "") local commanduse = "povcalnet_query"
-	else                      local commanduse = "povcalnet_aggquery" 
-	
 	if ("`subcommand'" == "wb") {
 		local wb "wb"
 	}
@@ -348,17 +337,6 @@ qui {
 	} // end of povline loop
 	return local npl = `f'
 	
-	pause after query
-	local obs = _N 
-	if (`obs' != 0) {
-		noi di as result "{p 4 4 2}Succesfully loaded `obs' observations.{p_end}"
-	}
-	
-	if ("`query'" == "") {
-		noi disp in y "{title:Available Surveys}: " in g "Select a country or region" 
-	}
-	
-	
 
 } // end of qui
 end
@@ -376,7 +354,3 @@ Notes:
 
 
 Version Control:
-
-
-disp as res "{hline 60}"
-disp as res "Year query:" as txt ""
