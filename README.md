@@ -117,17 +117,52 @@ povcalnet cl, country("COL DOM")            /*
             */  povline(4) clear
 
 						
-*----------  Understanding requests and aggregate
+*----------  Understanding requests and aggregates
+// --------------------------
+// Basic Syntax  and defaults
+// ------------------------
+
+****** Main defaults
+** all survey years, all coverages, 1.9 USD poverty. 
+povcalnet
+
+** filter by country
+povcalnet, country(COL) clear
+
+** Filter by year (only surveys avaialable in that year)
+povcalnet, year(2017) clear
+
+** Filter by coverage (national, urban, rural)
+povcalnet, coverage(urban) clear
+
+** Poverty lines
+povcalnet, povline(3.2) clear
+
+// ------------------------
+// Povcalnet features
+// ------------------------
+
+** fill gaps (Reference Years)
 * regular 
 povcalnet, country(COL BRA ARG IND) year(2015) clear 
 
 * fill gaps
 povcalnet, country(COL BRA ARG IND) year(2015) clear  fillgaps
 
-* Customized Aggregate
+** Customized Aggregate
 povcalnet, country(COL BRA ARG IND) year(2015) clear  aggregate
 
-* WB aggregates
+***** Aggregating all countries
+
+** using country(all)
+povcalnet, country(all) year(2015) clear  aggregate
+
+** parsing the list of all countries 
+povcalnet info, clear
+levelsof country_code, local(all) clean 
+povcalnet, country(`all') year(2015) clear  aggregate
+
+***** WB aggregates
 povcalnet wb, clear  year(2015)
 povcalnet wb, clear  region(SAR LAC)
 povcalnet wb, clear             // all reference years
@@ -135,6 +170,15 @@ povcalnet wb, clear             // all reference years
 * one-on-one query
 povcalnet cl, country(COL BRA ARG IND) year(2011) clear coverage("national national urban national")
 
+
+// ------------------------
+// advance options  and features
+// --------------------
+
+* Different national coverages
+povcalnet, coverage(national) country(IND COL) clear
+
+* PPP option
 
 ```
 
