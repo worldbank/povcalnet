@@ -86,6 +86,10 @@ qui {
 		local country ""
 		local aggregate ""
 		local subcommand "wb"
+		noi disp as res "Warning: " as text " {cmd:povclanet, country(all) aggregate} " /* 
+	 */	"is equivalent to {cmd:povcalnet wb}. " _n /* 
+	 */ " if you want to aggregate all countries by survey years, " /* 
+	 */ "you need to parse the list of countries in {it:country()} option."
 	}
 	
 	*---------- Year
