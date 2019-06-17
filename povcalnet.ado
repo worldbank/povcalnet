@@ -81,6 +81,12 @@ qui {
 		exit
 	}
 	
+	*---------- Modify country(all) with aggregate
+	if (lower("`country'") == "all" & "`aggregate'" != "") {
+		local country ""
+		local aggregate ""
+		local subcommand "wb"
+	}
 	
 	*---------- Year
 	if (wordcount("`year'") > 10){
