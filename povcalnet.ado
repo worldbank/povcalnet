@@ -81,6 +81,20 @@ qui {
 		exit
 	}
 	
+	*---------- Modify country(all) with aggregate
+	if (lower("`country'") == "all" & "`aggregate'" != "") {
+		local country ""
+		local aggregate ""
+		local subcommand "wb"
+		local wb_change 1
+		noi disp as res "Warning: " as text " {cmd:povclanet, country(all) aggregate} " /* 
+	  */	"is equivalent to {cmd:povcalnet wb}. " _n /* 
+	  */ " if you want to aggregate all countries by survey years, " /* 
+	  */ "you need to parse the list of countries in {it:country()} option."
+	}
+	else {
+		local wb_change 0
+	}
 	
 	*---------- Year
 	if (wordcount("`year'") > 10){
@@ -342,7 +356,9 @@ qui {
 	/*==================================================
            Append data
 	==================================================*/			
-		
+		if (`wb_change' == 1) {
+			keep if region_code == "WLD"
+		}
 		append using `povcalf'
 		save `povcalf', replace
 		

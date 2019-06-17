@@ -52,7 +52,7 @@ for a detailed explanation.{p_end}
 {synoptline}
 
 {pstd}
-{err:Note}: {cmd:povcalnet} requires internet connection.
+{bf:Note}: {cmd:povcalnet} requires internet connection.
 
 {marker sections}{...}
 {title:Sections}
@@ -192,7 +192,18 @@ Poverty lines are expressed in 2011 PPP-adjusted USD per capita per day.
 {opt aggregate} Will calculate the aggregated poverty measures for the given set of 
 countries or regions.
 
-{p 8 8 2}{err:Note}: Aggregation can only be done for 1981, 1984, 1987, 1990, 1993, 
+{p 8 8 2}{err:Note 1}: If option {it:country({ul:all})} is combined with 
+option {it:aggregate}, {cmd:povcalnet} executes instead {cmd: povcalnet wb}. 
+This forced behavior is implemented to be consistent with the 
+{browse "http://iresearch.worldbank.org/PovcalNet/povDuplicateWB.aspx":default global aggregates} 
+presented in PovcalNet. If you want instead to aggregate all countries by survey years, 
+you may list them all in the {it:country()} option. One way to do so may be as follows:{p_end}
+{cmd}
+		. povcalnet info, clear
+		. levelsof country_code, local(all) clean 
+		. povcalnet, country(`all') year(2015) clear  aggregate
+{txt}
+{p 8 8 2}{err:Note 2}: Aggregation can only be done for 1981, 1984, 1987, 1990, 1993, 
 1996, 1999, 2002, 2005, 2008, 2010, 2011, 2012, 2013 and 2015 (As of Sep 2018). 
 Due to the constant updating of the PovCalNet databases, using the option {it:last} 
 or {it:all} will load the years most updated year(s).{p_end}
@@ -222,17 +233,6 @@ estimates.
 By default all coverage levels are loaded, but the user may select "national", 
 "urban", or "rural" level. For now, only one level of covarege can be selected. 
 
-{phang}
-{opt auxiliary} ({err:Not longer available}) In countries where national aggregates are
- estimated by creating a weighted sum of urban and rural surveys, the national 
- estimate is reported by default.
-Specifying  {opt auxiliary} will load the underlying urban and rural surveys.
-
-{p 8 8 2}{err:Note}: As of September 2018, this applies to China, India and 
-Indonesia. Distributional statistics (e.g. Gini, decile shares) are typically 
-reported only for the urban and rural distributions separately,
-so auxiliary needs to specified to obtain these estimates.{p_end}
-
 {marker optinfo}{...}
 {phang}
 {opt information} Presents a clickable version of the available surveys, countries 
@@ -241,8 +241,8 @@ Choosing regions loads the regional aggregates in the reference years.
 
 {p 8 8 2}{err:Note}: If option {it:clear} is added, data in memory would be replaced with a PovcalNet 
 guidence database. If option {it:clear} is {ul:not} included, {cmd:povcalnet} 
-preserves data in memory  but displays a clickabe interface in the results window 
-of surveys availability.{p_end}
+preserves data in memory  but displays a clickabe interface of surveys availability 
+in the results window.{p_end}
 
 {phang}
 {opt clear} replaces data in memory.
@@ -439,6 +439,7 @@ poverty lines included in {it:povlines()}:
 
 {p 8 12} Millions of poor by region (by aggregation - reference year) 
 
+{cmd}
 	. povcalnet, povline(1.9) region(all) year(all) aggregate clear
 	. keep if requestyear > 1989
 	. gen poorpop = headcount * reqyearpopulation 
