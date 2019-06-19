@@ -93,13 +93,13 @@ quietly {
 	
 	*---------- Keep selected country
 	gen keep_this = 0
-	if ("`country'" != "") {
-		local country_l = `""`country'""'
-		local country_l: subinstr local country_l " " `"", ""', all
-
-		replace keep_this = 1 if inlist(country_code, `country_l')
-		if lower("`country'") == "all" replace keep_this = 1
+	if ("`country'" != "" & lower("`country'") != "all") {
+		foreach c of local country {
+			replace keep_this = 1 if (country_code == "`c'")
+		}
 	}
+	
+	if lower("`country'") == "all" replace keep_this = 1
 	
 	
 	* If region is selected instead of countries
