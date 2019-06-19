@@ -24,6 +24,14 @@ ssc install povcalnet
 
 ### From GitHub 
 
+#### Temporal installation
+
+1. Click on the green icon "Clone or Download" above. 
+2. Download the package as zip. 
+3. Extract the files with extension `.ado` and `.sthlp` only, and place them in the directory `c:/ado/plus/p`
+4. type `discard` in Stata. 
+
+#### Proper installation (Not yet available due to World Bank network restrictions).
 We recommend installing the [github](https://github.com/haghish/github) Stata command by [E. F. Haghish](https://github.com/haghish)
 
 ```stata
