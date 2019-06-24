@@ -38,13 +38,13 @@ We recommend installing the [github](https://github.com/haghish/github) Stata co
 net install github, from("https://haghish.github.io/github/")
 ```
 Then, type the following in Stata:
-```
+```stata
 github install worldbank/povcalnet
 ```
 
 ## Examples
 
-```
+```stata
 * Retrieve ONE country with default parameters
 
 povcalnet, country("ALB") clear
