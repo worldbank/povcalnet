@@ -33,12 +33,12 @@ version 9.0
           AGGregate                    ///
           CLEAR                        ///
           INFOrmation                  ///
-					coverage(string)             ///
+		  coverage(string)             ///
           ISO                          /// Standard ISO codes
           SERVER(string)               /// internal use
-					pause                        /// debugging
-					FILLgaps                     ///
-					noDIPSQuery                  ///
+		  pause                        /// debugging
+		  FILLgaps                     ///
+		  noDIPSQuery                  ///
         ] 
 
 if ("`pause'" == "pause") pause on

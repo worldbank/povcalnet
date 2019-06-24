@@ -168,7 +168,7 @@ if ("`type'" == "1") {
 ==================================================*/
 
 if ("`type'" == "2") {
-	if  ("`region'" != "") {
+	if  ("`region'" != "" & regioncid[1] != "XX") {
 		tempvar keep_this
 		gen `keep_this' = 0
 		local region_l = `""`region'""'
@@ -181,7 +181,7 @@ if ("`type'" == "2") {
 	
 	pause clean - after droping by region 
 	
-	if  ("`year'" == "last"){
+	if  ("`year'" == "last") {
 		tempvar maximum_y
 		bys regioncid: egen `maximum_y' = max(requestyear)
 		keep if `maximum_y' ==  requestyear
@@ -199,12 +199,12 @@ if ("`type'" == "2") {
 	rename p2 povgapsqr
 	rename population reqyearpopulation
 	
-	label var requestyear "Year you requested"
-	label var povertyline "Poverty line in PPP$ (per capita per day)"
-	label var mean  "Average monthly per capita income/consumption in PPP$"
-	label var headcount "Poverty Headcount"
-	label var povgap "Poverty Gap"
-	label var povgapsqr "Squared poverty gap"
+	label var requestyear       "Year you requested"
+	label var povertyline       "Poverty line in PPP$ (per capita per day)"
+	label var mean              "Average monthly per capita income/consumption in PPP$"
+	label var headcount         "Poverty Headcount"
+	label var povgap            "Poverty Gap"
+	label var povgapsqr         "Squared poverty gap"
 	label var reqyearpopulation "Population in year"
 	
 	

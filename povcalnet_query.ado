@@ -9,7 +9,7 @@
 *********************************************************************************
 program def povcalnet_query, rclass
 
-version 9.0
+version 14.0
 
    syntax [anything(name=subcommand)]    ///
       [,                       ///
@@ -120,6 +120,8 @@ quietly {
 	  */ " {stata povcalnet_info: guided selection} instead."
 		error
   }
+
+  pause query - after filtering conditions of country and region
 
 	***************************************************
 	* 3. Keep selected years and construct the request
