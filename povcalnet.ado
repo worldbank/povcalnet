@@ -38,6 +38,7 @@ version 9.0
           SERVER(string)               /// internal use
 		  pause                        /// debugging
 		  FILLgaps                     ///
+		  N2disp(integer 15)           ///
 		  noDIPSQuery                  ///
         ] 
 
@@ -340,33 +341,48 @@ qui {
            Display Query
 	==================================================*/
 		
-	if ("`dipsquery'" == "") {
-		noi di as res _n "{title: Query at \$`i_povline' poverty line}"
-		noi di as res "{hline}"
-		noi di as res "Year:"         as txt _col(20) "`query_ys'"
-		noi di as res "Country:"      as txt _col(20) "`query_ct'"
-		noi di as res "Poverty line:" as txt _col(20) "`query_pl'"
-		noi di as res "Aggregation:"  as txt _col(20) "`query_ds'"
-		noi di as res "PPP:"          as txt _col(20) "`query_pp'"
-		noi di as res _dup(20) "-"
-		noi di as res "No. Obs:"      as txt _col(20) c(N)
-		noi di as res "{hline}"
-	}
+	  if ("`dipsquery'" == "") {
+	  	noi di as res _n "{ul: Query at \$`i_povline' poverty line}"
+	  	noi di as res "{hline}"
+	  	if ("`query_ys'" != "") noi di as res "Year:"         as txt "{p 4 6 2} `query_ys' {p_end}"
+	  	if ("`query_ct'" != "") noi di as res "Country:"      as txt "{p 4 6 2} `query_ct' {p_end}"
+	  	if ("`query_pl'" != "") noi di as res "Poverty line:" as txt "{p 4 6 2} `query_pl' {p_end}"
+	  	if ("`query_ds'" != "") noi di as res "Aggregation:"  as txt "{p 4 6 2} `query_ds' {p_end}"
+	  	if ("`query_pp'" != "") noi di as res "PPP:"          as txt "{p 4 6 2} `query_pp' {p_end}"
+	  	noi di as res _dup(20) "-"
+	  	noi di as res "No. Obs:"      as txt _col(20) c(N)
+	  	noi di as res "{hline}"
+	  }
 	
 	/*==================================================
            Append data
 	==================================================*/			
-		if (`wb_change' == 1) {
-			keep if region_code == "WLD"
-		}
-		append using `povcalf'
-		save `povcalf', replace
-		
-		* local queryfull`f'  "`r(queryfull)'"
+	  if (`wb_change' == 1) {
+	  	keep if region_code == "WLD"
+	  }
+	  append using `povcalf'
+	  save `povcalf', replace
 	
 	} // end of povline loop
 	return local npl = `f'
 	
+	// ------------------------------
+	//  display results 
+	// ------------------------------
+	
+	local n2disp = min(`c(N)', `n2disp')
+	noi di as res _n "{ul: first `n2disp' observations}"
+	if ("`aggregate'" == "") {
+		sort regioncode countrycode year
+		noi list countrycode year povertyline headcount mean median in 1/`n2disp', /*
+		*/ abbreviate(12)  sepby(countrycode)
+	}
+	else {
+		sort year
+		noi list year povertyline headcount mean , /*
+		*/ abbreviate(12) sepby(povertyline)
+	}
+
 
 } // end of qui
 end
@@ -378,9 +394,17 @@ exit
 ><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><
 
 Notes:
-1.
+1. To display by region... maybe later. 
+tempvar todisp
+  bysort regioncode (countrycode): gen `todisp' = 1 if _n < `n2disp'
+  levelsof regioncode, local(regions)
+  noi di as res _n _col(30) "Display first `n2disp' obs in " _c
+  foreach region of local regions {
+  	noi tabdisp year if( regioncode == "`region'" & `todisp' == 1) , c(headcount mean median)  by(countrycode) concise missing
+
 2.
 3.
 
 
 Version Control:
+
