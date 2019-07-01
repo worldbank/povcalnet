@@ -144,13 +144,9 @@ if ("`type'" == "1") {
 
 	* Standardize names with R package
 
-	local Snames countrycode countryname regioncode coveragetype requestyear /* 
-	 */ datayear datatype isinterpolated usemicrodata povertyline /* 
-	 */ povgap povgapsqr reqyearpopulation 
+	local Snames requestyear reqyearpopulation 
 
-	local Rnames country_code country_name region_code coverage_type request_year /*
-	 */ data_year data_type is_interpolated use_microdata poverty_line    /*
-	 */ poverty_gap poverty_gap_sq  population 
+	local Rnames year population 
 
 	local i = 0
 	foreach var of local Snames {
@@ -158,9 +154,7 @@ if ("`type'" == "1") {
 		rename `var' `: word `i' of `Rnames''
 	}
 	 
-	sort country_code request_year coverage_type
-
-	*if ("`fillgaps'"!="") drop median gini mld decile*  // why dropping this?
+	sort countrycode year coveragetype
 }
 
 /*==================================================
@@ -208,11 +202,9 @@ if ("`type'" == "2") {
 	label var reqyearpopulation "Population in year"
 	
 	
-	local Snames region regioncode requestyear  povertyline /* 
-	 */ povgap povgapsqr reqyearpopulation 
+    local Snames requestyear reqyearpopulation 
 
-	local Rnames region_title region_code request_year poverty_line  /* 
-	 */ poverty_gap poverty_gap_sq population
+	local Rnames year population 
 	 
 	local i = 0
 	foreach var of local Snames {
