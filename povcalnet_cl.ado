@@ -54,8 +54,14 @@ gen n = _n
 levelsof country_code, local(countries) clean
 
 if (lower("`country'") != "all") {
-	local ncountries: list country - countries
-	local countries:  list country & countries 
+
+	local uniq_country : list uniq country
+	
+	local ncountries: list uniq_country  - countries
+	local avai_country: list uniq_country  & countries
+	
+	local countries:  list country | avai_country
+
 }
 
 if ("`ncountries'" != "") {
