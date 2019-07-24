@@ -28,8 +28,8 @@ version 9.0
           COUNtry(string)              /// 
           REGion(string)               ///
           YEAR(string)                 /// 
-          POVline(numlist max=10)      /// 
-          PPP(numlist max=10)          /// 
+          POVline(numlist)             /// 
+          PPP(numlist)                 /// 
           AGGregate                    ///
           CLEAR                        ///
           INFOrmation                  ///
@@ -97,12 +97,6 @@ qui {
 		local wb_change 0
 	}
 	
-	*---------- Year
-	if (wordcount("`year'") > 10){
-		noi disp as err "Too many years specified."
-		exit 198
-	}
-
 	if ("`year'" == "") local year "all"
 	* 
 	
