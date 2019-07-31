@@ -1,5 +1,5 @@
 theme: jekyll-theme-cayman
-title: "The `povcalnet` Stata command"
+title: The PovcalNet Stata command
 description: "Stata client to the Povcalnet API"
 baseurl: "/povcalnet" # the subpath of your site, e.g. "/blog"
 url: "https://worldbank.github.io" # the base hostname & protocol for your site e.g. "https://mmistakes.github.io"
