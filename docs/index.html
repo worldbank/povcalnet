@@ -1,0 +1,462 @@
+<p><!doctype html></p>
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<script type="text/javascript" async 
+src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-MML-AM_CHTML">
+</script>
+<!-- SYNTAX HIGHLIGHTING CLASSES  -->
+<style type="text/css">
+body {
+    font-family: "Open Sans", "Helvetica Neue", Helvetica, Arial, sans-serif;
+    text-align:justify;
+    margin: 0 8%;
+    font-size: 14px;
+        background-color:white; 
+}
+
+a {
+   color: #1e6bb8;
+       text-decoration: none;
+}
+a:hover {
+       text-decoration: underline;
+}
+
+h1, h2, h3, h4, h5, h6 {
+    line-height: 1.5;
+}
+
+h1, h1 > a, h1 > a:link {
+        margin:0.67em 0;
+        padding: 0;
+        font-family: ;
+        color:#17365D;
+        font-size: 22px;
+        }
+
+h1 > a:hover, h1 > a:hover{
+color:#345A8A;
+} 
+
+h2, h2 > a, h2 > a, h2 > a:link {
+        margin:14px 0px 2px 0px;
+        padding: 0;
+        color:#345A8A;
+        font-size: 18px;
+        font-weight:bold;
+        }
+
+h3, h3 > a,h3 > a, h3 > a:link,h3 > a:link {
+        margin:14px 0px 0px 0px;
+        padding: 0;
+        color:#4F81BD;
+        font-size: 16px;
+        font-weight:bold;
+        }
+
+h4 {
+        margin:10px 0px 0px 0px;
+        padding: 0;
+        font-family: ;
+        font-size: 16px;
+        color:#4F81BD;
+        font-weight:bold;
+        font-style:italic;
+        }
+
+h5  {
+        font-size: 14px;
+        font-weight:normal;
+        color:#4F81BD;
+        }
+
+h6  {
+        font-size:14px;
+        font-weight:normal;
+        font-style:italic;
+        color:#4F81BD;
+        }
+
+p {
+        font-weight:normal;
+        font-size:14px;
+        line-height: 16px;
+        text-align:justify;
+        text-justify:inter-word;
+        margin:0 0 14px 0;
+        }
+
+.author {display:block;text-align:center;font-size:16px;margin-bottom:3px;}
+.date {display:block;text-align:center;font-size:12px;margin-bottom:3px;}
+.center, #center {
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
+    -webkit-box-shadow: 0px 0px 2px rgba( 0, 0, 0, 0.5 );
+    -moz-box-shadow: 0px 0px 2px rgba( 0, 0, 0, 0.5 );
+    box-shadow: 0px 0px 2px rgba( 0, 0, 0, 0.5 );
+
+    padding: 0px;
+    border-width: 0px;
+    border-style: solid;
+    cursor:-webkit-zoom-in;
+    cursor:-moz-zoom-in;
+    }
+
+td > p {padding:0; margin:0;}
+
+
+header {
+        font-size:28px;
+        padding-bottom:5px; 
+        margin:0;
+        padding-top:150px; 
+        font-family: "Open Sans", "Helvetica Neue", Helvetica, Arial, sans-serif;
+        text-align:center;
+        display:block;
+        font-weight:bold;
+        }
+
+
+
+table {
+        border-collapse: collapse;
+        border-bottom:1px solid black;
+        padding:5px;
+        margin-top:5px;
+        margin-bottom: 16px;
+
+}
+.tble {
+        display:block;
+        margin-top: 10px;
+        margin-bottom: 0px;
+        margin-bottom: 0px;
+}
+
+.tblecenter {
+        display:block;
+        margin-top: 10px;
+        margin-bottom: 0px;
+        margin-bottom: 0px;
+        text-align:center;
+}
+
+span.tblecenter + table, span.tble + table, span.tble + img {
+        margin-top: 2px;
+}
+
+.figure, .caption {
+        text-align: center
+}
+
+th {
+        border-bottom:1px solid black;
+        border-top:1px solid black;
+        padding-right:20px;
+}
+
+td {
+        padding-right:20px;
+}
+
+pre code {
+       color: #567482;
+       font-size: 10px;
+       padding-top: 0;
+       padding-bottom: 0;
+       margin-top: 0;
+       margin-bottom: 0;
+      font-family: "menlo-regular","Consolas", "Liberation Mono", Menlo, Courier, monospace;
+   display: block;
+}
+
+code {
+   padding: 2px 4px;
+      font-family: Consolas, "Liberation Mono", Menlo, Courier, monospace;
+       font-size: 0.9rem;
+       color: #383e41;
+       background-color: #f3f6fa;
+   border-radius: 0.3rem; 
+}
+
+pre {
+   padding: 0.8rem ;
+      font: 1rem Consolas, "Liberation Mono", Menlo,  Courier, monospace;
+       margin-top: 0;
+       margin-bottom: 1rem;
+       color: #567482;
+   word-wrap: normal;
+   background-color: #f3f6fa;
+   border: solid 1px #dce6f0;
+   border-radius: 0.3rem; 
+}
+
+pre > code {
+   padding: 0;
+   margin: 0;
+   word-break: normal;
+}
+
+blockquote {
+       padding: 0 1rem;
+       margin-left: 0;
+       color: #819198;
+       border-left: 0.3rem solid #dce6f0;
+}
+
+img {
+        margin: 5px 0 5px 0;
+        padding: 0px;
+        cursor:-webkit-zoom-in;
+        cursor:-moz-zoom-in;
+        display:inline-block;
+        clear: both;
+        }
+
+hr {
+       height: 2px;
+       margin: 1rem 0;
+       background-color: #eff0f1;
+       border: 0; 
+}
+
+ul li {
+       font-size:14px;
+}
+
+</style>
+</head>
+<body>
+<h1><a href="#markdoc-mini" id="markdoc-mini">MarkDoc Mini</a></h1>
+<p>It is just a tradition to begin with <strong>Hello</strong> <em>World</em>!</p>
+<p>This is a new text paragraph. I can also use asterisk instead of underscore to make the text <strong>bold</strong> or <em>italic</em>, but the latter is not supported in Stata help files (supported in html,docx,pdf).</p>
+<p>You can separate  your document by adding a horizontal line, which is shown below. The alternative syntax mentioned in are also covered:</p>
+<hr />
+<p>How about line-breaks without adding a new paragraph? In Markdown you can do a line break<br />
+by adding 2 or more spaces<br />
+at the end of the line<br />
+to indicate a line-break<br />
+without creating a new paragraph! This means you should pay a careful attention to the spaces you put in the documentation. They are very meaningful in Markdown syntax!</p>
+<h2><a href="#hyperlinks" id="hyperlinks">Hyperlinks</a></h2>
+<p>Visit the <a href="https://daringfireball.net/projects/markdown/dingus">Markdown&rsquo;s developer site</a> to make yourself familiar with the Markdown syntax. Unfortunately, Stata&rsquo;s <strong>putdocx</strong> and <strong>putpdf</strong> do not yet support hyperlinks, but the Stata help files generated by MarkDoc can show hyperlinks.</p>
+<h2><a href="#adding-indention" id="adding-indention">Adding Indention</a></h2>
+<p>You can also indent your text as well as do nested indention. Use the &ldquo;&gt;&rdquo; sign at the beginning of the line to indent it.</p>
+<blockquote>
+<p>this is a Markdown indention</p>
+<blockquote>
+<p>this is indention level 2</p>
+<blockquote>
+<p>this is indention level 3</p>
+</blockquote>
+</blockquote>
+</blockquote>
+<h2><a href="#code-lines-and-code-blocks" id="code-lines-and-code-blocks">Code lines and code blocks</a></h2>
+<p>Code is shown in monospace font in the documents. Usually it is also styled to make it distinct from the text paragraphs. If you wish to add a line of code, begin the line with 4:</p>
+<pre><code>This is a code! Please **DO NOT** *INTERPRET* Markdown code
+This is another code line
+</code></pre>
+<p>If you have a code block of several lines, it is easier to place it in a code block as shown below. You don&rsquo;t have to indent the code block with 4 spaces, it&rsquo;s all done automatically. and of course, you can put a single line of code in it as well!</p>
+<pre><code>This is a code block! Please **DO NOT** *INTERPRET* Markdown code
+This is another code line
+</code></pre>
+<p>There is no limit on how many paragraphs you can write. Just keep an empty line between paragraphs or the previous styled text (header, code block, indented code, horizontal lines, etc.</p>
+<h2><a href="#adding-a-list" id="adding-a-list">Adding a list</a></h2>
+<p>making a list is easy. Just begin a line with a number, immediately followed by a dot. or a dash followed by a space.</p>
+<p>Stata&rsquo;s <strong>putdocx</strong> and <strong>putpdf</strong> do not support lists yet. I created a workaround to support Markdown lists But nested lists are not yet implemented because they look rather ugly without a decent support of lists in the document&hellip;</p>
+<ol>
+<li>This is a list</li>
+<li>This is list 2</li>
+<li>This is list 3</li>
+</ol>
+<ul>
+<li>This is unordered list</li>
+<li>This is also unordered list</li>
+</ul>
+<h1><a href="#limitations" id="limitations">Limitations</a></h1>
+<p>Some of the Markdown syntax is <strong>NOT</strong> yet supported by Stata&rsquo;s <strong>putdocx</strong> or <strong>putpdf</strong> commands. These limitations are:</p>
+<ol>
+<li>Hyperlink</li>
+<li>Nested lists</li>
+<li>Mathematical notations</li>
+</ol>
+<h1><a href="#markdown-tables" id="markdown-tables">Markdown Tables</a></h1>
+<blockquote>
+<p><strong>NOTE</strong>: Markdown tables are not supported in Stata Help files</p>
+</blockquote>
+<p>Markdown also supports tables! Currently 2 table flavors are recognized, but you can cooperate to increase the supported tables!</p>
+<h3><a href="#the-recommended-format" id="the-recommended-format">The recommended format</a></h3>
+<p>This is the recommended format, that is also used by the <strong>tbl</strong> command for generating dynamic tables (see below)</p>
+<table>
+<thead>
+<tr><th align="left">&ldquo;Column1&rdquo;</th><th align="center">&ldquo;Column2&rdquo;</th><th align="center">&ldquo;Column3&rdquo;</th></tr>
+</thead>
+<tbody>
+<tr><td align="left">Cat</td><td align="center">Soccer</td><td align="center">Apple</td></tr>
+<tr><td align="left">Dog</td><td align="center">Basketball</td><td align="center">Orange</td></tr>
+<tr><td align="left">Ape</td><td align="center">baseball</td><td align="center">Banana</td></tr>
+</tbody>
+</table>
+<p>You can also style a cell:</p>
+<table>
+<thead>
+<tr><th align="left">&ldquo;Column1&rdquo;</th><th align="center">&ldquo;Column2&rdquo;</th><th align="center">&ldquo;Column3&rdquo;</th></tr>
+</thead>
+<tbody>
+<tr><td align="left"><strong>Cat</strong></td><td align="center">Soccer</td><td align="center">Apple</td></tr>
+<tr><td align="left"><strong>Dog</strong></td><td align="center">Basketball</td><td align="center">Orange</td></tr>
+<tr><td align="left"><strong>Ape</strong></td><td align="center">baseball</td><td align="center">Banana</td></tr>
+</tbody>
+</table>
+<h3><a href="#the-alternative-format-not-recommended" id="the-alternative-format-not-recommended">The alternative format (not recommended)</a></h3>
+<p>The alternative format requires more work to create and adjust. You don&rsquo;t really want to do it manually&hellip;</p>
+<table>
+<thead>
+<tr><th> <strong>Animals</strong> </th><th> <strong>Sports</strong> </th><th> <strong>Fruits</strong> </th></tr>
+</thead>
+<tbody>
+<tr><td> Cat         </td><td> Soccer     </td><td> Apple      </td></tr>
+<tr><td> Dog         </td><td> Basketball </td><td> Orange     </td></tr>
+<tr><td> Ape         </td><td> baseball   </td><td> Banana     </td></tr>
+</tbody>
+</table>
+<h2><a href="#adding-a-figure-with-caption" id="adding-a-figure-with-caption">Adding a figure with caption</a></h2>
+<p>Adding a figure with markdown is simple. if we <strong>assume</strong> that you have an image file in your current working directory named <strong>graph.png</strong>, we can easily include it in the document using the following syntax:</p>
+<p><img src="graph.png" alt="Figure 1. This is a caption of graph.png" /></p>
+<p>Next, I will introduce you to other commands that can be used to generate dynamic tables and include figures.</p>
+<blockquote>
+<p>of course, Stata help files are unable of rendering image files</p>
+</blockquote>
+<h1><a href="#adding-a-figure-dynamically" id="adding-a-figure-dynamically">Adding a figure dynamically</a></h1>
+<pre><code>      . clear
+
+      . sysuse auto
+      (1978 Automobile Data)
+
+      . histogram price
+      (bin=8, start=3291, width=1576.875)
+</code></pre>
+<p><img src="Weaver-figure/figure_3.png" alt="Figure 1. say something about this figure" /></p>
+<h1><a href="#adding-a-dynamic-table" id="adding-a-dynamic-table">Adding a dynamic table</a></h1>
+<pre><code>      . sysuse auto, clear
+      (1978 Automobile Data)
+
+      . foreach var of varlist weight price mpg {
+      .         summarize `var'
+      .         local `var'_mean : display %9.2f r(mean)
+      .         local `var'_sd   : display %9.2f r(sd)
+      . }
+
+          Variable |        Obs        Mean    Std. Dev.       Min        Max
+      -------------+---------------------------------------------------------
+            weight |         74    3019.459    777.1936       1760       4840
+
+          Variable |        Obs        Mean    Std. Dev.       Min        Max
+      -------------+---------------------------------------------------------
+             price |         74    6165.257    2949.496       3291      15906
+
+          Variable |        Obs        Mean    Std. Dev.       Min        Max
+      -------------+---------------------------------------------------------
+               mpg |         74     21.2973    5.785503         12         41
+</code></pre>
+<p>Table 1. Summary of <strong>weight</strong>, <strong>price</strong>, and <strong>mpg</strong> variables</p>
+<table>
+<thead>
+<tr><th align="left">Variable Name</th><th align="center">Mean</th><th align="center">SD</th></tr>
+</thead>
+<tbody>
+<tr><td align="left"><strong>weight</strong></td><td align="center">3019.46</td><td align="center">777.19</td></tr>
+<tr><td align="left"><strong>price</strong></td><td align="center">6165.26</td><td align="center">2949.50</td></tr>
+<tr><td align="left"><strong>mpg</strong></td><td align="center">21.30</td><td align="center">5.79</td></tr>
+</tbody>
+</table>
+<p>The tbl command is very powerful and it allows you to take full control of your table. For example, you can format the text you wish to show in the cells, using exactly the same syntax as the <strong>display</strong> comand in Stata!</p>
+<pre><code>      . summarize price
+
+          Variable |        Obs        Mean    Std. Dev.       Min        Max
+      -------------+---------------------------------------------------------
+             price |         74    6165.257    2949.496       3291      15906
+
+      . return list
+
+      scalars:
+                        r(N) =  74
+                    r(sum_w) =  74
+                     r(mean) =  6165.256756756757
+                      r(Var) =  8699525.974268788
+                       r(sd) =  2949.495884768919
+                      r(min) =  3291
+                      r(max) =  15906
+                      r(sum) =  456229
+</code></pre>
+<table>
+<thead>
+<tr><th align="left">Variable</th><th align="center">Observations</th><th align="center">Mean</th><th align="center">SD</th></tr>
+</thead>
+<tbody>
+<tr><td align="left"><strong>price</strong></td><td align="center">74</td><td align="center">6165.26</td><td align="center">2949.50</td></tr>
+</tbody>
+</table>
+<h1><a href="#dynamic-text" id="dynamic-text">Dynamic text</a></h1>
+<p>There are two ways to write dynamic text in MarkDoc (and MarkDoc <em>mini</em>). The first is using the <strong>txt</strong> command. This is a powerful command that also allows styling the text. For example, I use the txt command to create a dynamic Markdown table below (not recommended, only for demonstration)</p>
+<pre><code>      . local l1 Cat
+
+      . local l2 Dog
+
+      . local l3 Soccer
+
+      . local l4 Basketball
+
+      . local l5 Apple 
+
+      . local l6 Orange
+</code></pre>
+<table>
+<thead>
+<tr><th> <strong>Animals</strong> </th><th> <strong>Sports</strong> </th><th> <strong>Fruits</strong> </th></tr>
+</thead>
+<tbody>
+<tr><td> Cat        </td><td> Soccer       </td><td> Apple       </td></tr>
+<tr><td> Dog        </td><td> Basketball       </td><td> Orange       </td></tr>
+</tbody>
+</table>
+<p>I can use the <strong>return list</strong> command to see what macros are returned by the <code>summarize</code> command. These values will be printed:</p>
+<pre><code>      . summarize price
+
+          Variable |        Obs        Mean    Std. Dev.       Min        Max
+      -------------+---------------------------------------------------------
+             price |         74    6165.257    2949.496       3291      15906
+
+      . return list
+
+      scalars:
+                        r(N) =  74
+                    r(sum_w) =  74
+                     r(mean) =  6165.256756756757
+                      r(Var) =  8699525.974268788
+                       r(sd) =  2949.495884768919
+                      r(min) =  3291
+                      r(max) =  15906
+                      r(sum) =  456229
+</code></pre>
+<p>the mean of Price variable is 6165.26</p>
+<p>the minimum value is 3291 and the maximum is 15906</p>
+<h2><a href="#alternative-procedure-for-dynamic-text" id="alternative-procedure-for-dynamic-text">Alternative procedure for dynamic text</a></h2>
+<p>There is, however, a smarter way that can be used when you execute a do-file in Stata:</p>
+<pre><code>      . scalar a = 10.847958758976
+
+      . matrix A = (1,2\ 3, 4)
+
+      . scalar b = A[2,1]
+
+      . local a = 999
+
+      . sysuse auto, clear
+      (1978 Automobile Data)
+</code></pre>
+<h2><a href="#how-about-10847959" id="how-about-10847959">How about 10.847959?</a></h2>
+<p>For example, we can show the value of the 10th observation of the <strong>Price</strong> variable, which is 4082</p>
+<p>You can also use this syntax to show a value of a macro 999 or Scalar 3, even when they are extracted from a matrix, e.g. 1 or 4!</p>
+</body>
+</html>
