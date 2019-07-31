@@ -1,6 +1,5 @@
 ---
 title: These are my examples
-layout: post
 ---
 
 Here is my page.
