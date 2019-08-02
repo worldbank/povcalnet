@@ -5,7 +5,7 @@ Author:		  Jorge Soler Lopez
             Espen Beer Prydz	
             Christoph Lakner	
             Ruoxuan Wu				
-            Qinghua Zhao			
+            Qinghua Zhao			\\
             World Bank Group	
 
 project:	  Stata package to easily query the [PovcalNet API](http://iresearch.worldbank.org/PovcalNet/docs/PovcalNet%20API.pdf) 
@@ -366,17 +366,25 @@ qui {
 	
 	local n2disp = min(`c(N)', `n2disp')
 	noi di as res _n "{ul: first `n2disp' observations}"
-	if ("`aggregate'" == "") {
-		sort regioncode countrycode year
-		noi list countrycode year povertyline headcount mean median in 1/`n2disp', /*
-		*/ abbreviate(12)  sepby(countrycode)
-	}
-	else {
-		sort year
-		noi list year povertyline headcount mean , /*
-		*/ abbreviate(12) sepby(povertyline)
+	
+	if ("`subcommand'" == "wb") {
+		sort  year regioncode
+		noi list region year povertyline headcount mean in 1/`n2disp', /*
+		*/ abbreviate(12)  sepby(year)
 	}
 
+	else {
+		if ("`aggregate'" == "") {
+			sort regioncode countrycode year
+			noi list countrycode year povertyline headcount mean median in 1/`n2disp', /*
+			*/ abbreviate(12)  sepby(countrycode)
+		}
+		else {
+			sort year
+			noi list year povertyline headcount mean , /*
+			*/ abbreviate(12) sepby(povertyline)
+		}		
+	}
 
 } // end of qui
 end
