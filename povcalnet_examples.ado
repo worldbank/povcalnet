@@ -78,24 +78,27 @@ end
 capture program drop example03
 program example03
 
-	povcalnet, povline(1.9) region(all) year(all) aggregate clear
+	povcalnet wb,  clear
 
 	keep if year > 1989
-	gen poorpop = headcount*population 
-	gen hcpercent = round(headcount*100, 0.1) 
-	gen poorpopround = round(poorpop, 1)
+	keep if regioncode == "WLD"	
+  gen poorpop = headcount*population 
+  gen hcpercent = round(headcount*100, 0.1) 
+  gen poorpopround = round(poorpop, 1)
 
-	twoway (sc hcpercent year, yaxis(1) mlab(hcpercent) mlabpos(7) c(l)) ///
-		(sc poorpopround year, yaxis(2) mlab(poorpopround) mlabpos(1) c(l)) ///
-		, yti("Poverty Rate (%)" " ", size(small) axis(1))  ///
-		ylab(0(10)40,labs(small) nogrid angle(0) axis(1))  ///
-		yti("Number of Poor (million)", size(small) axis(2)) ///
-		ylab(0(400)2000, labs(small) angle(0) axis(2))	///
-		xlabel(,labs(small)) xtitle("Year", size(small))  ///
-		graphregion(c(white)) ysize(5) xsize(5)  ///
-		legend(order( ///
-		1 "Poverty Rate (% of people living below $1.90)"  ///
-		2 "Number of people who live below $1.90") si(vsmall) row(2)) scheme(s2color)
+  twoway (sc hcpercent year, ///
+         yaxis(1) mlab(hcpercent) mlabpos(7) mlabsize(vsmall) c(l)) ///
+         (sc poorpopround year,  ///
+         yaxis(2) mlab(poorpopround) mlabsize(vsmall) mlabpos(1) c(l)), ///
+    yti("Poverty Rate (%)" " ", size(small) axis(1))  ///
+    ylab(0(10)40, labs(small) nogrid angle(0) axis(1))  ///
+    yti("Number of Poor (million)", size(small) axis(2)) ///
+    ylab(0(400)2000, labs(small) angle(0) axis(2))  ///
+    xlabel(,labs(small)) xtitle("Year", size(small))  ///
+    graphregion(c(white)) ysize(5) xsize(5)  ///
+    legend(order( ///
+    1 "Poverty Rate (% of people living below $1.90)"  ///
+    2 "Number of people who live below $1.90") si(vsmall) row(2)) scheme(s2color)
 
 end
 
