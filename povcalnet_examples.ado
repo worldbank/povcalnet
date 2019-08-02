@@ -107,46 +107,38 @@ end
 *  ----------------------------------------------------------------------------
 capture program drop example04
 program example04
-	povcalnet, povline(1.9) region(all) year(all) aggregate clear
-	keep if request_year > 1989
+	povcalnet wb, clear
+	keep if year > 1989
 	gen poorpop = headcount * population 
 	gen hcpercent = round(headcount*100, 0.1) 
 	gen poorpopround = round(poorpop, 1)
-	keep request_year region_code region_title poorpop
-	gen 	rid=1 if region_code=="OHI"
-	replace rid=2 if region_code=="ECA"
-	replace rid=3 if region_code=="MNA"
-	replace rid=4 if region_code=="LAC"
-	replace rid=5 if region_code=="EAP"
-	replace rid=6 if region_code=="SAS"
-	replace rid=7 if region_code=="SSA"
-	replace rid=8 if region_code=="WLD"
-	keep request_year rid poorpop
-	reshape wide poorpop,i(request_year) j(rid)
+	encode region, gen(rid)
+
+	levelsof rid, local(regions)
+	foreach region of local regions {
+		local legend = `"`legend' `region' "`: label rid `region''" "'
+	}
+
+	keep year rid poorpop
+	reshape wide poorpop,i(year) j(rid)
 	foreach i of numlist 2(1)7{
 		egen poorpopacc`i'=rowtotal(poorpop1 - poorpop`i')
 	}
-	twoway (area poorpop1 request_year) ///
-		(rarea poorpopacc2 poorpop1 request_year) ///
-		(rarea poorpopacc3 poorpopacc2 request_year) ///
-		(rarea poorpopacc4 poorpopacc3 request_year) ///
-		(rarea poorpopacc5 poorpopacc4 request_year) ///
-		(rarea poorpopacc6 poorpopacc5 request_year) ///
-		(rarea poorpopacc7 poorpopacc6 request_year) ///
-		(line poorpopacc7 request_year, lwidth(midthick) lcolor(gs0)), ///
+
+
+	twoway (area poorpop1 year) ///
+		(rarea poorpopacc2 poorpop1 year) ///
+		(rarea poorpopacc3 poorpopacc2 year) ///
+		(rarea poorpopacc4 poorpopacc3 year) ///
+		(rarea poorpopacc5 poorpopacc4 year) ///
+		(rarea poorpopacc6 poorpopacc5 year) ///
+		(rarea poorpopacc7 poorpopacc6 year) ///
+		(line poorpopacc7 year, lwidth(midthick) lcolor(gs0)), ///
 		ytitle("Millions of Poor" " ", size(small))  ///
-		xtitle(" " "", size(small))  ///
+		xtitle(" " "", size(small)) scheme(s2color)  ///
 		graphregion(c(white)) ysize(7) xsize(8)  ///
 		ylabel(,labs(small) nogrid angle(verticle)) xlabel(,labs(small)) ///
-		legend(order( ///
-		1 "Rest of the World"  ///
-		2 "Europe & Central Asia"  ///
-		3 "Middle East & North Africa" ///
-		4 "Latin America & Caribbean" ///
-		5 "East Asia & the Pacific" ///
-		6 "South Asia" ///
-		7 "Sub-Saharan Africa" /// 
-		8 "World") si(vsmall)) 
+		legend(order(`legend') si(vsmall))
 end
 
 *  ----------------------------------------------------------------------------
