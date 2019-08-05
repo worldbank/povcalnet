@@ -48,28 +48,28 @@ capture program drop example02
 program example02
 	povcalnet, region(lac) year(last) povline(3.2 5.5 15) fillgaps clear 
 	*povcalnet, region(lac) year(last) povline(3.2 5.5 15) clear 
-	keep if data_type==2 & data_year>=2014 // keep income surveys
-	keep poverty_line country_code country_name request_year headcount
-	replace poverty_line = poverty_line*100
+	keep if datatype==2 & year>=2014 // keep income surveys
+	keep povertyline countrycode countryname year headcount
+	replace povertyline = povertyline*100
 	replace headcount = headcount*100
-	tostring poverty_line, replace format(%12.0f) force
-	reshape wide  headcount,i(request_year country_code country_name ) j(poverty_line) string
+	tostring povertyline, replace format(%12.0f) force
+	reshape wide  headcount,i(year countrycode countryname ) j(povertyline) string
 	gen percentage_0 = headcount320
 	gen percentage_1 = headcount550 - headcount320
 	gen percentage_2 = headcount1500 - headcount550
 	gen percentage_3 = 100 - headcount1500
-	keep country_code country_name request_year  percentage_*
-	reshape long  percentage_,i(request_year country_code country_name ) j(category) 
+	keep countrycode countryname year  percentage_*
+	reshape long  percentage_,i(year countrycode countryname ) j(category) 
 	la define category 0 "Poor LMI (<$3.2)" 1 "Poor UMI ($3.2-$5.5)" ///
 		2 "Vulnerable ($5.5-$15)" 3 "Middle class (>$15)"
 	la val category category
 	la var category ""
-	graph bar (mean) percentage, inten(*0.7) o(category) o(country_code, lab(labsi(small) angle(vertical))) stack asy /// 
+	graph bar (mean) percentage, inten(*0.7) o(category) o(countrycode, lab(labsi(small) angle(vertical))) stack asy /// 
 		blab(bar, pos(center) format(%3.1f) si(tiny)) /// 
 		ti("Distribution of Income in Latin America and Caribbean, by country", si(small)) ///
 		note("Source: PovCalNet, using the latest survey after 2014 for each country. ", si(*.7)) ///
 		graphregion(c(white)) ysize(6) xsize(6.5) legend(si(vsmall) r(3))  yti("Population share in each income category (%)", si(small)) ///
-		ylab(,labs(small) nogrid angle(0))
+		ylab(,labs(small) nogrid angle(0)) scheme(s2color)
 end
 
 *  ----------------------------------------------------------------------------
