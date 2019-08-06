@@ -27,18 +27,27 @@ end
 *  ----------------------------------------------------------------------------
 capture program drop example01
 program example01
-	povcalnet, region(all) year(all) povline(1.9 3.2 5.5) clear aggregate
-	drop if region_code == "OHI" | request_year<1990 | region_code == "WLD"
-	keep poverty_line region_title request_year headcount
-	replace poverty_line = poverty_line*100
+	povcalnet wb, povline(1.9 3.2 5.5) clear
+	drop if inlist(regioncode, "OHI", "WLD") | year<1990 
+	keep povertyline region year headcount
+	replace povertyline = povertyline*100
 	replace headcount = headcount*100
-	tostring poverty_line, replace format(%12.0f) force
-	reshape wide  headcount,i(request_year region_title ) j(poverty_line) string
-	twoway (sc headcount190 request_year, c(l) msiz(small)) (sc headcount320 request_year, c(l) msiz(small)) (sc headcount550 request_year, c(l) msiz(small)) ///
-		, by(reg,  title("Poverty Headcount Ratio (1990-2015), by region", si(med)) note("Source: PovcalNet", si(vsmall)) graphregion(c(white))) ///
-		xlab(1990(5)2015 , labsi(vsmall)) xti("Year", si(vsmall)) ///
-		ylab(0(25)100, labsi(vsmall) angle(0)) yti("Poverty headcount (%)", si(vsmall)) ///
-		leg(order(1 "$1.9" 2 "$3.2" 3 "$5.5") r(1) si(vsmall)) sub(, si(small))	
+	
+	tostring povertyline, replace format(%12.0f) force
+	reshape wide  headcount,i(year region) j(povertyline) string
+	
+	local title "Poverty Headcount Ratio (1990-2015), by region"
+
+	twoway (sc headcount190 year, c(l) msiz(small))  ///
+	       (sc headcount320 year, c(l) msiz(small))  ///
+	       (sc headcount550 year, c(l) msiz(small)), ///
+	       by(reg,  title("`title'", si(med))        ///
+	       	note("Source: PovcalNet", si(vsmall)) graphregion(c(white))) ///
+	       xlab(1990(5)2015 , labsi(vsmall)) xti("Year", si(vsmall))     ///
+	       ylab(0(25)100, labsi(vsmall) angle(0))                        ///
+	       yti("Poverty headcount (%)", si(vsmall))                      ///
+	       leg(order(1 "$1.9" 2 "$3.2" 3 "$5.5") r(1) si(vsmall))        ///
+	       sub(, si(small))	scheme(s2color)
 end
 
 *  ----------------------------------------------------------------------------
@@ -47,28 +56,35 @@ end
 capture program drop example02
 program example02
 	povcalnet, region(lac) year(last) povline(3.2 5.5 15) fillgaps clear 
-	*povcalnet, region(lac) year(last) povline(3.2 5.5 15) clear 
-	keep if datatype==2 & year>=2014 // keep income surveys
+	keep if datatype==2 & year>=2014             // keep income surveys
 	keep povertyline countrycode countryname year headcount
 	replace povertyline = povertyline*100
 	replace headcount = headcount*100
 	tostring povertyline, replace format(%12.0f) force
 	reshape wide  headcount,i(year countrycode countryname ) j(povertyline) string
+	
 	gen percentage_0 = headcount320
 	gen percentage_1 = headcount550 - headcount320
 	gen percentage_2 = headcount1500 - headcount550
 	gen percentage_3 = 100 - headcount1500
+	
 	keep countrycode countryname year  percentage_*
 	reshape long  percentage_,i(year countrycode countryname ) j(category) 
-	la define category 0 "Poor LMI (<$3.2)" 1 "Poor UMI ($3.2-$5.5)" ///
-		2 "Vulnerable ($5.5-$15)" 3 "Middle class (>$15)"
+	la define category 0 "Poor LMI (< $3.2)" 1 "Poor UMI ($3.2-$5.5)" ///
+		                 2 "Vulnerable ($5.5-$15)" 3 "Middle class (> $15)"
 	la val category category
 	la var category ""
-	graph bar (mean) percentage, inten(*0.7) o(category) o(countrycode, lab(labsi(small) angle(vertical))) stack asy /// 
-		blab(bar, pos(center) format(%3.1f) si(tiny)) /// 
-		ti("Distribution of Income in Latin America and Caribbean, by country", si(small)) ///
-		note("Source: PovCalNet, using the latest survey after 2014 for each country. ", si(*.7)) ///
-		graphregion(c(white)) ysize(6) xsize(6.5) legend(si(vsmall) r(3))  yti("Population share in each income category (%)", si(small)) ///
+
+	local title "Distribution of Income in Latin America and Caribbean, by country"
+	local note "Source: PovCalNet, using the latest survey after 2014 for each country."
+	local yti  "Population share in each income category (%)"
+
+	graph bar (mean) percentage, inten(*0.7) o(category) o(countrycode, ///
+	  lab(labsi(small) angle(vertical))) stack asy                      /// 
+		blab(bar, pos(center) format(%3.1f) si(tiny))                     /// 
+		ti("`title'", si(small)) note("`note'", si(*.7))                  ///
+		graphregion(c(white)) ysize(6) xsize(6.5)                         ///
+			legend(si(vsmall) r(3))  yti("`yti'", si(small))                ///
 		ylab(,labs(small) nogrid angle(0)) scheme(s2color)
 end
 
@@ -86,19 +102,20 @@ program example03
   gen hcpercent = round(headcount*100, 0.1) 
   gen poorpopround = round(poorpop, 1)
 
-  twoway (sc hcpercent year, ///
-         yaxis(1) mlab(hcpercent) mlabpos(7) mlabsize(vsmall) c(l)) ///
-         (sc poorpopround year,  ///
-         yaxis(2) mlab(poorpopround) mlabsize(vsmall) mlabpos(1) c(l)), ///
-    yti("Poverty Rate (%)" " ", size(small) axis(1))  ///
-    ylab(0(10)40, labs(small) nogrid angle(0) axis(1))  ///
-    yti("Number of Poor (million)", size(small) axis(2)) ///
-    ylab(0(400)2000, labs(small) angle(0) axis(2))  ///
-    xlabel(,labs(small)) xtitle("Year", size(small))  ///
-    graphregion(c(white)) ysize(5) xsize(5)  ///
-    legend(order( ///
-    1 "Poverty Rate (% of people living below $1.90)"  ///
-    2 "Number of people who live below $1.90") si(vsmall) row(2)) scheme(s2color)
+  twoway (sc hcpercent year, yaxis(1) mlab(hcpercent)           ///
+           mlabpos(7) mlabsize(vsmall) c(l))                    ///
+         (sc poorpopround year, yaxis(2) mlab(poorpopround)     ///
+           mlabsize(vsmall) mlabpos(1) c(l)),                   ///
+         yti("Poverty Rate (%)" " ", size(small) axis(1))       ///
+         ylab(0(10)40, labs(small) nogrid angle(0) axis(1))     ///
+         yti("Number of Poor (million)", size(small) axis(2))   ///
+         ylab(0(400)2000, labs(small) angle(0) axis(2))         ///
+         xlabel(,labs(small)) xtitle("Year", size(small))       ///
+         graphregion(c(white)) ysize(5) xsize(5)                ///
+         legend(order(                                          ///
+         1 "Poverty Rate (% of people living below $1.90)"      ///
+         2 "Number of people who live below $1.90") si(vsmall)  ///
+         row(2)) scheme(s2color)
 
 end
 
@@ -125,18 +142,17 @@ program example04
 		egen poorpopacc`i'=rowtotal(poorpop1 - poorpop`i')
 	}
 
-
-	twoway (area poorpop1 year) ///
-		(rarea poorpopacc2 poorpop1 year) ///
-		(rarea poorpopacc3 poorpopacc2 year) ///
-		(rarea poorpopacc4 poorpopacc3 year) ///
-		(rarea poorpopacc5 poorpopacc4 year) ///
-		(rarea poorpopacc6 poorpopacc5 year) ///
-		(rarea poorpopacc7 poorpopacc6 year) ///
+	twoway (area poorpop1 year)                              ///
+		(rarea poorpopacc2 poorpop1 year)                      ///
+		(rarea poorpopacc3 poorpopacc2 year)                   ///
+		(rarea poorpopacc4 poorpopacc3 year)                   ///
+		(rarea poorpopacc5 poorpopacc4 year)                   ///
+		(rarea poorpopacc6 poorpopacc5 year)                   ///
+		(rarea poorpopacc7 poorpopacc6 year)                   ///
 		(line poorpopacc7 year, lwidth(midthick) lcolor(gs0)), ///
-		ytitle("Millions of Poor" " ", size(small))  ///
-		xtitle(" " "", size(small)) scheme(s2color)  ///
-		graphregion(c(white)) ysize(7) xsize(8)  ///
+		ytitle("Millions of Poor" " ", size(small))            ///
+		xtitle(" " "", size(small)) scheme(s2color)            ///
+		graphregion(c(white)) ysize(7) xsize(8)                ///
 		ylabel(,labs(small) nogrid angle(verticle)) xlabel(,labs(small)) ///
 		legend(order(`legend') si(vsmall))
 end
@@ -204,6 +220,94 @@ program example07
 			xlabel(0(10)100,labs(small)) xtitle("Decile group", size(small))  ///
 			graphregion(c(white)) ///
 			legend(order(1 "Argentina(2011-2016)"  2 "Ghana(1998-2005)" 3 "Thailand(2010-2015)") si(vsmall) row(1)) scheme(s2color)
+
+end
+
+
+
+
+
+
+// ------------------------------------------------------------------------
+// National level and longest available series (temporal change in welfare)
+// ------------------------------------------------------------------------
+
+capture program drop example08
+program define example08
+
+povcalnet, clear
+
+* keep only national
+bysort countrycode datatype year: egen _ncover = count(coveragetype)
+gen _tokeepn = ( (inlist(coveragetype, 3, 4) & _ncover > 1) | _ncover == 1)
+
+keep if _tokeepn == 1
+
+* Keep longest series per country
+by countrycode datatype, sort:  gen _ndtype = _n == 1
+by countrycode : replace _ndtype = sum(_ndtype)
+by countrycode : replace _ndtype = _ndtype[_N] // number of datatype per country
+
+duplicates tag countrycode year, gen(_yrep)  // duplicate year
+
+bysort countrycode datatype: egen _type_length = count(year) // length of type series
+bysort countrycode: egen _type_max = max(_type_length)   // longest type series
+replace _type_max = (_type_max == _type_length)
+
+* in case of same elngth in series, keep consumption
+by countrycode _type_max, sort:  gen _ntmax = _n == 1
+by countrycode : replace _ntmax = sum(_ntmax)
+by countrycode : replace _ntmax = _ntmax[_N]  // number of datatype per country
+
+
+gen _tokeepl = ((_type_max == 1 & _ntmax == 2) | ///
+	             (datatype == 1 & _ntmax == 1 & _ndtype == 2) | ///
+	             _yrep == 0)
+
+keep if _tokeepl == 1
+drop _*
+
+end
+
+
+
+capture program drop example09
+program define example09
+
+
+// ------------------------------------------------------------------------
+// National level and longest available series of same welfare type
+// ------------------------------------------------------------------------
+
+povcalnet, clear
+
+* keep only national
+bysort countrycode datatype year: egen _ncover = count(coveragetype)
+gen _tokeepn = ( (inlist(coveragetype, 3, 4) & _ncover > 1) | _ncover == 1)
+
+keep if _tokeepn == 1
+* Keep longest series per country
+by countrycode datatype, sort:  gen _ndtype = _n == 1
+by countrycode : replace _ndtype = sum(_ndtype)
+by countrycode : replace _ndtype = _ndtype[_N] // number of datatype per country
+
+
+bysort countrycode datatype: egen _type_length = count(year)
+bysort countrycode: egen _type_max = max(_type_length)
+replace _type_max = (_type_max == _type_length)
+
+* in case of same elngth in series, keep consumption
+by countrycode _type_max, sort:  gen _ntmax = _n == 1
+by countrycode : replace _ntmax = sum(_ntmax)
+by countrycode : replace _ntmax = _ntmax[_N]  // max 
+
+
+gen _tokeepl = ((_type_max == 1 & _ntmax == 2) | ///
+	             (datatype == 1 & _ntmax == 1 & _ndtype == 2)) | ///
+               _ndtype == 1
+
+keep if _tokeepl == 1
+drop _*
 
 end
 

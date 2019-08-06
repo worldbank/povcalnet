@@ -363,123 +363,210 @@ poverty lines included in {it:povlines()}:
 {phang2}
 {stata povcalnet cl, country(COL BRA ARG IND) year(2011) clear coverage("national national urban national")}
 
-
-{dlgtab: 3. Analytical examples}
+{dlgtab: 3. Samples uniquely identified by country/year}
 
 {phang2}
-3.1.Graph of trend in poverty headcount ratio and number of poor for the world
+{ul:3.1} National coverage (when available) and longest possible time series for each country, 
+{it:even if} welfare type changes from one year to another.
 
 {cmd}
-	. povcalnet, povline(1.9) region(all) year(all) aggregate clear
-	. keep if requestyear > 1989
-	. gen poorpop = headcount*reqyearpopulation 
+	. povcalnet, clear
+
+	* keep only national
+	. bysort countrycode datatype year: egen _ncover = count(coveragetype)
+	. gen _tokeepn = ( (inlist(coveragetype, 3, 4) & _ncover > 1) | _ncover == 1)
+
+	. keep if _tokeepn == 1
+
+	* Keep longest series per country
+	. by countrycode datatype, sort:  gen _ndtype = _n == 1
+	. by countrycode : replace _ndtype = sum(_ndtype)
+	. by countrycode : replace _ndtype = _ndtype[_N] // number of datatype per country
+
+	. duplicates tag countrycode year, gen(_yrep)  // duplicate year
+
+	.bysort countrycode datatype: egen _type_length = count(year) // length of type series
+	.bysort countrycode: egen _type_max = max(_type_length)   // longest type series
+	.replace _type_max = (_type_max == _type_length)
+
+	* in case of same elngth in series, keep consumption
+	. by countrycode _type_max, sort:  gen _ntmax = _n == 1
+	. by countrycode : replace _ntmax = sum(_ntmax)
+	. by countrycode : replace _ntmax = _ntmax[_N]  // number of datatype per country
+
+
+	. gen _tokeepl = ((_type_max == 1 & _ntmax == 2) | ///
+	.                (datatype == 1 & _ntmax == 1 & _ndtype == 2) | ///
+	.                _yrep == 0)
+	. 
+	. keep if _tokeepl == 1
+	. drop _*
+
+{txt}      ({stata "povcalnet_examples example08":click to run})
+
+{phang2}
+{ul:3.2} National coverage (when available) and longest possible time series for each country, {it:either all consumption, or all income}
+
+{cmd}
+	. bysort countrycode datatype year: egen _ncover = count(coveragetype)
+	. gen _tokeepn = ( (inlist(coveragetype, 3, 4) & _ncover > 1) | _ncover == 1)
+
+	. keep if _tokeepn == 1
+	* Keep longest series per country
+	. by countrycode datatype, sort:  gen _ndtype = _n == 1
+	. by countrycode : replace _ndtype = sum(_ndtype)
+	. by countrycode : replace _ndtype = _ndtype[_N] // number of datatype per country
+
+
+	. bysort countrycode datatype: egen _type_length = count(year)
+	. bysort countrycode: egen _type_max = max(_type_length)
+	. replace _type_max = (_type_max == _type_length)
+
+	* in case of same elngth in series, keep consumption
+	. by countrycode _type_max, sort:  gen _ntmax = _n == 1
+	. by countrycode : replace _ntmax = sum(_ntmax)
+	. by countrycode : replace _ntmax = _ntmax[_N]  // max 
+
+
+	. gen _tokeepl = ((_type_max == 1 & _ntmax == 2) | ///
+	.               (datatype == 1 & _ntmax == 1 & _ndtype == 2)) | ///
+	.               _ndtype == 1
+
+	. keep if _tokeepl == 1
+	. drop _*
+
+{txt}      ({stata "povcalnet_examples example09":click to run})
+
+{dlgtab: 4. Analytical examples}
+
+{phang2}
+{ul:4.1} Graph of trend in poverty headcount ratio and number of poor for the world
+
+{cmd}
+	. povcalnet wb,  clear
+
+	. keep if year > 1989
+	. keep if regioncode == "WLD"	
+	. gen poorpop = headcount*population 
 	. gen hcpercent = round(headcount*100, 0.1) 
 	. gen poorpopround = round(poorpop, 1)
-	. twoway (sc hcpercent requestyear if regioncode == "WLD", yaxis(1) mlab(hcpercent) mlabpos(7) c(l)) ///
-	. (sc poorpopround requestyear if regioncode == "WLD", yaxis(2) mlab(poorpopround) mlabpos(1) c(l)) ///
-	. ti("Poverty Rate (%)" " ", size(small) axis(1))  ///
-	. b(0(10)40,labs(small) nogrid angle(0) axis(1))  ///
-	. ("Number of Poor (million)", size(small) axis(2)) ///
-	. b(0(400)2000, labs(small) angle(0) axis(2))	///
-	. bel(,labs(small)) xtitle("Year", size(small))  ///
-	. graphregion(c(white)) ysize(5) xsize(5)  ///
-	. legend(order( ///
-	. 1 "Poverty Rate (% of people living below $1.90)"  ///
-	. 2 "Number of people who live below $1.90") si(vsmall) row(2))
+
+	. twoway (sc hcpercent year, yaxis(1) mlab(hcpercent)           ///
+	.          mlabpos(7) mlabsize(vsmall) c(l))                    ///
+	.        (sc poorpopround year, yaxis(2) mlab(poorpopround)     ///
+	.          mlabsize(vsmall) mlabpos(1) c(l)),                   ///
+	.        yti("Poverty Rate (%)" " ", size(small) axis(1))       ///
+	.        ylab(0(10)40, labs(small) nogrid angle(0) axis(1))     ///
+	.        yti("Number of Poor (million)", size(small) axis(2))   ///
+	.        ylab(0(400)2000, labs(small) angle(0) axis(2))         ///
+	.        xlabel(,labs(small)) xtitle("Year", size(small))       ///
+	.        graphregion(c(white)) ysize(5) xsize(5)                ///
+	.        legend(order(                                          ///
+	.        1 "Poverty Rate (% of people living below $1.90)"      ///
+	.        2 "Number of people who live below $1.90") si(vsmall)  ///
+	.        row(2)) scheme(s2color)
+	
 {txt}      ({stata "povcalnet_examples example03":click to run})
 
-{p 8 12}Graph of population distribution across income categories in Latin America, by country
+{phang2}
+{ul:4.2} Graph of population distribution across income categories in Latin America, by country
 
 {cmd}
-	. povcalnet, region(lac) year(last) povline(3.2 5.5 15) clear 
-	. keep if datatype==2 & datayear>=2014 // keep income surveys
-	. keep povertyline countrycode countryname requestyear headcount
+	. povcalnet, region(lac) year(last) povline(3.2 5.5 15) fillgaps clear 
+	. keep if datatype==2 & year>=2014             // keep income surveys
+	. keep povertyline countrycode countryname year headcount
 	. replace povertyline = povertyline*100
 	. replace headcount = headcount*100
 	. tostring povertyline, replace format(%12.0f) force
-	. reshape wide  headcount,i(requestyear countrycode countryname ) j(povertyline) string
+	. reshape wide  headcount,i(year countrycode countryname ) j(povertyline) string
+	
 	. gen percentage_0 = headcount320
 	. gen percentage_1 = headcount550 - headcount320
 	. gen percentage_2 = headcount1500 - headcount550
 	. gen percentage_3 = 100 - headcount1500
-	. keep countrycode countryname requestyear  percentage_*
-	. reshape long  percentage_,i(requestyear countrycode countryname ) j(category) 
-	. la define category 0 "Poor LMI (<$3.2)" 1 "Poor UMI ($3.2-$5.5)" ///
-	. 	2 "Vulnerable ($5.5-$15)" 3 "Middle class (>$15)"
+	
+	. keep countrycode countryname year  percentage_*
+	. reshape long  percentage_,i(year countrycode countryname ) j(category) 
+	. la define category 0 "Poor LMI (< $3.2)" 1 "Poor UMI ($3.2-$5.5)" ///
+		                 2 "Vulnerable ($5.5-$15)" 3 "Middle class (> $15)"
 	. la val category category
 	. la var category ""
-	. graph bar (mean) percentage, inten(*0.7) o(category) o(countrycode, lab(labsi(small) angle(vertical))) stack asy /// 
-	. 	blab(bar, pos(center) format(%3.1f) si(tiny)) /// 
-	. 	ti("Distribution of Income in Latin America and Caribbean, by country", si(small)) ///
-	. 	note("Source: PovCalNet, using the latest survey after 2014 for each country. ", si(*.7)) ///
-	. 	graphregion(c(white)) ysize(6) xsize(6.5) legend(si(vsmall) r(3)) ///
-	. 	yti("Population share in each income category (%)", si(small)) ///
-		ylab(,labs(small) nogrid angle(0))
+
+	. local title "Distribution of Income in Latin America and Caribbean, by country"
+	. local note "Source: PovCalNet, using the latest survey after 2014 for each country."
+	. local yti  "Population share in each income category (%)"
+
+	. graph bar (mean) percentage, inten(*0.7) o(category) o(countrycode, ///
+	.   lab(labsi(small) angle(vertical))) stack asy                      /// 
+	. 	blab(bar, pos(center) format(%3.1f) si(tiny))                     /// 
+	. 	ti("`title'", si(small)) note("`note'", si(*.7))                  ///
+	. 	graphregion(c(white)) ysize(6) xsize(6.5)                         ///
+	. 		legend(si(vsmall) r(3))  yti("`yti'", si(small))                ///
+	. 	ylab(,labs(small) nogrid angle(0)) scheme(s2color)
 {txt}      ({stata "povcalnet_examples example02":click to run})
 
-{p 8 12}Graph of trends in poverty headcount ratio by region, multiple poverty lines ($1.9, $3.2, $5.5)
-
+{phang2}
+{ul:4.3} Graph of trends in poverty headcount ratio by region, multiple poverty lines ($1.9, $3.2, $5.5)
 
 {cmd}	
-	. povcalnet, region(all) year(all) povline(1.9 3.2 5.5) clear aggregate
-	. drop if regioncode == "OHI" | requestyear<1990 | regioncode == "WLD"
-	. keep povertyline region requestyear headcount
+	. povcalnet wb, povline(1.9 3.2 5.5) clear
+	. drop if inlist(regioncode, "OHI", "WLD") | year<1990 
+	. keep povertyline region year headcount
 	. replace povertyline = povertyline*100
 	. replace headcount = headcount*100
+	
 	. tostring povertyline, replace format(%12.0f) force
-	. reshape wide  headcount,i(requestyear region ) j(povertyline) string
-	. twoway (sc headcount190 requestyear, c(l) msiz(small)) ///
-	. (sc headcount320 requestyear, c(l) msiz(small)) (sc headcount550 requestyear, c(l) msiz(small)) ///
-	. 	, by(reg,  title("Poverty Headcount Ratio (1990-2015), by region", si(med)) ///
-	. 	note("Source: PovcalNet", si(vsmall)) graphregion(c(white))) ///
-	. 	xlab(1990(5)2015 , labsi(vsmall)) xti("Year", si(vsmall)) ///
-	. 	ylab(0(25)100, labsi(vsmall) angle(0)) yti("Poverty headcount (%)", si(vsmall)) ///
-	. 	leg(order(1 "$1.9" 2 "$3.2" 3 "$5.5") r(1) si(vsmall)) sub(, si(small))
+	. reshape wide  headcount,i(year region) j(povertyline) string
+	
+	. local title "Poverty Headcount Ratio (1990-2015), by region"
+
+	. twoway (sc headcount190 year, c(l) msiz(small))  ///
+	.        (sc headcount320 year, c(l) msiz(small))  ///
+	.        (sc headcount550 year, c(l) msiz(small)), ///
+	.        by(reg,  title("`title'", si(med))        ///
+	.        	note("Source: PovcalNet", si(vsmall)) graphregion(c(white))) ///
+	.        xlab(1990(5)2015 , labsi(vsmall)) xti("Year", si(vsmall))     ///
+	.        ylab(0(25)100, labsi(vsmall) angle(0))                        ///
+	.        yti("Poverty headcount (%)", si(vsmall))                      ///
+	.        leg(order(1 "$1.9" 2 "$3.2" 3 "$5.5") r(1) si(vsmall))        ///
+	.        sub(, si(small))	scheme(s2color)
 {txt}      ({stata "povcalnet_examples example01":click to run})
 
-{p 8 12} Millions of poor by region (by aggregation - reference year) 
+{phang2}
+{ul:4.4} Millions of poor by region (by aggregation - reference year) 
 
 {cmd}
-	. povcalnet, povline(1.9) region(all) year(all) aggregate clear
-	. keep if requestyear > 1989
-	. gen poorpop = headcount * reqyearpopulation 
+	. povcalnet wb, clear
+	. keep if year > 1989
+	. gen poorpop = headcount * population 
 	. gen hcpercent = round(headcount*100, 0.1) 
 	. gen poorpopround = round(poorpop, 1)
-	. keep requestyear regioncode region poorpop
-	. gen 	rid=1 if regioncode=="OHI"
-	. replace rid=2 if regioncode=="ECA"
-	. replace rid=3 if regioncode=="MNA"
-	. replace rid=4 if regioncode=="LAC"
-	. replace rid=5 if regioncode=="EAP"
-	. replace rid=6 if regioncode=="SAS"
-	. replace rid=7 if regioncode=="SSA"
-	. replace rid=8 if regioncode=="WLD"
-	. keep requestyear rid poorpop
-	. reshape wide poorpop,i(requestyear) j(rid)
+	. encode region, gen(rid)
+
+	. levelsof rid, local(regions)
+	. foreach region of local regions {
+	. 	local legend = `"`legend' `region' "`: label rid `region''" "'
+	. }
+
+	. keep year rid poorpop
+	. reshape wide poorpop,i(year) j(rid)
 	. foreach i of numlist 2(1)7{
 	. 	egen poorpopacc`i'=rowtotal(poorpop1 - poorpop`i')
 	. }
-	. twoway (area poorpop1 requestyear) ///
-	. 	(rarea poorpopacc2 poorpop1 requestyear) ///
-	. 	(rarea poorpopacc3 poorpopacc2 requestyear) ///
-	. 	(rarea poorpopacc4 poorpopacc3 requestyear) ///
-	. 	(rarea poorpopacc5 poorpopacc4 requestyear) ///
-	. 	(rarea poorpopacc6 poorpopacc5 requestyear) ///
-	. 	(rarea poorpopacc7 poorpopacc6 requestyear) ///
-	. 	(line poorpopacc7 requestyear, lwidth(midthick) lcolor(gs0)), ///
-	. 	ytitle("Millions of Poor" " ", size(small))  ///
-	. 	xtitle(" " "", size(small))  ///
-	. 	graphregion(c(white)) ysize(7) xsize(8)  ///
+
+	. twoway (area poorpop1 year)                              ///
+	. 	(rarea poorpopacc2 poorpop1 year)                      ///
+	. 	(rarea poorpopacc3 poorpopacc2 year)                   ///
+	. 	(rarea poorpopacc4 poorpopacc3 year)                   ///
+	. 	(rarea poorpopacc5 poorpopacc4 year)                   ///
+	. 	(rarea poorpopacc6 poorpopacc5 year)                   ///
+	. 	(rarea poorpopacc7 poorpopacc6 year)                   ///
+	. 	(line poorpopacc7 year, lwidth(midthick) lcolor(gs0)), ///
+	. 	ytitle("Millions of Poor" " ", size(small))            ///
+	. 	xtitle(" " "", size(small)) scheme(s2color)            ///
+	. 	graphregion(c(white)) ysize(7) xsize(8)                ///
 	. 	ylabel(,labs(small) nogrid angle(verticle)) xlabel(,labs(small)) ///
-	. 	legend(order( ///
-	. 	1 "Rest of the World"  ///
-	. 	2 "Europe & Central Asia"  ///
-	. 	3 "Middle East & North Africa" ///
-	. 	4 "Latin America & Caribbean" ///
-	. 	5 "East Asia & the Pacific" ///
-	. 	6 "South Asia" ///
-	. 	7 "Sub-Saharan Africa" /// 
-	. 	8 "World") si(vsmall)) 
+	. 	legend(order(`legend') si(vsmall))
 {txt}      ({stata "povcalnet_examples example04":click to run})
 
 {marker disclaimer}{...}
