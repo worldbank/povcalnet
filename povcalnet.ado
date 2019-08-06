@@ -88,10 +88,11 @@ qui {
 		local aggregate ""
 		local subcommand "wb"
 		local wb_change 1
-		noi disp as res "Warning: " as text " {cmd:povclanet, country(all) aggregate} " /* 
+		noi disp as err "Warning: " as text " {cmd:povclanet, country(all) aggregate} " /* 
 	  */	"is equivalent to {cmd:povcalnet wb}. " _n /* 
 	  */ " if you want to aggregate all countries by survey years, " /* 
-	  */ "you need to parse the list of countries in {it:country()} option."
+	  */ "you need to parse the list of countries in {it:country()} option. See " /*
+     */  "{help povcalnet##options:aggregate option description} for an example on how to do it"
 	}
 	else {
 		local wb_change 0
