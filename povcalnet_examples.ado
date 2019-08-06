@@ -174,13 +174,14 @@ program example05
 	merge m:1 countrycode year using `PerCapitaGDP', keep(match)
 	replace gini = gini * 100
 	drop if ny_gdp_pcap_pp_kd == .
-	twoway (scatter gini ny_gdp_pcap_pp_kd, mfcolor(%0) ///
-		msize(vsmall)) (lfit gini ny_gdp_pcap_pp_kd), ///
-			ytitle("Gini Index" " ", size(small))  ///
-			xtitle(" " "GDP per Capita per Year (in 2011 USD PPP)", size(small))  ///
-			graphregion(c(white)) ysize(5) xsize(7)  ///
-			ylabel(,labs(small) nogrid angle(verticle)) xlabel(,labs(small)) ///
-			legend(order(1 "Gini Index" 2 "Fitted Value") si(small)) scheme(s2color)
+	twoway (scatter gini ny_gdp_pcap_pp_kd, mfcolor(%0)       ///
+		msize(vsmall)) (lfit gini ny_gdp_pcap_pp_kd),           ///
+		ytitle("Gini Index" " ", size(small))                   ///
+		xtitle(" " "GDP per Capita per Year (in 2011 USD PPP)", ///
+		size(small))  graphregion(c(white)) ysize(5) xsize(7)   ///
+		ylabel(,labs(small) nogrid angle(verticle))             ///
+		xlabel(,labs(small)) scheme(s2color)                    ///
+    legend(order(1 "Gini Index" 2 "Fitted Value") si(small))
 end
 
 *  ----------------------------------------------------------------------------
@@ -190,12 +191,14 @@ capture program drop example06
 program example06
 povcalnet, country(arg gha tha) year(all) clear
 	replace gini = gini * 100
-	twoway (connected gini datayear if countrycode == "ARG" & datayear > 1989)  ///
-		(connected gini datayear if countrycode == "GHA" & datayear > 1989)  ///
-		(connected gini datayear if countrycode == "THA" & datayear > 1989),  /// 
-		ytitle("Gini Index" " ", size(small)) xtitle(" " "", size(small))  ///
-		ylabel(,labs(small) nogrid angle(verticle)) xlabel(,labs(small)) ///
-		graphregion(c(white)) scheme(s2color)   ///
+	keep if datayear > 1989
+	twoway (connected gini datayear if countrycode == "ARG")  ///
+		(connected gini datayear if countrycode == "GHA")       ///
+		(connected gini datayear if countrycode == "THA"),      /// 
+		ytitle("Gini Index" " ", size(small))                   ///
+		xtitle(" " "", size(small)) ylabel(,labs(small) nogrid  ///
+		angle(verticle)) xlabel(,labs(small))                   ///
+		graphregion(c(white)) scheme(s2color)                   ///
 		legend(order(1 "Argentina" 2 "Ghana" 3 "Thailand") si(small) row(1)) 
 		
 end	   
@@ -206,20 +209,26 @@ capture program drop example07
 program example07	   
   povcalnet, country(arg gha tha) year(all)  clear
 	reshape long decile, i(countrycode datayear) j(dec)
+	
 	egen panelid=group(countrycode dec)
 	replace datayear=int(datayear)
 	xtset panelid datayear
+	
 	replace decile=10*decile*mean
 	gen g=(((decile/L5.decile)^(1/5))-1)*100
+	
 	replace g=(((decile/L7.decile)^(1/7))-1)*100 if countrycode=="GHA"
 	replace dec=10*dec
-	twoway 	(sc g dec if datayear==2016 & countrycode=="ARG", c(l)) ///
-			(sc g dec if datayear==2005 & countrycode=="GHA", c(l)) ///
-			(sc g dec if datayear==2015 & countrycode=="THA", c(l)) ///
-			, yti("Annual growth in decile average income (%)" " ", size(small))  ///
-			xlabel(0(10)100,labs(small)) xtitle("Decile group", size(small))  ///
-			graphregion(c(white)) ///
-			legend(order(1 "Argentina(2011-2016)"  2 "Ghana(1998-2005)" 3 "Thailand(2010-2015)") si(vsmall) row(1)) scheme(s2color)
+	
+	twoway (sc g dec if datayear==2016 & countrycode=="ARG", c(l)) ///
+			(sc g dec if datayear==2005 & countrycode=="GHA", c(l))    ///
+			(sc g dec if datayear==2015 & countrycode=="THA", c(l)),   ///
+			yti("Annual growth in decile average income (%)" " ",      ///
+			size(small))  xlabel(0(10)100,labs(small))                 ///
+			xtitle("Decile group", size(small)) graphregion(c(white))  ///
+			legend(order(1 "Argentina(2011-2016)"                      ///
+			2 "Ghana(1998-2005)" 3 "Thailand(2010-2015)")              ///
+			si(vsmall) row(1)) scheme(s2color)
 
 end
 

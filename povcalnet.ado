@@ -207,6 +207,7 @@ qui {
 			noi di  as err "Option PPP cannot be combined with aggregate."
 			error 198
 		}
+		noi disp as res "Note: " as text "Aggregation is only possible over reference years."
 		local agg_display = "Aggregation in base year(s) `year'"
 	}
 
