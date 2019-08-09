@@ -23,76 +23,9 @@ end
 
 
 *  ----------------------------------------------------------------------------
-*  1. Regional Poverty Evolution
+*  World Poverty Trend (reference year)
 *  ----------------------------------------------------------------------------
-capture program drop example01
-program example01
-	povcalnet wb, povline(1.9 3.2 5.5) clear
-	drop if inlist(regioncode, "OHI", "WLD") | year<1990 
-	keep povertyline region year headcount
-	replace povertyline = povertyline*100
-	replace headcount = headcount*100
-	
-	tostring povertyline, replace format(%12.0f) force
-	reshape wide  headcount,i(year region) j(povertyline) string
-	
-	local title "Poverty Headcount Ratio (1990-2015), by region"
-
-	twoway (sc headcount190 year, c(l) msiz(small))  ///
-	       (sc headcount320 year, c(l) msiz(small))  ///
-	       (sc headcount550 year, c(l) msiz(small)), ///
-	       by(reg,  title("`title'", si(med))        ///
-	       	note("Source: PovcalNet", si(vsmall)) graphregion(c(white))) ///
-	       xlab(1990(5)2015 , labsi(vsmall)) xti("Year", si(vsmall))     ///
-	       ylab(0(25)100, labsi(vsmall) angle(0))                        ///
-	       yti("Poverty headcount (%)", si(vsmall))                      ///
-	       leg(order(1 "$1.9" 2 "$3.2" 3 "$5.5") r(1) si(vsmall))        ///
-	       sub(, si(small))	scheme(s2color)
-end
-
-*  ----------------------------------------------------------------------------
-*  2. Categories of income and poverty in LAC
-*  ----------------------------------------------------------------------------
-capture program drop example02
-program example02
-	povcalnet, region(lac) year(last) povline(3.2 5.5 15) fillgaps clear 
-	keep if datatype==2 & year>=2014             // keep income surveys
-	keep povertyline countrycode countryname year headcount
-	replace povertyline = povertyline*100
-	replace headcount = headcount*100
-	tostring povertyline, replace format(%12.0f) force
-	reshape wide  headcount,i(year countrycode countryname ) j(povertyline) string
-	
-	gen percentage_0 = headcount320
-	gen percentage_1 = headcount550 - headcount320
-	gen percentage_2 = headcount1500 - headcount550
-	gen percentage_3 = 100 - headcount1500
-	
-	keep countrycode countryname year  percentage_*
-	reshape long  percentage_,i(year countrycode countryname ) j(category) 
-	la define category 0 "Poor LMI (< $3.2)" 1 "Poor UMI ($3.2-$5.5)" ///
-		                 2 "Vulnerable ($5.5-$15)" 3 "Middle class (> $15)"
-	la val category category
-	la var category ""
-
-	local title "Distribution of Income in Latin America and Caribbean, by country"
-	local note "Source: PovCalNet, using the latest survey after 2014 for each country."
-	local yti  "Population share in each income category (%)"
-
-	graph bar (mean) percentage, inten(*0.7) o(category) o(countrycode, ///
-	  lab(labsi(small) angle(vertical))) stack asy                      /// 
-		blab(bar, pos(center) format(%3.1f) si(tiny))                     /// 
-		ti("`title'", si(small)) note("`note'", si(*.7))                  ///
-		graphregion(c(white)) ysize(6) xsize(6.5)                         ///
-			legend(si(vsmall) r(3))  yti("`yti'", si(small))                ///
-		ylab(,labs(small) nogrid angle(0)) scheme(s2color)
-end
-
-*  ----------------------------------------------------------------------------
-*  3. World Poverty Trend (reference year)
-*  ----------------------------------------------------------------------------
-capture program drop example03
-program example03
+program define example01
 
 	povcalnet wb,  clear
 
@@ -118,12 +51,10 @@ program example03
          row(2)) scheme(s2color)
 
 end
-
 *  ----------------------------------------------------------------------------
-*  4.  Millions of poor by region (reference year) 
+*  Millions of poor by region (reference year) 
 *  ----------------------------------------------------------------------------
-capture program drop example04
-program example04
+program define example02
 	povcalnet wb, clear
 	keep if year > 1989
 	gen poorpop = headcount * population 
@@ -158,37 +89,46 @@ program example04
 end
 
 *  ----------------------------------------------------------------------------
-*  5.  Gini & per capita GDP
+*  Categories of income and poverty in LAC
 *  ----------------------------------------------------------------------------
-capture program drop example05
-program example05
-	set checksum off
-	wbopendata, indicator(NY.GDP.PCAP.PP.KD) long clear
-	tempfile PerCapitaGDP
-	save `PerCapitaGDP', replace
+program example03
+	povcalnet, region(lac) year(last) povline(3.2 5.5 15) fillgaps clear 
+	keep if datatype==2 & year>=2014             // keep income surveys
+	keep povertyline countrycode countryname year headcount
+	replace povertyline = povertyline*100
+	replace headcount = headcount*100
+	tostring povertyline, replace format(%12.0f) force
+	reshape wide  headcount,i(year countrycode countryname ) j(povertyline) string
 	
-	povcalnet, povline(1.9) country(all) year(last) clear iso
-	keep countrycode countryname year gini
-	drop if gini == -1
-	* Merge Gini coefficient with per capita GDP
-	merge m:1 countrycode year using `PerCapitaGDP', keep(match)
-	replace gini = gini * 100
-	drop if ny_gdp_pcap_pp_kd == .
-	twoway (scatter gini ny_gdp_pcap_pp_kd, mfcolor(%0)       ///
-		msize(vsmall)) (lfit gini ny_gdp_pcap_pp_kd),           ///
-		ytitle("Gini Index" " ", size(small))                   ///
-		xtitle(" " "GDP per Capita per Year (in 2011 USD PPP)", ///
-		size(small))  graphregion(c(white)) ysize(5) xsize(7)   ///
-		ylabel(,labs(small) nogrid angle(verticle))             ///
-		xlabel(,labs(small)) scheme(s2color)                    ///
-    legend(order(1 "Gini Index" 2 "Fitted Value") si(small))
+	gen percentage_0 = headcount320
+	gen percentage_1 = headcount550 - headcount320
+	gen percentage_2 = headcount1500 - headcount550
+	gen percentage_3 = 100 - headcount1500
+	
+	keep countrycode countryname year  percentage_*
+	reshape long  percentage_,i(year countrycode countryname ) j(category) 
+	la define category 0 "Poor LMI (< $3.2)" 1 "Poor UMI ($3.2-$5.5)" ///
+		                 2 "Vulnerable ($5.5-$15)" 3 "Middle class (> $15)"
+	la val category category
+	la var category ""
+
+	local title "Distribution of Income in Latin America and Caribbean, by country"
+	local note "Source: PovCalNet, using the latest survey after 2014 for each country."
+	local yti  "Population share in each income category (%)"
+
+	graph bar (mean) percentage, inten(*0.7) o(category) o(countrycode, ///
+	  lab(labsi(small) angle(vertical))) stack asy                      /// 
+		blab(bar, pos(center) format(%3.1f) si(tiny))                     /// 
+		ti("`title'", si(small)) note("`note'", si(*.7))                  ///
+		graphregion(c(white)) ysize(6) xsize(6.5)                         ///
+			legend(si(vsmall) r(3))  yti("`yti'", si(small))                ///
+		ylab(,labs(small) nogrid angle(0)) scheme(s2color)
 end
 
 *  ----------------------------------------------------------------------------
-*  6. Trend of Gini 
+* Trend of Gini 
 *  ----------------------------------------------------------------------------
-capture program drop example06
-program example06
+program example04
 povcalnet, country(arg gha tha) year(all) clear
 	replace gini = gini * 100
 	keep if datayear > 1989
@@ -202,11 +142,11 @@ povcalnet, country(arg gha tha) year(all) clear
 		legend(order(1 "Argentina" 2 "Ghana" 3 "Thailand") si(small) row(1)) 
 		
 end	   
+
 *  ----------------------------------------------------------------------------
-*  7. Growth incidence curves
+*  Growth incidence curves
 *  ----------------------------------------------------------------------------
-capture program drop example07
-program example07	   
+program example05
   povcalnet, country(arg gha tha) year(all)  clear
 	reshape long decile, i(countrycode datayear) j(dec)
 	
@@ -232,6 +172,61 @@ program example07
 
 end
 
+*  ----------------------------------------------------------------------------
+*  Gini & per capita GDP
+*  ----------------------------------------------------------------------------
+program example06
+	set checksum off
+	wbopendata, indicator(NY.GDP.PCAP.PP.KD) long clear
+	tempfile PerCapitaGDP
+	save `PerCapitaGDP', replace
+	
+	povcalnet, povline(1.9) country(all) year(last) clear iso
+	keep countrycode countryname year gini
+	drop if gini == -1
+	* Merge Gini coefficient with per capita GDP
+	merge m:1 countrycode year using `PerCapitaGDP', keep(match)
+	replace gini = gini * 100
+	drop if ny_gdp_pcap_pp_kd == .
+	twoway (scatter gini ny_gdp_pcap_pp_kd, mfcolor(%0)       ///
+		msize(vsmall)) (lfit gini ny_gdp_pcap_pp_kd),           ///
+		ytitle("Gini Index" " ", size(small))                   ///
+		xtitle(" " "GDP per Capita per Year (in 2011 USD PPP)", ///
+		size(small))  graphregion(c(white)) ysize(5) xsize(7)   ///
+		ylabel(,labs(small) nogrid angle(verticle))             ///
+		xlabel(,labs(small)) scheme(s2color)                    ///
+    legend(order(1 "Gini Index" 2 "Fitted Value") si(small))
+end
+
+
+
+
+*  ----------------------------------------------------------------------------
+*  Regional Poverty Evolution
+*  ----------------------------------------------------------------------------
+program define example07
+	povcalnet wb, povline(1.9 3.2 5.5) clear
+	drop if inlist(regioncode, "OHI", "WLD") | year<1990 
+	keep povertyline region year headcount
+	replace povertyline = povertyline*100
+	replace headcount = headcount*100
+	
+	tostring povertyline, replace format(%12.0f) force
+	reshape wide  headcount,i(year region) j(povertyline) string
+	
+	local title "Poverty Headcount Ratio (1990-2015), by region"
+
+	twoway (sc headcount190 year, c(l) msiz(small))  ///
+	       (sc headcount320 year, c(l) msiz(small))  ///
+	       (sc headcount550 year, c(l) msiz(small)), ///
+	       by(reg,  title("`title'", si(med))        ///
+	       	note("Source: PovcalNet", si(vsmall)) graphregion(c(white))) ///
+	       xlab(1990(5)2015 , labsi(vsmall)) xti("Year", si(vsmall))     ///
+	       ylab(0(25)100, labsi(vsmall) angle(0))                        ///
+	       yti("Poverty headcount (%)", si(vsmall))                      ///
+	       leg(order(1 "$1.9" 2 "$3.2" 3 "$5.5") r(1) si(vsmall))        ///
+	       sub(, si(small))	scheme(s2color)
+end
 
 
 
