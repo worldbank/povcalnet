@@ -97,9 +97,8 @@ qui {
 					"{stata github update povcalnet}"
 					local bye "error"
 				}
-				global pcn_cmds_ssc = 1  // make sure it does not execute again per session
 			}
-			local bye ""
+			else local bye ""
 		}  // end of checking github update
 		else {
 			noi disp as result "Github version up to date."
