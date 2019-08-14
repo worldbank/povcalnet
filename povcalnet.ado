@@ -48,6 +48,70 @@ else                      pause off
 qui {
 
 	/*==================================================
+		    Dependencies         
+	==================================================*/
+
+	if ("${pcn_cmds_ssc}" == "") {
+		
+		*---------- check SSC commands
+
+		local cmds missings
+		
+		noi disp in y "Note: " in w "{cmd:povcalnet} requires the packages below: " /* 
+		 */ _n in g "`cmds'"
+		 
+		foreach cmd of local cmds {
+			capture which `cmd'
+			if (_rc != 0) {
+				ssc install `cmd'
+				noi disp in g "{cmd:`cmd'} " in w _col(15) "installed"
+			}
+		}
+
+		adoupdate `cmds', ssconly
+		if ("`r(pkglist)'" != "") adoupdate `r(pkglist)', update ssconly
+
+
+		*---------- check update in Github
+
+		qui github query worldbank/povcalnet
+		local latestversion = "`'r(latestversion)'"
+
+		qui github version povcalnet
+		local crrtversion =  "`r(version)'"
+
+		if ("`latestversion'" != "crrtversion") {
+			cap window stopbox rusure "There is a new version of povcalnet in Github." ///
+			"Would you like to install it now?"
+
+			if (_rc == 0) {
+				cap github update povcalnet
+				if (_rc == 0) {
+					noi disp as result "Installation complete. please type" ///
+					"{cmd: discard} in your command window to finish"
+					local bye "exit"
+				}
+				else {
+					noi disp as err "there was an error in the installation. " _n ///
+					"please run the following to retry, " _n(2) ///
+					"{stata github update povcalnet}"
+					local bye "error"
+				}
+				global pcn_cmds_ssc = 1  // make sure it does not execute again per session
+			}
+			local bye ""
+		}  // end of checking github update
+		else {
+			noi disp as result "Github version up to date."
+			local bye ""
+		}
+
+		global pcn_cmds_ssc = 1  // make sure it does not execute again per session
+		`bye'
+	}
+
+
+	/*==================================================
         	Defaults           
 	==================================================*/
 	
@@ -159,29 +223,6 @@ qui {
 		else                             local country "all"
 	}
 	
-	/*==================================================
-		    Dependencies         
-	==================================================*/
-
-	if ("${pcn_cmds_ssc}" == "") {
-		local cmds missings
-		
-		noi disp in y "Note: " in w "{cmd:povcalnet} requires the packages below: " /* 
-		 */ _n in g "`cmds'"
-		 
-		foreach cmd of local cmds {
-			capture which `cmd'
-			if (_rc != 0) {
-				ssc install `cmd'
-				noi disp in g "{cmd:`cmd'} " in w _col(15) "installed"
-			}
-		}
-
-		adoupdate `cmds', ssconly
-		if ("`r(pkglist)'" != "") adoupdate `r(pkglist)', update ssconly
-		global pcn_cmds_ssc = 1  // make sure it does not execute again per session
-	}
-
 
 	/*==================================================
 		     Main conditions
