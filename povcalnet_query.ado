@@ -9,7 +9,7 @@
 *********************************************************************************
 program def povcalnet_query, rclass
 
-version 14.0
+version 11.0
 
    syntax [anything(name=subcommand)]    ///
       [,                       ///

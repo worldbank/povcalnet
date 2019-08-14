@@ -10,7 +10,7 @@
 
 program def povcalnet_aggquery, rclass
 
-version 9.0
+version 11.0
 
     syntax                    ///
       [,                      ///

@@ -27,7 +27,7 @@ syntax , [                       ///
            noDIPSQuery           /// 
          ]
 
-version 14
+version 11.0
 
 if ("`pause'" == "pause") pause on
 else                      pause off

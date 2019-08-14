@@ -21,7 +21,7 @@ program def povcalnet, rclass
 
 set checksum off //temporarily bypasses controls of files taken from internet
 
-version 9.0
+version 11.0
 
  syntax [anything(name=subcommand)]    ///
         [,                             ///
@@ -33,13 +33,13 @@ version 9.0
           AGGregate                    ///
           CLEAR                        ///
           INFOrmation                  ///
-		  coverage(string)             ///
+		      coverage(string)             ///
           ISO                          /// Standard ISO codes
           SERVER(string)               /// internal use
-		  pause                        /// debugging
-		  FILLgaps                     ///
-		  N2disp(integer 15)           ///
-		  noDIPSQuery                  ///
+		      pause                        /// debugging
+		      FILLgaps                     ///
+		      N2disp(integer 15)           ///
+		      noDIPSQuery                  ///
         ] 
 
 if ("`pause'" == "pause") pause on
@@ -354,7 +354,7 @@ qui {
            Append data
 	==================================================*/			
 	  if (`wb_change' == 1) {
-	  	keep if region_code == "WLD"
+	  	keep if regioncode == "WLD"
 	  }
 	  append using `povcalf'
 	  save `povcalf', replace

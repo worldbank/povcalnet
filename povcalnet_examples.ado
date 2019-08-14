@@ -15,7 +15,7 @@
 
 capture program drop povcalnet_examples
 program povcalnet_examples
-version 9.2
+version 11.0
 args EXAMPLE
 set more off
 `EXAMPLE'

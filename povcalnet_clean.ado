@@ -15,6 +15,8 @@ Output:             dta
 ==================================================*/
 program define povcalnet_clean, rclass
 
+version 11.0
+
 syntax anything(name=type),      ///
              [                   ///
 								year(string)     ///
