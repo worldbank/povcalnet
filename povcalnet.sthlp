@@ -1,9 +1,21 @@
 {smcl}
-{hline}
-{* 31Auot2018 }{...}
-help for {hi:povcalnet}{right:World Bank}
-{hline}
-
+{* *! version 1.0 14 aug 2019}{...}
+{vieweralsosee "" "--"}{...}
+{vieweralsosee "Install wbopendata" "ssc install wbopendata"}{...}
+{vieweralsosee "Help wbopendata (if installed)" "help wbopendata"}{...}
+{viewerjumpto 	"Command description"   "povcalnet##desc"}{...}
+{viewerjumpto "Parameters description"   "povcalnet##param"}{...}
+{viewerjumpto "Options description"   "povcalnet##options"}{...}
+{viewerjumpto "Subcommands"   "povcalnet##subcommands"}{...}
+{viewerjumpto "Stored results"   "povcalnet##return"}{...}
+{viewerjumpto "Examples"   "povcalnet##Examples"}{...}
+{viewerjumpto "Disclaimer"   "povcalnet##disclaimer"}{...}
+{viewerjumpto "How to cite"   "povcalnet##howtocite"}{...}
+{viewerjumpto "References"   "povcalnet##references"}{...}
+{viewerjumpto "Acknowledgements"   "povcalnet##acknowled"}{...}
+{viewerjumpto "Authors"   "povcalnet##authors"}{...}
+{viewerjumpto "Regions" "povcalnet_countries##regions"}{...}
+{viewerjumpto "Countries" "povcalnet_countries##countries"}{...}
 {title:Title}
 
 {p2colset 9 24 22 2}{...}
@@ -67,11 +79,12 @@ Sections are presented under the following headings:
 		{it:{help povcalnet##return:Stored results}}
 		{it:{help povcalnet##Examples:Examples}}
 		{it:{help povcalnet##disclaimer:Disclaimer}}
-		{it:{help povcalnet##howtocite:How to cite}}
 		{it:{help povcalnet##references:References}}
 		{it:{help povcalnet##acknowled:Acknowledgements}}
 		{it:{help povcalnet##authors:Authors}}
-
+		{it:{help povcalnet##contact:Contact}}
+		{it:{help povcalnet##howtocite:How to cite}}
+		{it:{help povcalnet_countries:Region and country codes}}
 
 {marker desc}{...}
 {p 40 20 2}(Go up to {it:{help povcalnet##sections:Sections Menu}}){p_end}
@@ -582,213 +595,11 @@ We would especially warn that estimates of the densities near the bottom and top
 {p 4 4 2}The term country, used interchangeably with economy, does not imply political independence but refers to any territory for which authorities report separate social or economic statistics.
 {p_end}
 
-
-{marker howtocite}{...}
-{title:Thanks for citing {cmd:povcalnet} as follows}
-{p 40 20 2}(Go up to {it:{help povcalnet##sections:Sections Menu}}){p_end}
-
-{p 8 12 2}XXX (2018) "povcalnet: Stata module to access World Bank’s Global Poverty and Inequality data," Statistical Software Components YYYY, Boston College Department of Economics. http://ideas.repec.org/c/boc/bocode/ZZZZZ.html {p_end}
-
-
 {marker references}{...}
 {title:References}
 {p 40 20 2}(Go up to {it:{help povcalnet##sections:Sections Menu}}){p_end}
 
     {p 8 12 2}XXX (2018) "How to use PovcalNet from Stata", Global Poverty Monitoring Technical Note 7, World Bank. [NEED TO ADD HYPERLINK]{p_end}
-
-	
-	
-{marker regions}{...}
-{p 40 20 2}(Go up to {it:{help povcalnet##sections:Sections Menu}}){p_end}
-{title:Region Codes}
-
-{synoptset 33 tabbed}{...}
-{synopthdr: Regions}
-{col 6}{hline 70}
-{synopt:{opt  EAP }} East Asia and Pacific{p_end}
-{synopt:{opt  ECA }} Europe and Central Asia{p_end}
-{synopt:{opt  HIC }} Other High Income{p_end}
-{synopt:{opt  LAC }} Latin America and the Caribbean{p_end}
-{synopt:{opt  MNA }} Middle East and North Africa{p_end}
-{synopt:{opt  SAS }} South Asia{p_end}
-{synopt:{opt  SSA }} Sub-Saharan Africa{p_end}
-{col 6}{hline 70}
-{p 6 6 0 76}{err:Note}: {it:Other High Income} includes the advanced economies; 
-all other economies are included in geographic regions, as defined by the World Bank.{p_end}
-
-
-	
-{marker countries}{...}
-{p 40 20 2}(Go up to {it:{help povcalnet##sections:Sections Menu}}){p_end}
-{title:Country and Economy Acronyms}
-
-{synoptset 33 tabbed}{...}
-{synopthdr: Country/Economy}
-{synoptline}
-{synopt:{opt  ALB }} Albania{p_end}
-{synopt:{opt  DZA }} Algeria{p_end}
-{synopt:{opt  AGO }} Angola{p_end}
-{synopt:{opt  ARG }} Argentina{p_end}
-{synopt:{opt  ARM }} Armenia{p_end}
-{synopt:{opt  AUS }} Australia{p_end}
-{synopt:{opt  AUT }} Austria{p_end}
-{synopt:{opt  AZE }} Azerbaijan{p_end}
-{synopt:{opt  BGD }} Bangladesh{p_end}
-{synopt:{opt  BLR }} Belarus{p_end}
-{synopt:{opt  BEL }} Belgium{p_end}
-{synopt:{opt  BLZ }} Belize{p_end}
-{synopt:{opt  BEN }} Benin{p_end}
-{synopt:{opt  BTN }} Bhutan{p_end}
-{synopt:{opt  BOL }} Bolivia{p_end}
-{synopt:{opt  BIH }} Bosnia and Herzegovina{p_end}
-{synopt:{opt  BWA }} Botswana{p_end}
-{synopt:{opt  BRA }} Brazil{p_end}
-{synopt:{opt  BGR }} Bulgaria{p_end}
-{synopt:{opt  BFA }} Burkina Faso{p_end}
-{synopt:{opt  BDI }} Burundi{p_end}
-{synopt:{opt  CPV }} Cabo Verde{p_end}
-{synopt:{opt  CMR }} Cameroon{p_end}
-{synopt:{opt  CAN }} Canada{p_end}
-{synopt:{opt  CAF }} Central African Republic{p_end}
-{synopt:{opt  TCD }} Chad{p_end}
-{synopt:{opt  CHL }} Chile{p_end}
-{synopt:{opt  CHN }} China{p_end}
-{synopt:{opt  COL }} Colombia{p_end}
-{synopt:{opt  COM }} Comoros{p_end}
-{synopt:{opt  ZAR }} Congo, Democratic Republic of{p_end}
-{synopt:{opt  COG }} Congo, Republic of{p_end}
-{synopt:{opt  CRI }} Costa Rica{p_end}
-{synopt:{opt  CIV }} Cote d'Ivoire{p_end}
-{synopt:{opt  HRV }} Croatia{p_end}
-{synopt:{opt  CYP }} Cyprus{p_end}
-{synopt:{opt  CZE }} Czech Republic{p_end}
-{synopt:{opt  DNK }} Denmark{p_end}
-{synopt:{opt  DJI }} Djibouti{p_end}
-{synopt:{opt  DOM }} Dominican Republic{p_end}
-{synopt:{opt  ECU }} Ecuador{p_end}
-{synopt:{opt  EGY }} Egypt, Arab Republic of{p_end}
-{synopt:{opt  SLV }} El Salvador{p_end}
-{synopt:{opt  EST }} Estonia{p_end}
-{synopt:{opt  SWZ }} Eswatini{p_end}
-{synopt:{opt  ETH }} Ethiopia{p_end}
-{synopt:{opt  FJI }} Fiji{p_end}
-{synopt:{opt  FIN }} Finland{p_end}
-{synopt:{opt  FRA }} France{p_end}
-{synopt:{opt  GAB }} Gabon{p_end}
-{synopt:{opt  GMB }} Gambia, The{p_end}
-{synopt:{opt  GEO }} Georgia{p_end}
-{synopt:{opt  DEU }} Germany{p_end}
-{synopt:{opt  GHA }} Ghana{p_end}
-{synopt:{opt  GRC }} Greece{p_end}
-{synopt:{opt  GTM }} Guatemala{p_end}
-{synopt:{opt  GIN }} Guinea{p_end}
-{synopt:{opt  GNB }} Guinea-Bissau{p_end}
-{synopt:{opt  GUY }} Guyana{p_end}
-{synopt:{opt  HTI }} Haiti{p_end}
-{synopt:{opt  HND }} Honduras{p_end}
-{synopt:{opt  HUN }} Hungary{p_end}
-{synopt:{opt  ISL }} Iceland{p_end}
-{synopt:{opt  IND }} India{p_end}
-{synopt:{opt  IDN }} Indonesia{p_end}
-{synopt:{opt  IRN }} Iran, Islamic Republic of{p_end}
-{synopt:{opt  IRQ }} Iraq{p_end}
-{synopt:{opt  IRL }} Ireland{p_end}
-{synopt:{opt  ISR }} Israel{p_end}
-{synopt:{opt  ITA }} Italy{p_end}
-{synopt:{opt  JAM }} Jamaica{p_end}
-{synopt:{opt  JPN }} Japan{p_end}
-{synopt:{opt  JOR }} Jordan{p_end}
-{synopt:{opt  KAZ }} Kazakhstan{p_end}
-{synopt:{opt  KEN }} Kenya{p_end}
-{synopt:{opt  KIR }} Kiribati{p_end}
-{synopt:{opt  KOR }} Korea, Republic of{p_end}
-{synopt:{opt  KSV }} Kosovo{p_end}
-{synopt:{opt  KGZ }} Kyrgyz Republic{p_end}
-{synopt:{opt  LAO }} Lao People's Democratic Republic{p_end}
-{synopt:{opt  LVA }} Latvia{p_end}
-{synopt:{opt  LBN }} Lebanon{p_end}
-{synopt:{opt  LSO }} Lesotho{p_end}
-{synopt:{opt  LBR }} Liberia{p_end}
-{synopt:{opt  LTU }} Lithuania{p_end}
-{synopt:{opt  LUX }} Luxembourg{p_end}
-{synopt:{opt  MKD }} Macedonia, former Yugoslav Republic of{p_end}
-{synopt:{opt  MDG }} Madagascar{p_end}
-{synopt:{opt  MWI }} Malawi{p_end}
-{synopt:{opt  MYS }} Malaysia{p_end}
-{synopt:{opt  MDV }} Maldives{p_end}
-{synopt:{opt  MLI }} Mali{p_end}
-{synopt:{opt  MLT }} Malta{p_end}
-{synopt:{opt  MRT }} Mauritania{p_end}
-{synopt:{opt  MUS }} Mauritius{p_end}
-{synopt:{opt  MEX }} Mexico{p_end}
-{synopt:{opt  FSM }} Micronesia, Federated States of{p_end}
-{synopt:{opt  MDA }} Moldova{p_end}
-{synopt:{opt  MNG }} Mongolia{p_end}
-{synopt:{opt  MNE }} Montenegro{p_end}
-{synopt:{opt  MAR }} Morocco{p_end}
-{synopt:{opt  MOZ }} Mozambique{p_end}
-{synopt:{opt  MMR }} Myanmar{p_end}
-{synopt:{opt  NAM }} Namibia{p_end}
-{synopt:{opt  NPL }} Nepal{p_end}
-{synopt:{opt  NLD }} Netherlands{p_end}
-{synopt:{opt  NIC }} Nicaragua{p_end}
-{synopt:{opt  NER }} Niger{p_end}
-{synopt:{opt  NGA }} Nigeria{p_end}
-{synopt:{opt  NOR }} Norway{p_end}
-{synopt:{opt  PAK }} Pakistan{p_end}
-{synopt:{opt  PAN }} Panama{p_end}
-{synopt:{opt  PNG }} Papua New Guinea{p_end}
-{synopt:{opt  PRY }} Paraguay{p_end}
-{synopt:{opt  PER }} Peru{p_end}
-{synopt:{opt  PHL }} Philippines{p_end}
-{synopt:{opt  POL }} Poland{p_end}
-{synopt:{opt  PRT }} Portugal{p_end}
-{synopt:{opt  ROU }} Romania{p_end}
-{synopt:{opt  RUS }} Russian Federation{p_end}
-{synopt:{opt  RWA }} Rwanda{p_end}
-{synopt:{opt  WSM }} Samoa{p_end}
-{synopt:{opt  STP }} Sao Tome and Principe{p_end}
-{synopt:{opt  SEN }} Senegal{p_end}
-{synopt:{opt  SRB }} Serbia{p_end}
-{synopt:{opt  SYC }} Seychelles{p_end}
-{synopt:{opt  SLE }} Sierra Leone{p_end}
-{synopt:{opt  SVK }} Slovak Republic{p_end}
-{synopt:{opt  SVN }} Slovenia{p_end}
-{synopt:{opt  SLB }} Solomon Islands{p_end}
-{synopt:{opt  ZAF }} South Africa{p_end}
-{synopt:{opt  SSD }} South Sudan{p_end}
-{synopt:{opt  ESP }} Spain{p_end}
-{synopt:{opt  LKA }} Sri Lanka{p_end}
-{synopt:{opt  LCA }} St. Lucia{p_end}
-{synopt:{opt  SDN }} Sudan{p_end}
-{synopt:{opt  SUR }} Suriname{p_end}
-{synopt:{opt  SWE }} Sweden{p_end}
-{synopt:{opt  CHE }} Switzerland{p_end}
-{synopt:{opt  SYR }} Syrian Arab Republic{p_end}
-{synopt:{opt  TJK }} Tajikistan{p_end}
-{synopt:{opt  TZA }} Tanzania{p_end}
-{synopt:{opt  THA }} Thailand{p_end}
-{synopt:{opt  TMP }} Timor-Leste{p_end}
-{synopt:{opt  TGO }} Togo{p_end}
-{synopt:{opt  TON }} Tonga{p_end}
-{synopt:{opt  TTO }} Trinidad and Tobago{p_end}
-{synopt:{opt  TUN }} Tunisia{p_end}
-{synopt:{opt  TUR }} Turkey{p_end}
-{synopt:{opt  TKM }} Turkmenistan{p_end}
-{synopt:{opt  TUV }} Tuvalu{p_end}
-{synopt:{opt  UGA }} Uganda{p_end}
-{synopt:{opt  UKR }} Ukraine{p_end}
-{synopt:{opt  GBR }} United Kingdom{p_end}
-{synopt:{opt  USA }} United States{p_end}
-{synopt:{opt  URY }} Uruguay{p_end}
-{synopt:{opt  UZB }} Uzbekistan{p_end}
-{synopt:{opt  VUT }} Vanuatu{p_end}
-{synopt:{opt  VEN }} Venezuela, Republica Bolivariana de{p_end}
-{synopt:{opt  VNM }} Vietnam{p_end}
-{synopt:{opt  WBG }} West Bank and Gaza{p_end}
-{synopt:{opt  YEM }} Yemen, Republic of{p_end}
-{synopt:{opt  ZMB }} Zambia{p_end}
-{synopt:{opt  ZWE }} Zimbabwe{p_end}
 
 {marker acknowled}{...}
 {title:Acknowledgements}
@@ -797,25 +608,29 @@ all other economies are included in geographic regions, as defined by the World 
 {p 4 4 2}The authors would like to thank R. Andres Castaneda Aguilar, Kihoon Lee and Minh Cong Nguyen for comments received on earlier versions of this code.{p_end}
 {p 4 4 2}In developing this code, we closely followed the example of wbopendata developed by Joao Pedro Azevedo. {p_end} 
 
-
 {p 40 20 2}(Go up to {it:{help povcalnet##sections:Sections Menu}}){p_end}
 {marker authors}{...}
 {title:Authors}
-	{p 4 4 2}Christoph Lakner, Espen Beer Prydz, Jorge Soler Lopez, Ruoxuan Wu, Qinghua Zhao{p_end}
-	{p 4 4 2}Any questions or suggestions for improvements should be directed to Data at worldbank.org{p_end}
+	{p 4 4 2}R.Andres Castaneda, Christoph Lakner, Espen Beer Prydz, Jorge Soler Lopez, Ruoxuan Wu, Qinghua Zhao{p_end}
 
-{title:contributor}
+{title:maintainer}
 {p 4 4 4}R.Andres Castaneda, The World Bank{p_end}
 {p 6 6 4}Email: {browse "acastanedaa@worldbank.org":  acastanedaa@worldbank.org}{p_end}
 {p 6 6 4}GitHub:{browse "https://github.com/randrescastaneda": randrescastaneda }{p_end}
 
+{marker contact}{...}
 {title:contact}
 {phang}
 Any comment, suggestion, or bug can be reported in the 
 {browse "https://github.com/worldbank/povcalnet/issues" :GitHub issues page}.
 All the files are avaialble in the {browse "https://github.com/worldbank/povcalnet": GitHub repository}
-	
-{title:Also see}
-{psee}
-Online:  {help wbopendata}  (if installed)
-{p_end}
+
+{marker howtocite}{...}
+{title:Thanks for citing {cmd:povcalnet} as follows}
+{p 40 20 2}(Go up to {it:{help povcalnet##sections:Sections Menu}}){p_end}
+
+{p 8 12 2}XXX (2019) "povcalnet: Stata module to access World Bank’s Global Poverty and Inequality data," Statistical Software Components YYYY, Boston College Department of Economics. http://ideas.repec.org/c/boc/bocode/ZZZZZ.html {p_end}
+
+
+
+
