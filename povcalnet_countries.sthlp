@@ -14,7 +14,7 @@
 {title:Region Codes}
 
 {synoptset 33 tabbed}{...}
-{synopthdr: Regions}
+{col 7}{it:Code}{col 41}{cmd:Name}
 {col 6}{hline 70}
 {synopt:{opt  EAP }} East Asia and Pacific{p_end}
 {synopt:{opt  ECA }} Europe and Central Asia{p_end}
@@ -24,7 +24,8 @@
 {synopt:{opt  SAS }} South Asia{p_end}
 {synopt:{opt  SSA }} Sub-Saharan Africa{p_end}
 {col 6}{hline 70}
-{p 6 6 0 76}{err:Note}: {it:Other High Income} includes the advanced economies; 
+{p 6 6 0 76}{err:Note}: {it:Other High Income} includes mostly high-income economies
+(for a list see p. 152 of World Bank, 2018, and the PovcalNet webpage); 
 all other economies are included in geographic regions, as defined by the World Bank.{p_end}
 
 
@@ -34,7 +35,7 @@ all other economies are included in geographic regions, as defined by the World 
 {title:Country and Economy Acronyms}
 
 {synoptset 33 tabbed}{...}
-{synopthdr: Country/Economy}
+{col 7}{it:Code}{col 41}{cmd:Name}
 {synoptline}
 {synopt:{opt  ALB }} Albania{p_end}
 {synopt:{opt  DZA }} Algeria{p_end}
@@ -122,7 +123,7 @@ all other economies are included in geographic regions, as defined by the World 
 {synopt:{opt  LBR }} Liberia{p_end}
 {synopt:{opt  LTU }} Lithuania{p_end}
 {synopt:{opt  LUX }} Luxembourg{p_end}
-{synopt:{opt  MKD }} Macedonia, former Yugoslav Republic of{p_end}
+{synopt:{opt  MKD }} North Macedonia{p_end}
 {synopt:{opt  MDG }} Madagascar{p_end}
 {synopt:{opt  MWI }} Malawi{p_end}
 {synopt:{opt  MYS }} Malaysia{p_end}
