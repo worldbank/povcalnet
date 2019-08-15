@@ -427,9 +427,48 @@ qui {
 			*/ abbreviate(12) sepby(povertyline)
 		}		
 	}
-
+	
 } // end of qui
 end
+
+// ------------------------------------------------------------------------
+// MATA functions
+// ------------------------------------------------------------------------
+
+
+findfile stata.trk
+local fn = "`r(fn)'"
+
+cap mata: mata drop povcalnet_*()
+mata:
+
+// function to look for source of code
+void povcalnet_source(string scalar cmd) {
+	
+	cmd =  cmd :+ ".pkg"
+	
+	fh = _fopen("`fn'", "r")
+	
+	pos_a = ftell(fh)
+	pos_b = 0
+	while ((line=strtrim(fget(fh)))!=J(0,0,"")) {
+		if (regexm(strtrim(line), cmd)) {
+			fseek(fh, pos_b, -1)
+			break
+		}
+		pos_b = pos_a
+		pos_a = ftell(fh)
+	}
+	
+	src = strtrim(fget(fh))
+	src = substr(src, 3)
+	st_local("src", src)
+	
+	fclose(fh)
+}
+
+end 
+
 
 
 exit
