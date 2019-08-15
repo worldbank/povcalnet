@@ -2,11 +2,11 @@
 /*=======================================================
 Program Name: dotemplate.ado
 Author:		  Jorge Soler Lopez
-            Espen Beer Prydz	
-            Christoph Lakner	
-            Ruoxuan Wu				
-            Qinghua Zhao			\\
-            World Bank Group	
+Espen Beer Prydz	
+Christoph Lakner	
+Ruoxuan Wu				
+Qinghua Zhao			\\
+World Bank Group	
 
 project:	  Stata package to easily query the [PovcalNet API](http://iresearch.worldbank.org/PovcalNet/docs/PovcalNet%20API.pdf) 
 Dependencies: The World Bank - DEC
@@ -23,95 +23,164 @@ set checksum off //temporarily bypasses controls of files taken from internet
 
 version 11.0
 
- syntax [anything(name=subcommand)]    ///
-        [,                             ///
-          COUNtry(string)              /// 
-          REGion(string)               ///
-          YEAR(string)                 /// 
-          POVline(numlist)             /// 
-          PPP(numlist)                 /// 
-          AGGregate                    ///
-          CLEAR                        ///
-          INFOrmation                  ///
-		      coverage(string)             ///
-          ISO                          /// Standard ISO codes
-          SERVER(string)               /// internal use
-		      pause                        /// debugging
-		      FILLgaps                     ///
-		      N2disp(integer 15)           ///
-		      noDIPSQuery                  ///
-        ] 
+syntax [anything(name=subcommand)]    ///
+[,                             ///
+COUNtry(string)              /// 
+REGion(string)               ///
+YEAR(string)                 /// 
+POVline(numlist)             /// 
+PPP(numlist)                 /// 
+AGGregate                    ///
+CLEAR                        ///
+INFOrmation                  ///
+coverage(string)             ///
+ISO                          /// Standard ISO codes
+SERVER(string)               /// internal use
+pause                        /// debugging
+FILLgaps                     ///
+N2disp(integer 15)           ///
+noDIPSQuery                  ///
+] 
 
 if ("`pause'" == "pause") pause on
 else                      pause off
 
 qui {
-
-	/*==================================================
-		    Dependencies         
-	==================================================*/
-
+	
+	// ------------------------------------------------------------------------
+	// New session procedure
+	// ------------------------------------------------------------------------
+	
 	if ("${pcn_cmds_ssc}" == "") {
 		
-		*---------- check SSC commands
-
-		local cmds missings
+		// ---------------------------------------------------------------
+		// Update PovcalNet 
+		// ---------------------------------------------------------------
 		
-		noi disp in y "Note: " in w "{cmd:povcalnet} requires the packages below: " /* 
-		 */ _n in g "`cmds'"
-		 
-		foreach cmd of local cmds {
+		mata: povcalnet_source("povcalnet") // creates local src
+		
+		* If povcalnet was installed from github
+		if (regexm("`src'", "github")) {
+			local git_cmds povcalnet github
+			
+			foreach cmd of local git_cmds {
+				
+				* Check repository of files 
+				mata: povcalnet_source("`cmd'")
+				
+				if regexm("`src'", "\.io/") {  // if site
+					if regexm("`src'", "://([^ ]+)\.github") {
+						local repo = regexs(1) + "/`cmd'"
+					}
+				}
+				else {  // if branch
+					if regexm("`src'", "\.com/([^ ]+)(/`cmd')") {
+						local repo = regexs(1) + regexs(2) 
+					}
+				}
+						
+				qui github query `repo'
+				local latestversion = "`r(latestversion)'"
+				
+				qui github version `cmd'
+				local crrtversion =  "`r(version)'"
+
+				* force installation 
+				if ("`crrtversion'" == "") {
+					github install `repo', replace
+					cap window stopbox note "github command has been reinstalled to " ///
+					"keep record of new updates. Please type discard and retry."
+					global pcn_cmds_ssc = ""
+					exit 
+				}
+
+				if ("`latestversion'" != "`crrtversion'") {
+					cap window stopbox rusure "There is a new version of `cmd' in Github (`latestversion')." ///
+					"Would you like to install it now?"
+					
+					if (_rc == 0) {
+						cap github update `cmd'
+						if (_rc == 0) {
+							cap window stopbox note "Installation complete. please type" ///
+							"discard in your command window to finish"
+							local bye "exit"
+						}
+						else {
+							noi disp as err "there was an error in the installation. " _n ///
+							"please run the following to retry, " _n(2) ///
+							"{stata github update `cmd'}"
+							local bye "error"
+						}
+					}	
+					else local bye ""
+					
+				}  // end of checking github update
+				
+				else {
+					noi disp as result "Github version of {cmd:`cmd'} is up to date."
+					local bye ""
+				}
+				
+			} // end of loop
+			
+		} // end if installed from github 
+		
+		else {  // if povcalnet was installed from SSC
+			qui adoupdate povcalnet, ssconly
+			if ("`r(pkglist)'" == "povcalnet") {
+				cap window stopbox rusure "There is a new version of povcalnet in SSC." ///
+				"Would you like to install it now?"
+				
+				if (_rc == 0) {
+					cap ado update povcalnet, ssconly update
+					if (_rc == 0) {
+						cap window stopbox note "Installation complete. please type" ///
+						"discard in your command window to finish"
+						local bye "exit"
+					}
+					else {
+						noi disp as err "there was an error in the installation. " _n ///
+						"please run the following to retry, " _n(2) ///
+						"{stata ado update povcalnet, ssconly update}"
+						local bye "error"
+					}
+				}
+				else local bye ""
+			}  // end of checking SSC update
+			else {
+				noi disp as result "SSC version of {cmd:povcalnet} is up to date."
+				local bye ""
+			}
+		}  // Finish checking povclanet update  
+		
+		/*==================================================
+		Dependencies         
+		==================================================*/
+		*---------- check SSC commands
+		
+		local ssc_cmds missings 
+		
+		noi disp in y "Note: " in w "{cmd:povcalnet} requires the packages " ///
+		"below from SSC: " _n in g "`ssc_cmds'"
+		
+		foreach cmd of local ssc_cmds {
 			capture which `cmd'
 			if (_rc != 0) {
 				ssc install `cmd'
 				noi disp in g "{cmd:`cmd'} " in w _col(15) "installed"
 			}
 		}
-
-		adoupdate `cmds', ssconly
+		
+		adoupdate `ssc_cmds', ssconly
 		if ("`r(pkglist)'" != "") adoupdate `r(pkglist)', update ssconly
-
-
-		*---------- check update in Github
-
-		qui github query worldbank/povcalnet
-		local latestversion = "`'r(latestversion)'"
-
-		qui github version povcalnet
-		local crrtversion =  "`r(version)'"
-
-		if ("`latestversion'" != "crrtversion") {
-			cap window stopbox rusure "There is a new version of povcalnet in Github." ///
-			"Would you like to install it now?"
-
-			if (_rc == 0) {
-				cap github update povcalnet
-				if (_rc == 0) {
-					noi disp as result "Installation complete. please type" ///
-					"{cmd: discard} in your command window to finish"
-					local bye "exit"
-				}
-				else {
-					noi disp as err "there was an error in the installation. " _n ///
-					"please run the following to retry, " _n(2) ///
-					"{stata github update povcalnet}"
-					local bye "error"
-				}
-			}
-			else local bye ""
-		}  // end of checking github update
-		else {
-			noi disp as result "Github version up to date."
-			local bye ""
-		}
-
+		
 		global pcn_cmds_ssc = 1  // make sure it does not execute again per session
 		`bye'
 	}
-
-
+	
+	
 	/*==================================================
-        	Defaults           
+	Defaults           
 	==================================================*/
 	
 	*---------- API defaults
@@ -155,7 +224,7 @@ qui {
 	  */	"is equivalent to {cmd:povcalnet wb}. " _n /* 
 	  */ " if you want to aggregate all countries by survey years, " /* 
 	  */ "you need to parse the list of countries in {it:country()} option. See " /*
-     */  "{help povcalnet##options:aggregate option description} for an example on how to do it"
+	  */  "{help povcalnet##options:aggregate option description} for an example on how to do it"
 	}
 	else {
 		local wb_change 0
@@ -183,7 +252,7 @@ qui {
 		local information = "information"
 		local subcommand  = "information"
 	}
-
+	
 	*---------- Subcommand consistency 
 	if !inlist("`subcommand'", "wb", "information", "cl", "") {
 		noi disp as err "subcommand must be either {it:wb}, {it:cl}, or {it:info}"
@@ -195,7 +264,7 @@ qui {
 	if ("`subcommand'" == "cl" & lower("`country'") == "all") {
 		noi disp in red "you cannot use option {it:countr(all)} with subcommand {it:cl}"
 		error 197
-  }
+	}
 	
 	*---------- PPP
 	if (lower("`country'") == "all" & "`ppp'" != "") {
@@ -211,7 +280,7 @@ qui {
 			error
 		}
 		noi disp as res "Note: " as txt "subcommand {it:wb} only accepts options " _n  /* 
-		 */ "{it:region()} and {it:year()}"
+		*/ "{it:region()} and {it:year()}"
 	}
 	
 	
@@ -222,26 +291,26 @@ qui {
 		else                             local country "all"
 	}
 	
-
+	
 	/*==================================================
-		     Main conditions
+	Main conditions
 	==================================================*/
 	
 	if ("`information'" == "") {
 		if (c(N) != 0 & "`clear'" == "" & /* 
-		 */ "`information'" == "") {
+		*/ "`information'" == "") {
 			noi di as err "You must start with an empty dataset; or enable the option {it:clear}."
 			error 4
 		}
 		drop _all
 	}
-		
+	
 	*---------- Country and region
 	if  ("`country'" != "") & ("`region'" != "") {
 		noi disp in r "options {it:country()} and {it:region()} are mutally exclusive"
 		error
 	}
-
+	
 	if ("`aggregate'" != "") {
 		if ("`ppp'" != ""){
 			noi di  as err "Option PPP cannot be combined with aggregate."
@@ -250,17 +319,17 @@ qui {
 		noi disp as res "Note: " as text "Aggregation is only possible over reference years."
 		local agg_display = "Aggregation in base year(s) `year'"
 	}
-
+	
 	if (wordcount("`country'")>2) {
 		if ("`ppp'" != ""){
 			noi di as err "Option PPP can only be used with one country."
 			error 198
 		}
 	}
-
+	
 	
 	/*==================================================
-					     Execution 
+	Execution 
 	==================================================*/
 	pause povcalnet - before execution
 	
@@ -269,18 +338,18 @@ qui {
 		noi povcalnet_info, `clear' `pause'
 		exit
 	}	
-
+	
 	*---------- Country Level (one-on-one query)
 	if ("`subcommand'" == "cl") {
 		noi povcalnet_cl, country("`country'")  ///
-			 year("`year'")                   ///
-			 povline("`povline'")             ///
-			 ppp("`ppp'")                     ///
-			 server("`server'")               ///
-			 coverage(`coverage')             /// 
-			 `clear'                          ///
-			 `iso'                            ///
-			 `pause'
+		year("`year'")                   ///
+		povline("`povline'")             ///
+		ppp("`ppp'")                     ///
+		server("`server'")               ///
+		coverage(`coverage')             /// 
+		`clear'                          ///
+		`iso'                            ///
+		`pause'
 		return add
 		exit
 	}
@@ -301,30 +370,30 @@ qui {
 	foreach i_povline of local povline {	
 		local ++f 
 		
-	/*==================================================
-           Create Query
-	==================================================*/
+		/*==================================================
+		Create Query
+		==================================================*/
 		povcalnet_query,   country("`country'")  ///
-			 region("`region'")                     ///
-			 year("`year'")                         ///
-			 povline("`i_povline'")                 ///
-			 ppp("`i_ppp'")                         ///
-			 coverage(`coverage')                   ///
-			 `clear'                                ///
-			 `information'                          ///
-			 `iso'                                  ///
-			 `fillgaps'                             ///
-			 `aggregate'                            ///
-			 `wb'                                   ///
-			 `pause'                                ///
-			 `groupedby'                            ///
-			
-			
+		region("`region'")                     ///
+		year("`year'")                         ///
+		povline("`i_povline'")                 ///
+		ppp("`i_ppp'")                         ///
+		coverage(`coverage')                   ///
+		`clear'                                ///
+		`information'                          ///
+		`iso'                                  ///
+		`fillgaps'                             ///
+		`aggregate'                            ///
+		`wb'                                   ///
+		`pause'                                ///
+		`groupedby'                            ///
+		
+		
 		local query_ys = "`r(query_ys)'"
-    local query_ct = "`r(query_ct)'"
-    local query_pl = "`r(query_pl)'"
-    local query_ds = "`r(query_ds)'"
-    local query_pp = "`r(query_pp)'"
+		local query_ct = "`r(query_ct)'"
+		local query_pl = "`r(query_pl)'"
+		local query_ds = "`r(query_ds)'"
+		local query_pp = "`r(query_pp)'"
 		
 		return local query_ys_`f' = "`query_ys'"
 		return local query_ct_`f' = "`query_ct'"
@@ -336,15 +405,15 @@ qui {
 		local query = "`query_ys'&`query_ct'&`query_pl'`query_pp'`query_ds'&format=csv"
 		return local query_`f' "`query'"
 		global pcn_query = "`query'"
-
+		
 		*---------- Base + query
 		local queryfull "`base'?`query'"
 		return local queryfull_`f' = "`queryfull'"
 		
 		
-	/*==================================================
-           Download  and clean data
-	==================================================*/
+		/*==================================================
+		Download  and clean data
+		==================================================*/
 		
 		*---------- download data
 		local rc = 0
@@ -357,9 +426,9 @@ qui {
 		else {
 			local rc "copy"
 		} 
-
+		
 		if ("`aggregate'" == "" & "`wb'" == "") {
-			 local rtype 1
+			local rtype 1
 		}
 		else {
 			local rtype 2
@@ -369,36 +438,36 @@ qui {
 		
 		*---------- Clean data
 		povcalnet_clean `rtype', year("`year'") `iso' /* 
-		 */ rc(`rc') region(`region') `pause'
-	
+		*/ rc(`rc') region(`region') `pause'
+		
 		pause after cleaning
 		
-	/*==================================================
-           Display Query
-	==================================================*/
+		/*==================================================
+		Display Query
+		==================================================*/
 		
-	  if ("`dipsquery'" == "") {
-	  	noi di as res _n "{ul: Query at \$`i_povline' poverty line}"
-	  	noi di as res "{hline}"
-	  	if ("`query_ys'" != "") noi di as res "Year:"         as txt "{p 4 6 2} `query_ys' {p_end}"
-	  	if ("`query_ct'" != "") noi di as res "Country:"      as txt "{p 4 6 2} `query_ct' {p_end}"
-	  	if ("`query_pl'" != "") noi di as res "Poverty line:" as txt "{p 4 6 2} `query_pl' {p_end}"
-	  	if ("`query_ds'" != "") noi di as res "Aggregation:"  as txt "{p 4 6 2} `query_ds' {p_end}"
-	  	if ("`query_pp'" != "") noi di as res "PPP:"          as txt "{p 4 6 2} `query_pp' {p_end}"
-	  	noi di as res _dup(20) "-"
-	  	noi di as res "No. Obs:"      as txt _col(20) c(N)
-	  	noi di as res "{hline}"
-	  }
-	
-	/*==================================================
-           Append data
-	==================================================*/			
-	  if (`wb_change' == 1) {
-	  	keep if regioncode == "WLD"
-	  }
-	  append using `povcalf'
-	  save `povcalf', replace
-	
+		if ("`dipsquery'" == "") {
+			noi di as res _n "{ul: Query at \$`i_povline' poverty line}"
+			noi di as res "{hline}"
+			if ("`query_ys'" != "") noi di as res "Year:"         as txt "{p 4 6 2} `query_ys' {p_end}"
+			if ("`query_ct'" != "") noi di as res "Country:"      as txt "{p 4 6 2} `query_ct' {p_end}"
+			if ("`query_pl'" != "") noi di as res "Poverty line:" as txt "{p 4 6 2} `query_pl' {p_end}"
+			if ("`query_ds'" != "") noi di as res "Aggregation:"  as txt "{p 4 6 2} `query_ds' {p_end}"
+			if ("`query_pp'" != "") noi di as res "PPP:"          as txt "{p 4 6 2} `query_pp' {p_end}"
+			noi di as res _dup(20) "-"
+			noi di as res "No. Obs:"      as txt _col(20) c(N)
+			noi di as res "{hline}"
+		}
+		
+		/*==================================================
+		Append data
+		==================================================*/			
+		if (`wb_change' == 1) {
+			keep if regioncode == "WLD"
+		}
+		append using `povcalf'
+		save `povcalf', replace
+		
 	} // end of povline loop
 	return local npl = `f'
 	
@@ -414,7 +483,7 @@ qui {
 		noi list region year povertyline headcount mean in 1/`n2disp', /*
 		*/ abbreviate(12)  sepby(year)
 	}
-
+	
 	else {
 		if ("`aggregate'" == "") {
 			sort regioncode countrycode year
@@ -479,10 +548,10 @@ exit
 Notes:
 1. To display by region... maybe later. 
 tempvar todisp
-  bysort regioncode (countrycode): gen `todisp' = 1 if _n < `n2disp'
-  levelsof regioncode, local(regions)
-  noi di as res _n _col(30) "Display first `n2disp' obs in " _c
-  foreach region of local regions {
+bysort regioncode (countrycode): gen `todisp' = 1 if _n < `n2disp'
+levelsof regioncode, local(regions)
+noi di as res _n _col(30) "Display first `n2disp' obs in " _c
+foreach region of local regions {
 	noi tabdisp year if( regioncode == "`region'" & `todisp' == 1) , c(headcount mean median)  by(countrycode) concise missing
 	
 	2.
