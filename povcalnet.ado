@@ -1,11 +1,13 @@
 *! version 0.1.0  	<sept2018>
 /*=======================================================
-Program Name: dotemplate.ado
-Author:		  Jorge Soler Lopez
+Program Name: povcalnet.ado
+Author:		  
+R.Andres Castaneda Aguilar
+Jorge Soler Lopez
 Espen Beer Prydz	
 Christoph Lakner	
 Ruoxuan Wu				
-Qinghua Zhao			\\
+Qinghua Zhao			
 World Bank Group	
 
 project:	  Stata package to easily query the [PovcalNet API](http://iresearch.worldbank.org/PovcalNet/docs/PovcalNet%20API.pdf) 
