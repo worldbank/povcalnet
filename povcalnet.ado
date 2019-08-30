@@ -127,7 +127,7 @@ qui {
 			
 		} // end if installed from github 
 		
-		else {  // if povcalnet was installed from SSC
+		else if (regexm("`src'", "repec")) {  // if povcalnet was installed from SSC
 			qui adoupdate povcalnet, ssconly
 			if ("`r(pkglist)'" == "povcalnet") {
 				cap window stopbox rusure "There is a new version of povcalnet in SSC." ///
@@ -153,7 +153,12 @@ qui {
 				noi disp as result "SSC version of {cmd:povcalnet} is up to date."
 				local bye ""
 			}
-		}  // Finish checking povclanet update  
+		}  // Finish checking povclanet update 
+		else {
+			noi disp as result "Source of {cmd:povcalnet} package not found." _n ///
+			"You won't be able to benefit from latest updates."
+			local bye ""
+		}
 		
 		/*==================================================
 		Dependencies         
@@ -531,9 +536,14 @@ void povcalnet_source(string scalar cmd) {
 		pos_a = ftell(fh)
 	}
 	
-	src = strtrim(fget(fh))
-	src = substr(src, 3)
-	st_local("src", src)
+	if (rows(src) > 0) {
+		src = strtrim(fget(fh))
+		src = substr(src, 3)
+		st_local("src", src)
+	} 
+	else {
+		st_local("src", "NotFound")
+	}
 	
 	fclose(fh)
 }
