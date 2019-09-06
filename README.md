@@ -24,23 +24,20 @@ ssc install povcalnet
 
 ### From GitHub 
 
-#### Temporal installation
+#### Proper installation (Might not be available in your computer due to firewall restriction of your organization. See alternative installation below if this is your case).
+We recommend installing the [github](https://github.com/haghish/github) Stata command by [E. F. Haghish](https://github.com/haghish)
+
+```stata
+net install github, from("https://haghish.github.io/github/")
+github install worldbank/povcalnet
+```
+
+#### Alternative installation from GitHub in case the one above does not work for you.
 
 1. Click on the green icon "Clone or Download" above. 
 2. Download the package as zip. 
 3. Extract the files with extension `.ado` and `.sthlp` only, and place them in the directory `c:/ado/plus/p`
 4. type `discard` in Stata. 
-
-#### Proper installation (Not yet available due to World Bank network restrictions).
-We recommend installing the [github](https://github.com/haghish/github) Stata command by [E. F. Haghish](https://github.com/haghish)
-
-```stata
-net install github, from("https://haghish.github.io/github/")
-```
-Then, type the following in Stata:
-```stata
-github install worldbank/povcalnet
-```
 
 ## Examples
 
