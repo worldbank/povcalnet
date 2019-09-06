@@ -9,13 +9,23 @@ Do-file version:    01
 References:      https://github.com/worldbank/povcalnet
 Output:             
 ==================================================*/
-
+	
 /*==================================================
             0: Program set up
 ==================================================*/
 
 version 14
 drop _all
+* cd "C:\Users\wb424681\OneDrive - WBG\My Documents\PovcalNet\Requests\201909 p10 and p90 for Marta Roig"
+
+*Prep data file to store results:
+clear
+set obs 0 
+gen p10=. 
+gen p50=. 
+gen p90=.
+gen countrycode=""
+save percentiles, replace
 
 // ------------------------------------------------------------------------
 // Initial conditions
@@ -23,17 +33,29 @@ drop _all
 * Get data by country - lined up to requested years
 
 ** Initial conditions (it could be any number)
-local pl         = 1   // MODIFY (if you want): starting point (it could be any positive number)
-local country    = "CHL"      // MODIFY
+local pl         = .2   // MODIFY (if you want): starting point (it could be any positive number)
 local year       = "last"         // MODIFY: Year of analysis.
-
+*local country    = "CHN"     // MODIFY
 local goals      = "0.1 0.5 0.9"  // MODIFY: deciles or any population share. 
-local tolerance  = .0001          // MODIFY (if you want)
+local tolerance  = .00001          // MODIFY (if you want)
 local ni         = 40             // number of iterations before failing
 
+** Get the country codes to loop over. 
+povcalnet info, clear
+levelsof country_code, clean
 
-tempname M        // matrix with results
+local countries = `"`r(levels)'"'
+// ------------------------------------------------------------------------
+// loop over countries
+// ------------------------------------------------------------------------
 
+local countries = "COD"
+foreach country of local countries {
+	*Define coverage variable:	
+	if "`country'"=="ARG" 		local coverage="urban"
+	else						local coverage="national"
+
+tempname M N      // matrix with results
 // ------------------------------------------------------------------------
 // loop over goals
 // ------------------------------------------------------------------------
@@ -45,9 +67,9 @@ foreach goal of local goals {
 	local s          = 0    // iteration stage counter
 	local num        = 1    // numerator
 	local i          = 0    // general counter
-  local delta      = 3    // MODIFY (if you want): Initial change of povline value
+  local delta      = .5    // MODIFY (if you want): Initial change of povline value
 
-	qui povcalnet, countr(`country') povline(`pl') clear year(`year')
+	qui povcalnet, countr(`country') povline(`pl') clear year(`year') coverage(`coverage')
 	local attempt = headcount[1]
 
 	while (round(`attempt', `tolerance') != `goal' & `s' <= `ni') {
@@ -91,5 +113,18 @@ foreach goal of local goals {
 mat colnames `M' = goal value
 
 mat list `M'
+
+mat `N'=`M''	// transpose matrix
+
+*Save in a data file
+clear
+svmat `N'
+renvars _all \ p10 p50 p90		// NEED TO CHANGE IF GOALS CHANGE!!!
+gen countrycode="`country'"
+
+*Append to main results file.
+append using percentiles
+save percentiles, replace
+}
 
 exit 
