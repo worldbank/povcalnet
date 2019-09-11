@@ -56,7 +56,8 @@ groups of countries instead of country-level estimated.{p_end}
 {synoptline}
 {synopt :{opt info:rmation}}presents a clickable version of the available surveys, 
 countries and regions. Same as option {it:information}{p_end}
-{synopt :{opt cl}}parses the parameters of the query in a one-on-one correspondence instead of the default combinational query. See below for a detailed explanation. 
+{synopt :{opt cl}} {it:country-level} query that changes the default combinatorial 
+arrangement of parameters for a one-on-one correspondence. 
 See{help povcalnet##typesq: below} for a detailed explanation.{p_end}
 {synopt :{opt wb}}downloads World Bank's regional and global aggegation{p_end}
 {synopt :{opt test}}executes the last query in browser regardless of failure by 
@@ -271,8 +272,9 @@ availability in the results window.{p_end}
 {opt info} Same as option {it:info} {help povcalnet##optinfo:above}. 
 
 {phang}
-{opt cl} Changes combinatorial query of parameters for one-on-one correspondence of 
-parameters. See {help povcalnet##typesq:above} for a detailed explanation. 
+{opt cl} Stands for {it:country-level} queries. It changes combinatorial query of parameters 
+for one-on-one correspondence of parameters. See {help povcalnet##typesq:above} 
+for a detailed explanation. 
 
 {phang}
 {opt wb} Downloads World Bank's regional and global aggregation. These functions
