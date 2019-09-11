@@ -493,7 +493,7 @@ qui {
 	
 	else {
 		if ("`aggregate'" == "") {
-			sort regioncode countrycode year
+			sort countrycode year regioncode
 			noi list countrycode year povertyline headcount mean median in 1/`n2disp', /*
 			*/ abbreviate(12)  sepby(countrycode)
 		}
