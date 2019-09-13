@@ -4,6 +4,11 @@ description: "Stata client to the Povcalnet API"
 baseurl: "/povcalnet" # the subpath of your site, e.g. "/blog"
 url: "https://worldbank.github.io" # the base hostname & protocol for your site e.g. "https://mmistakes.github.io"
 
-pages:
-- [index.md, Home]
-- [about.md, About]
+plugins:
+  - jekyll-relative-links
+relative_links:
+  enabled: true
+  collections: true
+include:
+  - index.md
+  - about.md
