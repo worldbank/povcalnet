@@ -1,3 +1,9 @@
+---
+title: About
+layout: Page
+permalink: /about/
+---
+
 # about
 
 this page is about `povcalnet` ado file
