@@ -3,7 +3,7 @@ Stata client to the Povcalnet API
 
 [![githubrelease](https://img.shields.io/github/release/worldbank/povcalnet/all.svg?label=current+release)](https://github.com/worldbank/povcalnet/releases)
 
-[About](/about.html/)
+[About](about.md)
 
 
 The `povcalnet` Stata command allows Stata users to compute poverty and inequality
