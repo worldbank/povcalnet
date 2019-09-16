@@ -1,4 +1,4 @@
-theme: jekyll-theme-cayman
+theme: jekyll-theme-minimal
 title: PovcalNet Stata command
 description: "Stata client to the Povcalnet API"
 baseurl: "/povcalnet" # the subpath of your site, e.g. "/blog"
