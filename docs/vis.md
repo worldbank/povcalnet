@@ -28,5 +28,7 @@ xlabel(1980(5)2015) xscale(range(1980 2015) noextend)  ///
   1 "Poverty Rate (% of people living below $1.90)"  ///
   2 "Number of people who live below $1.90") si(vsmall) row(2)) scheme(s2color)
 ```
+<center>
 <img src="/povcalnet/img/worldpoverty.png" 
-alt="worldpoverty" width="650" height="600" />
+alt="worldpoverty" width="450" height="400" />
+</center>
