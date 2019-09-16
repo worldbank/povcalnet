@@ -30,5 +30,5 @@ xlabel(1980(5)2015) xscale(range(1980 2015) noextend)  ///
 ```
 <center>
 <img src="/povcalnet/img/worldpoverty.png" 
-alt="worldpoverty" width="450" height="400" />
+alt="worldpoverty" width="550" height="500" />
 </center>
