@@ -7,156 +7,186 @@ Here are some examples on how to use the `povcalnet` command.
 Be default `povcalnet` returns poverty estimates at \$1.9 usd a day in 2011 PPP for all the surveys available at three different levels of coverage depending on availability; national, urban, and rural areas. 
 
 ```stata
-
+povclanet, clear
+*.     +--------------------------------------------------------------------+
+*.     | countrycode   year   povertyline   headcount       mean     median |
+*.     |--------------------------------------------------------------------|
+*.  1. |         AGO   2000           1.9    .3227822   136.7125   86.47519 |
+*.  2. |         AGO   2008           1.9    .3008292   120.7577   87.02627 |
+*.     |--------------------------------------------------------------------|
+*.  3. |         ALB   1996           1.9    .0112912   187.8427   165.0867 |
+*.  4. |         ALB   2002           1.9    .0204732    191.988    158.363 |
+*.  5. |         ALB   2005           1.9    .0112373   217.0335   184.6848 |
+*.  6. |         ALB   2008           1.9    .0037052   237.5353   198.7757 |
+*.  7. |         ALB   2012           1.9    .0106392   225.2692   195.0467 |
+*.     |--------------------------------------------------------------------|
+*.  8. |         ARG   1980           1.9    .0036856   796.8967    609.356 |
+*.  9. |         ARG   1986           1.9           0   863.0112   635.2688 |
+*. 10. |         ARG   1987           1.9           0   788.8666   557.7358 |
+*. 11. |         ARG   1991           1.9    .0110414    559.907   370.9952 |
+*. 12. |         ARG   1992           1.9    .0205003   564.6129   387.9738 |
+*. 13. |         ARG   1993           1.9    .0242011   566.0145    396.681 |
+*. 14. |         ARG   1994           1.9    .0228149   558.6381   383.2049 |
+*. 15. |         ARG   1995           1.9    .0411135   530.8553   354.3608 |
+*.     +--------------------------------------------------------------------+
 ```
 
 
+## Basic Options
+
+### Filter by country
 
 ```stata
-* Retrieve ONE country with default parameters
-
 povcalnet, country("ALB") clear
 
-* Retrieve MULTIPLE countries with default parameters
-
-povcalnet, country("all") clear
+*.     +--------------------------------------------------------------------+
+*.     | countrycode   year   povertyline   headcount       mean     median |
+*.     |--------------------------------------------------------------------|
+*.  1. |         ALB   1996           1.9    .0112912   187.8427   165.0867 |
+*.  2. |         ALB   2002           1.9    .0204732    191.988    158.363 |
+*.  3. |         ALB   2005           1.9    .0112373   217.0335   184.6848 |
+*.  4. |         ALB   2008           1.9    .0037052   237.5353   198.7757 |
+*.  5. |         ALB   2012           1.9    .0106392   225.2692   195.0467 |
+*.     +--------------------------------------------------------------------+
 
 povcalnet, country("ALB CHN") clear
 
-* Change poverty line
-povcalnet, country("ALB CHN") povline(10) clear
-
-povcalnet, country("ALB CHN") povline(5 10) clear
-
-* Select specific years
-
-povcalnet, country("ALB") year("2002 2012") clear
-povcalnet, country("ALB") year("2002 2020") clear  // just 2002
-cap noi povcalnet, country("ALB") year("2020") clear       // error
-
-povcalnet, country("ALB") year("2002") clear
-
-* Change coverage
-
-povcalnet, country("all") coverage("urban") clear
-
-povcalnet, country("all") coverage("rural") clear
-
-povcalnet, country("all") coverage("national") clear
-
-povcalnet, country("all") coverage("rural national") clear
-
-* Aggregation
-povcalnet, country("ALB CHN") aggregate clear
-
-povcalnet, country("all")  aggregate clear 
-
-povcalnet, country("all")  aggregate year(last) clear 
-
-povcalnet, aggregate region(LAC) clear 
-
-povcalnet, aggregate region(all) clear 
-
-
-* Fill gaps when surveys are missing for specific year
-
-povcalnet, country("ALB CHN") fillgaps clear 
-povcalnet, country("ALB CHN") fillgaps coverage("national") clear
-
-* PPP
-
-povcalnet, country("ALB CHN") ppp(50 100) clear
-
-
-* Country level (one-on-one) request
-povcalnet cl, country("ALB CHN")       /*
-            */	povline(1.9 2.0)          /*
-            */  year("all")           /*
-            */  ppp(40 30) clear
-
-						
-povcalnet cl, country("DOL DOM")           /*  get info only for DOM
-            */	coverage("national")      /*
-            */  year(2002)             /*
-            */  povline(10) clear
-
-						
-povcalnet cl, country("COL DOM")           /*  get info for both
-            */	coverage("national")      /*
-            */  year(all)             /*
-            */  povline(4) clear
-
-						
-povcalnet cl, country("COL DOM")            /*  
-            */	coverage("urban national")  /*
-            */  year(all)                   /*
-            */  povline(4) clear
-
-						
-*----------  Understanding requests and aggregates
-// --------------------------
-// Basic Syntax  and defaults
-// ------------------------
-
-****** Main defaults
-** all survey years, all coverages, 1.9 USD poverty. 
-povcalnet
-
-** filter by country
-povcalnet, country(COL) clear
-
-** Filter by year (only surveys avaialable in that year)
-povcalnet, year(2017) clear
-
-** Filter by coverage (national, urban, rural)
-povcalnet, coverage(urban) clear
-
-** Poverty lines
-povcalnet, povline(3.2) clear
-
-// ------------------------
-// Povcalnet features
-// ------------------------
-
-** fill gaps (Reference Years)
-* regular 
-povcalnet, country(COL BRA ARG IND) year(2015) clear 
-
-* fill gaps
-povcalnet, country(COL BRA ARG IND) year(2015) clear  fillgaps
-
-** Customized Aggregate
-povcalnet, country(COL BRA ARG IND) year(2015) clear  aggregate
-
-***** Aggregating all countries
-
-** using country(all)
-povcalnet, country(all) year(2015) clear  aggregate
-
-** parsing the list of all countries 
-povcalnet info, clear
-levelsof country_code, local(all) clean 
-povcalnet, country(`all') year(2015) clear  aggregate
-
-***** WB aggregates
-povcalnet wb, clear  year(2015)
-povcalnet wb, clear  region(SAR LAC)
-povcalnet wb, clear             // all reference years
-
-* one-on-one query
-povcalnet cl, country(COL BRA ARG IND) year(2011) clear coverage("national national urban national")
-
-
-// ------------------------
-// advance options  and features
-// --------------------
-
-* Different national coverages
-povcalnet, coverage(national) country(IND COL) clear
-
-* PPP option
+*.     +--------------------------------------------------------------------+
+*.     | countrycode   year   povertyline   headcount       mean     median |
+*.     |--------------------------------------------------------------------|
+*.  1. |         ALB   1996           1.9    .0112912   187.8427   165.0867 |
+*.  2. |         ALB   2002           1.9    .0204732    191.988    158.363 |
+*.  3. |         ALB   2005           1.9    .0112373   217.0335   184.6848 |
+*.  4. |         ALB   2008           1.9    .0037052   237.5353   198.7757 |
+*.  5. |         ALB   2012           1.9    .0106392   225.2692   195.0467 |
+*.     |--------------------------------------------------------------------|
+*.  6. |         CHN   1981           1.9    .9535688   29.60017   27.01447 |
+*.  7. |         CHN   1981           1.9    .5914477   56.36052   53.66441 |
+*.  8. |         CHN   1981           1.9    .8807173   34.98382          . |
+*.  9. |         CHN   1984           1.9    .8456264   41.28645   36.63175 |
+*. 10. |         CHN   1984           1.9    .4236267   64.59421   61.40226 |
+*. 11. |         CHN   1984           1.9    .7519298   46.46147          . |
+*. 12. |         CHN   1987           1.9    .7205992   50.18413   43.71798 |
+*. 13. |         CHN   1987           1.9    .2407536   78.38737    73.9687 |
+*. 14. |         CHN   1987           1.9    .6041935   57.02595          . |
+*. 15. |         CHN   1990           1.9     .785309   48.03129   40.10764 |
+*.     +--------------------------------------------------------------------+
 
 ```
 
+### Filter by year
+
+```stata
+povcalnet, country("ALB") year("2002 2012") clear
+*.     +--------------------------------------------------------------------+
+*.     | countrycode   year   povertyline   headcount       mean     median |
+*.     |--------------------------------------------------------------------|
+*.  1. |         ALB   2002           1.9    .0204732    191.988    158.363 |
+*.  2. |         ALB   2012           1.9    .0106392   225.2692   195.0467 |
+*.     +--------------------------------------------------------------------+
+
+povcalnet, country("ALB") year("2002 2020") clear  // just 2002
+*.     +------------------------------------------------------------------+
+*.     | countrycode   year   povertyline   headcount      mean    median |
+*.     |------------------------------------------------------------------|
+*.  1. |         ALB   2002           1.9    .0204732   191.988   158.363 |
+*.     +------------------------------------------------------------------+
 
 
+povcalnet, country("ALB") year("2020") clear       // error
+*. years selected do not match any survey year for any country.
+*. You could type povcalnet info to check availability.
+*. r(20); 
+```
+### Modify the poverty line
+
+```stata
+povcalnet, country("ALB CHN") povline(5.5) clear
+*.     +--------------------------------------------------------------------+
+*.     | countrycode   year   povertyline   headcount       mean     median |
+*.     |--------------------------------------------------------------------|
+*.  1. |         ALB   1996           5.5    .5149493   187.8427   165.0867 |
+*.  2. |         ALB   2002           5.5    .5409047    191.988    158.363 |
+*.  3. |         ALB   2005           5.5    .4260391   217.0335   184.6848 |
+*.  4. |         ALB   2008           5.5     .358052   237.5353   198.7757 |
+*.  5. |         ALB   2012           5.5    .3912901   225.2692   195.0467 |
+*.     |--------------------------------------------------------------------|
+*.  6. |         CHN   1981           5.5      .99999   29.60017   27.01447 |
+*.  7. |         CHN   1981           5.5    .9982551   56.36052   53.66441 |
+*.  8. |         CHN   1981           5.5     .999641   34.98382          . |
+*.  9. |         CHN   1984           5.5    .9973044   41.28645   36.63175 |
+*. 10. |         CHN   1984           5.5    .9969091   64.59421   61.40226 |
+*. 11. |         CHN   1984           5.5    .9972166   46.46147          . |
+*. 12. |         CHN   1987           5.5    .9892666   50.18413   43.71798 |
+*. 13. |         CHN   1987           5.5    .9867092   78.38737    73.9687 |
+*. 14. |         CHN   1987           5.5    .9886462   57.02595          . |
+*. 15. |         CHN   1990           5.5    .9878059   48.03129   40.10764 |
+*.     +--------------------------------------------------------------------+
+```
+
+## Other features
+
+### Get estimates for references years when survey years are not available
+
+The `fillgaps` option triggers the interpolation / extrapolation of poverty estimates in reference years when survey year is not available
+
+```stata
+* 
+povcalnet, countr(HTI) clear
+*.     +----------------------------------------------------------------------------------+
+*.     | countrycode   year   povertyline   headcount       mean     median      datatype |
+*.     |----------------------------------------------------------------------------------|
+*.  1. |         HTI   2001           1.9    .5609249   98.62671   50.42543        Income |
+*.  2. |         HTI   2012           1.9     .250244   127.1753   95.98644   Consumption |
+*.  3. |         HTI   2012           1.9     .539098   104.7003   51.16564        Income |
+*.     +----------------------------------------------------------------------------------+
+
+povcalnet, countr(HTI) clear fillgaps
+
+*.     +----------------------------------------------------------------------------------+
+*.     | countrycode   year   povertyline   headcount       mean     median      datatype |
+*.     |----------------------------------------------------------------------------------|
+*.  1. |         HTI   1981           1.9    .3688352   156.3377   79.93164        Income |
+*.  2. |         HTI   1984           1.9    .4061127   142.2825   72.74559        Income |
+*.  3. |         HTI   1987           1.9    .4376994   132.1854   67.58315        Income |
+*.  4. |         HTI   1990           1.9     .467399   122.0726   62.41275        Income |
+*.  5. |         HTI   1993           1.9     .534257   105.0003   53.68411        Income |
+*.  6. |         HTI   1996           1.9    .5523341   100.0336   51.14476        Income |
+*.  7. |         HTI   1999           1.9    .5454523   102.1958   52.25024        Income |
+*.  8. |         HTI   2002           1.9     .562766   97.97414          .        Income |
+*.  9. |         HTI   2005           1.9    .5740808   95.43351          .        Income |
+*. 10. |         HTI   2008           1.9     .555704   100.4467          .        Income |
+*. 11. |         HTI   2010           1.9    .5685747   97.09933          .        Income |
+*. 12. |         HTI   2011           1.9    .5492141   102.1022          .        Income |
+*. 13. |         HTI   2012           1.9     .250244   127.1753   95.98644   Consumption |
+*. 14. |         HTI   2013           1.9     .238203   130.7483   98.68321   Consumption |
+*. 15. |         HTI   2015           1.9    .2348435   132.5032   100.0078   Consumption |
+*.     +----------------------------------------------------------------------------------+
+
+```
+### Compute custom aggregates
+The `aggregate` option computes aggregate welfare statistics of custom group of countries
+
+```stata
+povcalnet, aggregate clear countr(CHL ARG BOL)
+*.     +-------------------------------------------+
+*.     | year   povertyline   headcount       mean |
+*.     |-------------------------------------------|
+*.  1. | 1981           1.9    .0307906     582.91 |
+*.  2. | 1984           1.9    .0496136   597.6374 |
+*.  3. | 1987           1.9    .0423164   576.1755 |
+*.  4. | 1990           1.9    .0376588   457.9516 |
+*.  5. | 1993           1.9     .044295   476.5255 |
+*.  6. | 1996           1.9    .0622336   468.0056 |
+*.  7. | 1999           1.9    .0761674   452.4822 |
+*.  8. | 2002           1.9    .1299185   333.7441 |
+*.  9. | 2005           1.9    .0595559   466.5413 |
+*. 10. | 2008           1.9     .037928   537.7383 |
+*. 11. | 2010           1.9    .0256542   570.7694 |
+*. 12. | 2011           1.9    .0209171   605.9316 |
+*. 13. | 2012           1.9    .0204949   620.9224 |
+*. 14. | 2013           1.9    .0174703    639.773 |
+*. 15. | 2015           1.9    .0171186   640.9478 |
+*.     +-------------------------------------------+
+
+```

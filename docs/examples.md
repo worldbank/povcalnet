@@ -1,5 +1,6 @@
 ## Examples
 
+
 ```stata
 * Retrieve ONE country with default parameters
 
@@ -58,29 +59,29 @@ povcalnet, country("ALB CHN") ppp(50 100) clear
 
 * Country level (one-on-one) request
 povcalnet cl, country("ALB CHN")       /*
-            */	povline(1.9 2.0)          /*
+            */    povline(1.9 2.0)          /*
             */  year("all")           /*
             */  ppp(40 30) clear
 
-						
+                                    
 povcalnet cl, country("DOL DOM")           /*  get info only for DOM
-            */	coverage("national")      /*
+            */    coverage("national")      /*
             */  year(2002)             /*
             */  povline(10) clear
 
-						
+                                    
 povcalnet cl, country("COL DOM")           /*  get info for both
-            */	coverage("national")      /*
+            */    coverage("national")      /*
             */  year(all)             /*
             */  povline(4) clear
 
-						
+                                    
 povcalnet cl, country("COL DOM")            /*  
-            */	coverage("urban national")  /*
+            */    coverage("urban national")  /*
             */  year(all)                   /*
             */  povline(4) clear
 
-						
+                                    
 *----------  Understanding requests and aggregates
 // --------------------------
 // Basic Syntax  and defaults
