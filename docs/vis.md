@@ -1,3 +1,5 @@
+## [Home](index.md) --- [Get Started](get_started.md) --- [Visualizations examples](vis.md) --- [Help file](help_file.md) 
+
 # Visualization Examples
 
 ## Global Poverty Trends 1990-2015
