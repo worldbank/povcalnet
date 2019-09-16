@@ -131,7 +131,8 @@ twoway 	(sc g dec if datayear==2016 & countrycode=="ARG", c(l)) ///
 , yti("Annual growth in decile average income (%)" " ", size(small))  ///
 xlabel(0(10)100,labs(small)) xtitle("Decile group", size(small))  ///
 graphregion(c(white)) ///
-legend(order(1 "Argentina(2011-2016)"  2 "Ghana(1998-2005)" 3 "Thailand(2010-2015)") si(vsmall) row(1)) scheme(s2color)
+legend(order(1 "Argentina(2011-2016)"  2 "Ghana(1998-2005)" //
+3 "Thailand(2010-2015)") si(vsmall) row(1)) scheme(s2color)
 ```
 <center>
 <img src="/povcalnet/img/Income_growth.png" 
