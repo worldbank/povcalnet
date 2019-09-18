@@ -20,6 +20,7 @@ version 11.0
       clear              ///
 			justdata           /// programmers option
 			pause              /// debuggin
+			server(string)     ///
 			] 
 
 if ("`pause'" == "pause") pause on
@@ -28,13 +29,30 @@ else                      pause off
 qui {
 	
 	if ("``clear''" == "") preserve
-	local url "http://iresearch.worldbank.org/PovcalNet"
+	
+	
+	*---------- API defaults
+	
+	if "`server'"==""  {
+		local server   = "http://iresearch.worldbank.org"
+	}
+	
+	local site_name = "PovcalNet"
+	local url = "`server'/`site_name'"
+	
+	return local server    = "`server'"
+	return local site_name = "`site_name'"
+	return local url       = "`url'"
+	
 	***************************************************
 	* 1. Load guidance database
 	***************************************************
 	
 	tempfile temp1000
-	cap copy "`url'/js/initCItem2014.js" `temp1000'
+	local jsfile  = "`url'/js/initCItem2014.js"
+	return local jsfile = "`jsfile'"
+	
+	cap copy "`jsfile'" `temp1000'
 	local rccopy = _rc
 	cap import delim using `temp1000',  delim(",()") stringc(_all) /* 
 	 */                                stripq(yes) varnames(nonames)  clear

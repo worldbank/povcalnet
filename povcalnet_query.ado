@@ -43,13 +43,6 @@ quietly {
 	* 0. Housekeeping
 	************************************************
 
-	local base="http://iresearch.worldbank.org/PovcalNet/PovcalNetAPI.ashx"
-
-	if "`server'"!=""  {
-		local base="`server'/PovcalNetAPI.ashx"
-	}
-
-
 	if ("`ppp'" != "") local ppp_q = "&PPP0=`ppp'"
 	return local query_pp = "`ppp_q'"
 	
@@ -78,7 +71,7 @@ quietly {
 	* 1. Will load guidance database
 	***************************************************
 
-	povcalnet_info, clear justdata `pause'
+	povcalnet_info, clear justdata `pause' server(`server')
 
 	***************************************************
 	* 2. Keep selected countries and save codes

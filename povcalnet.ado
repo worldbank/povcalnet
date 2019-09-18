@@ -193,6 +193,7 @@ qui {
 	*---------- API defaults
 	
 	if "`server'"!=""  {
+		if ("`server'" == "int") local server "http://wbgmsrech001"
 		local base="`server'/PovcalNet/PovcalNetAPI.ashx"
 	} 
 	else {
@@ -204,8 +205,6 @@ qui {
 	
 	return local server    = "`serveri'`server'"
 	return local site_name = "`site_name'"
-	return local handler   = "`handler'"
-	return local base      = "`base'"
 	
 	*---------- lower case subcommand
 	local subcommand = lower("`subcommand'")
@@ -342,7 +341,8 @@ qui {
 	
 	*---------- Information
 	if ("`information'" != ""){
-		noi povcalnet_info, `clear' `pause'
+		noi povcalnet_info, `clear' `pause' server(`server')
+		return add 
 		exit
 	}	
 	
@@ -386,6 +386,7 @@ qui {
 		povline("`i_povline'")                 ///
 		ppp("`i_ppp'")                         ///
 		coverage(`coverage')                   ///
+		server(`server')                       ///
 		`clear'                                ///
 		`information'                          ///
 		`iso'                                  ///
@@ -393,7 +394,7 @@ qui {
 		`aggregate'                            ///
 		`wb'                                   ///
 		`pause'                                ///
-		`groupedby'                            ///
+		`groupedby'                            //
 		
 		
 		local query_ys = "`r(query_ys)'"
@@ -407,6 +408,7 @@ qui {
 		return local query_pl_`f' = "`query_pl'"
 		return local query_ds_`f' = "`query_ds'"
 		return local query_pp_`f' = "`query_pp'"
+		return local base      = "`base'"
 		
 		*---------- Query
 		local query = "`query_ys'&`query_ct'&`query_pl'`query_pp'`query_ds'&format=csv"
