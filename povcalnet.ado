@@ -42,6 +42,7 @@ pause                        /// debugging
 FILLgaps                     ///
 N2disp(integer 15)           ///
 noDIPSQuery                  ///
+querytimes(integer 5)        ///
 ] 
 
 if ("`pause'" == "pause") pause on
@@ -426,15 +427,24 @@ qui {
 		
 		*---------- download data
 		local rc = 0
-		tempfile clfile
-		cap copy "`queryfull'" `clfile'
-		if (_rc == 0) {
-			cap insheet using `clfile', clear name
-			if (_rc != 0) local rc "in"
-		} 
-		else {
-			local rc "copy"
-		} 
+		
+		local qr = 1 // query round		
+		while (`qr' <= `querytimes') {
+			
+			tempfile clfile
+			cap copy "`queryfull'" `clfile'
+			if (_rc == 0) {
+				cap insheet using `clfile', clear name
+				if (_rc != 0) local rc "in"
+				continue, break
+			} 
+			else {
+				local rc "copy"
+				local ++qr
+			} 
+		}
+		
+		* global qr = `qr'
 		
 		if ("`aggregate'" == "" & "`wb'" == "") {
 			local rtype 1

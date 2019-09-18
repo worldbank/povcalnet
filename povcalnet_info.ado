@@ -107,7 +107,7 @@ qui {
 	
 	*---------- If didn't copy
 	if (`rccopy' != 0) { //Use cache if error
-		cap:findfile _initCItem2014.dta
+		cap: findfile _initCItem2014.dta
 		local file `"`r(fn)'"'
 		local wd : environment HOME
 		if strpos(`"`file'"', "~") == 1 & !missing(`"`wd'"') {
