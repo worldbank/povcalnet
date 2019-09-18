@@ -563,7 +563,7 @@ poverty lines included in {it:povlines()}:
 {ul:4.4} Graph of population distribution across income categories in Latin America, by country
 
 {cmd}
-	. povcalnet, region(lac) year(last) povline(3.2 5.5 15) fillgaps clear 
+	. povcalnet, region(lac) year(last) povline(3.2 5.5 15) clear 
 	. keep if datatype==2 & year>=2014             // keep income surveys
 	. keep povertyline countrycode countryname year headcount
 	. replace povertyline = povertyline*100
@@ -584,7 +584,7 @@ poverty lines included in {it:povlines()}:
 	. la var category ""
 
 	. local title "Distribution of Income in Latin America and Caribbean, by country"
-	. local note "Source: PovCalNet, using the latest survey after 2014 for each country."
+	. local note "Source: PovcalNet, using the latest survey after 2014 for each country."
 	. local yti  "Population share in each income category (%)"
 
 	. graph bar (mean) percentage, inten(*0.7) o(category) o(countrycode, ///
