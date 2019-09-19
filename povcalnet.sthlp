@@ -617,33 +617,36 @@ We would especially warn that estimates of the densities near the bottom and top
 {title:References}
 {p 40 20 2}(Go up to {it:{help povcalnet##sections:Sections Menu}}){p_end}
 
-{p 4 8 2}Castaneda Aguilar, R. A., C. Lakner, J. S. Lopez, E. B. Prydz, R. Wu and Q. Zhao (2018) "Estimating Global Poverty in Stata: The povcalnet command", Global Poverty Monitoring Technical Note 107, World Bank. [NEED TO ADD HYPERLINK]{p_end}
+{p 4 8 2}Castaneda Aguilar, R. A., C. Lakner, E. B. Prydz, J. Soler Lopez, R. Wu and Q. Zhao (2019)
+"Estimating Global Poverty in Stata: The povcalnet command", Global Poverty Monitoring Technical 
+Note, No. 9, World Bank, Washington, DC 
+{browse "http://documents.worldbank.org/curated/en/docsearch/collection-title/Global%2520Poverty%2520Monitoring%2520Technical%2520Note?colT=Global%2520Poverty%2520Monitoring%2520Technical%2520Note":Link}{p_end}
 
 {marker acknowled}{...}
 {title:Acknowledgements}
 {p 40 20 2}(Go up to {it:{help povcalnet##sections:Sections Menu}}){p_end}
 
 {pstd}
-The authors would like to thank Tony Fujs, Dean Jolliffe, Aart Kraay, Kihoon
-Lee, Daniel Mahler and , Minh Cong Nguyen and Marco Ranaldi, as well as seminar
-participants at the World Bank, for comments received on earlier versions of this 
-code. In developing this code, we closely followed the example of wbopendata
-developed by Joao Pedro Azevedo.
+The authors would like to thank Joao-Pedro Azevedo, Tony Fujs, Dean Jolliffe, 
+Aart Kraay, Kihoon Lee, Daniel Mahler, Minh Cong Nguyen, Marco Ranaldi and Prem 
+Sangraula, as well as seminar participants at the World Bank, for comments received 
+on earlier versions of this code. In developing this code, we closely followed the 
+example of wbopendata developed by Joao-Pedro Azevedo.
 
 {p 40 20 2}(Go up to {it:{help povcalnet##sections:Sections Menu}}){p_end}
 {marker authors}{...}
 {title:Authors}
 {pstd}
 R.Andres Castaneda, Christoph Lakner, Espen Beer Prydz, Jorge Soler Lopez, 
-Ruoxuan Wu, Qinghua Zhao
+Ruoxuan Wu, and Qinghua Zhao
 
-{title:maintainer}
+{title:Maintainer}
 {p 4 4 4}R.Andres Castaneda, The World Bank{p_end}
 {p 6 6 4}Email: {browse "acastanedaa@worldbank.org":  acastanedaa@worldbank.org}{p_end}
 {p 6 6 4}GitHub:{browse "https://github.com/randrescastaneda": randrescastaneda }{p_end}
 
 {marker contact}{...}
-{title:contact}
+{title:Contact}
 {pstd}
 Any comments, suggestions, or bugs can be reported in the 
 {browse "https://github.com/worldbank/povcalnet/issues":GitHub issues page}.
@@ -653,7 +656,7 @@ All the files are available in the {browse "https://github.com/worldbank/povcaln
 {title:Thanks for citing {cmd:povcalnet} as follows}
 {p 40 20 2}(Go up to {it:{help povcalnet##sections:Sections Menu}}){p_end}
 
-{p 4 8 2}Castaneda Aguilar, R. A., C. Lakner, J. S. Lopez, E. B. Prydz, R. Wu and Q. Zhao  (2019) "povcalnet: Stata module to access World Bank’s Global Poverty and Inequality data," Statistical Software Components YYYY, Boston College Department of Economics. http://ideas.repec.org/c/boc/bocode/ZZZZZ.html {p_end}
+{p 4 8 2}Castaneda Aguilar, R. A., C. Lakner, E. B. Prydz, J. S. Lopez, R. Wu and Q. Zhao (2019) "povcalnet: Stata module to access World Bank’s Global Poverty and Inequality data," Statistical Software Components YYYY, Boston College Department of Economics.{p_end}
 
 {pstd}
 Please make reference to the date when the database was downloaded, as statistics may change
