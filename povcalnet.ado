@@ -21,7 +21,7 @@ Output:		dta file
 
 program def povcalnet, rclass
 
-set checksum off //temporarily bypasses controls of files taken from internet
+set checksum off //temporarily bypasses control of files taken from internet
 
 version 11.0
 

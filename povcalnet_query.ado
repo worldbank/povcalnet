@@ -1,11 +1,5 @@
 *********************************************************************************
 * povcalnet_query                                                               *
-*! v1.0  		sept2018               by 	Jorge Soler Lopez					*
-*											Espen Beer Prydz					*
-*											Christoph Lakner					*
-*											Ruoxuan Wu							*
-*											Qinghua Zhao						*
-*											World Bank Group					*
 *********************************************************************************
 program def povcalnet_query, rclass
 

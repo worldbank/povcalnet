@@ -1,11 +1,5 @@
 *********************************************************************************
 * povcalnet_info                                                          		*
-*! v1.0  		sept2018               by 	Jorge Soler Lopez					*
-*											Espen Beer Prydz					*
-*											Christoph Lakner					*
-*											Ruoxuan Wu							*
-*											Qinghua Zhao						*
-*											World Bank Group					*
 *********************************************************************************
 
 

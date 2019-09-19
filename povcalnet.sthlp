@@ -50,6 +50,8 @@ groups of countries instead of country-level estimated.{p_end}
 {synopt :{opt info:rmation}} presents a clickable version of the available surveys, countries and regions.{p_end}
 {synopt :{opt iso}} uses ISO3 for country/economy codes in the output. {p_end}
 {synopt :{opt ppp}{cmd:(#)}} allows the selection of PPP. {p_end}
+{synopt :{opt querytimes(integer)}} Number of times the API is hit before defaulting to failure. 
+Default is 5. {it:Advance option. Just use it if internet connection is poor}{p_end}
 
 {synoptset 27 tabbed}{...}
 {synopthdr:subcommands}
