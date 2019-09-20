@@ -67,7 +67,7 @@ all other economies are included in geographic regions, as defined by the World 
 {synopt:{opt  CHN }} China{p_end}
 {synopt:{opt  COL }} Colombia{p_end}
 {synopt:{opt  COM }} Comoros{p_end}
-{synopt:{opt  ZAR }} Congo, Democratic Republic of{p_end}
+{synopt:{opt  COD }} Congo, Democratic Republic of{p_end}
 {synopt:{opt  COG }} Congo, Republic of{p_end}
 {synopt:{opt  CRI }} Costa Rica{p_end}
 {synopt:{opt  CIV }} Cote d'Ivoire{p_end}
@@ -114,7 +114,7 @@ all other economies are included in geographic regions, as defined by the World 
 {synopt:{opt  KEN }} Kenya{p_end}
 {synopt:{opt  KIR }} Kiribati{p_end}
 {synopt:{opt  KOR }} Korea, Republic of{p_end}
-{synopt:{opt  KSV }} Kosovo{p_end}
+{synopt:{opt  XKX }} Kosovo{p_end}
 {synopt:{opt  KGZ }} Kyrgyz Republic{p_end}
 {synopt:{opt  LAO }} Lao People's Democratic Republic{p_end}
 {synopt:{opt  LVA }} Latvia{p_end}
@@ -123,7 +123,6 @@ all other economies are included in geographic regions, as defined by the World 
 {synopt:{opt  LBR }} Liberia{p_end}
 {synopt:{opt  LTU }} Lithuania{p_end}
 {synopt:{opt  LUX }} Luxembourg{p_end}
-{synopt:{opt  MKD }} North Macedonia{p_end}
 {synopt:{opt  MDG }} Madagascar{p_end}
 {synopt:{opt  MWI }} Malawi{p_end}
 {synopt:{opt  MYS }} Malaysia{p_end}
@@ -146,6 +145,7 @@ all other economies are included in geographic regions, as defined by the World 
 {synopt:{opt  NIC }} Nicaragua{p_end}
 {synopt:{opt  NER }} Niger{p_end}
 {synopt:{opt  NGA }} Nigeria{p_end}
+{synopt:{opt  MKD }} North Macedonia{p_end}
 {synopt:{opt  NOR }} Norway{p_end}
 {synopt:{opt  PAK }} Pakistan{p_end}
 {synopt:{opt  PAN }} Panama{p_end}
@@ -180,7 +180,7 @@ all other economies are included in geographic regions, as defined by the World 
 {synopt:{opt  TJK }} Tajikistan{p_end}
 {synopt:{opt  TZA }} Tanzania{p_end}
 {synopt:{opt  THA }} Thailand{p_end}
-{synopt:{opt  TMP }} Timor-Leste{p_end}
+{synopt:{opt  TLS }} Timor-Leste{p_end}
 {synopt:{opt  TGO }} Togo{p_end}
 {synopt:{opt  TON }} Tonga{p_end}
 {synopt:{opt  TTO }} Trinidad and Tobago{p_end}
@@ -197,7 +197,7 @@ all other economies are included in geographic regions, as defined by the World 
 {synopt:{opt  VUT }} Vanuatu{p_end}
 {synopt:{opt  VEN }} Venezuela, Republica Bolivariana de{p_end}
 {synopt:{opt  VNM }} Vietnam{p_end}
-{synopt:{opt  WBG }} West Bank and Gaza{p_end}
+{synopt:{opt  PSE }} West Bank and Gaza{p_end}
 {synopt:{opt  YEM }} Yemen, Republic of{p_end}
 {synopt:{opt  ZMB }} Zambia{p_end}
 {synopt:{opt  ZWE }} Zimbabwe{p_end}

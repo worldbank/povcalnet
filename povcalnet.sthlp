@@ -48,7 +48,6 @@ groups of countries instead of country-level estimated.{p_end}
 {synopt :{opt coverage(string)}} loads coverage level ("national", "urban", "rural", "all"). Default "all".{p_end}
 {synopt :{opt fill:gaps}} loads all countries used to create regional aggregates.{p_end}
 {synopt :{opt info:rmation}} presents a clickable version of the available surveys, countries and regions.{p_end}
-{synopt :{opt iso}} uses ISO3 for country/economy codes in the output. {p_end}
 {synopt :{opt ppp}{cmd:(#)}} allows the selection of PPP. {p_end}
 {synopt :{opt querytimes(integer)}} Number of times the API is hit before defaulting to failure. 
 Default is 5. {it:Advance option. Just use it if internet connection is poor}{p_end}
@@ -238,10 +237,6 @@ distribution-neutrality (see Chapter 6
 {browse "https://openknowledge.worldbank.org/bitstream/handle/10986/20384/9781464803611.pdf":here}).
 Therefore, changes at the country-level from one reference year to the next need 
 to be interpreted carefully and may not be the result of a new household survey.{p_end}
-
-{phang}
-{opt iso} Uses ISO3 for country/economy codes in output. However, users still need to use {help povcalnet_countries##countries:Countries and Economies Abbreviations} when 
-calling the command (i.e. option {it:country()}).
 
 {phang}
 {opt PPP}{cmd:(#)} Allows the selection of PPP exchange rate. This option only 
