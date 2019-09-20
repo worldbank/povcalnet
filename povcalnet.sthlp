@@ -20,6 +20,7 @@
 
 {p2colset 9 24 22 2}{...}
 {p2col :{hi:povcalnet} {hline 2}}Access World Bank Global Poverty and Inequality measures.{p_end}
+{p2col :{hi:Website: }}{browse "https://worldbank.github.io/povcalnet/"}{p_end}
 {p2colreset}{...}
 {title:Syntax}
 
@@ -651,7 +652,7 @@ All the files are available in the {browse "https://github.com/worldbank/povcaln
 {title:Thanks for citing {cmd:povcalnet} as follows}
 {p 40 20 2}(Go up to {it:{help povcalnet##sections:Sections Menu}}){p_end}
 
-{p 4 8 2}Castaneda Aguilar, R. A., C. Lakner, E. B. Prydz, J. S. Lopez, R. Wu and Q. Zhao (2019) "povcalnet: Stata module to access World Bank’s Global Poverty and Inequality data," Statistical Software Components YYYY, Boston College Department of Economics.{p_end}
+{p 4 8 2}Castaneda Aguilar, R. A., C. Lakner, E. B. Prydz, J. S. Lopez, R. Wu and Q. Zhao (2019) "povcalnet: Stata module to access World Bank’s Global Poverty and Inequality data," Statistical Software Components 2019, Boston College Department of Economics.{p_end}
 
 {pstd}
 Please make reference to the date when the database was downloaded, as statistics may change
