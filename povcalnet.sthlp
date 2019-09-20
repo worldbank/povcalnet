@@ -1,5 +1,5 @@
 {smcl}
-{* *! version 1.0 14 aug 2019}{...}
+{* *! version 1.0.0 20 sep 2019}{...}
 {vieweralsosee "" "--"}{...}
 {vieweralsosee "Install wbopendata" "ssc install wbopendata"}{...}
 {vieweralsosee "Help wbopendata (if installed)" "help wbopendata"}{...}
@@ -20,6 +20,7 @@
 
 {p2colset 9 24 22 2}{...}
 {p2col :{hi:povcalnet} {hline 2}}Access World Bank Global Poverty and Inequality measures.{p_end}
+{p2col :{hi:Website: }}{browse "https://worldbank.github.io/povcalnet/"}{p_end}
 {p2colreset}{...}
 {title:Syntax}
 
@@ -48,7 +49,6 @@ groups of countries instead of country-level estimated.{p_end}
 {synopt :{opt coverage(string)}} loads coverage level ("national", "urban", "rural", "all"). Default "all".{p_end}
 {synopt :{opt fill:gaps}} loads all countries used to create regional aggregates.{p_end}
 {synopt :{opt info:rmation}} presents a clickable version of the available surveys, countries and regions.{p_end}
-{synopt :{opt iso}} uses ISO3 for country/economy codes in the output. {p_end}
 {synopt :{opt ppp}{cmd:(#)}} allows the selection of PPP. {p_end}
 {synopt :{opt querytimes(integer)}} Number of times the API is hit before defaulting to failure. 
 Default is 5. {it:Advance option. Just use it if internet connection is poor}{p_end}
@@ -238,10 +238,6 @@ distribution-neutrality (see Chapter 6
 {browse "https://openknowledge.worldbank.org/bitstream/handle/10986/20384/9781464803611.pdf":here}).
 Therefore, changes at the country-level from one reference year to the next need 
 to be interpreted carefully and may not be the result of a new household survey.{p_end}
-
-{phang}
-{opt iso} Uses ISO3 for country/economy codes in output. However, users still need to use {help povcalnet_countries##countries:Countries and Economies Abbreviations} when 
-calling the command (i.e. option {it:country()}).
 
 {phang}
 {opt PPP}{cmd:(#)} Allows the selection of PPP exchange rate. This option only 
@@ -656,7 +652,7 @@ All the files are available in the {browse "https://github.com/worldbank/povcaln
 {title:Thanks for citing {cmd:povcalnet} as follows}
 {p 40 20 2}(Go up to {it:{help povcalnet##sections:Sections Menu}}){p_end}
 
-{p 4 8 2}Castaneda Aguilar, R. A., C. Lakner, E. B. Prydz, J. S. Lopez, R. Wu and Q. Zhao (2019) "povcalnet: Stata module to access World Bank’s Global Poverty and Inequality data," Statistical Software Components YYYY, Boston College Department of Economics.{p_end}
+{p 4 8 2}Castaneda Aguilar, R. A., C. Lakner, E. B. Prydz, J. S. Lopez, R. Wu and Q. Zhao (2019) "povcalnet: Stata module to access World Bank’s Global Poverty and Inequality data," Statistical Software Components 2019, Boston College Department of Economics.{p_end}
 
 {pstd}
 Please make reference to the date when the database was downloaded, as statistics may change
