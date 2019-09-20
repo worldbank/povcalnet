@@ -548,8 +548,8 @@ void povcalnet_source(string scalar cmd) {
 		pos_a = ftell(fh)
 	}
 	
+	src = strtrim(fget(fh))
 	if (rows(src) > 0) {
-		src = strtrim(fget(fh))
 		src = substr(src, 3)
 		st_local("src", src)
 	} 
@@ -570,53 +570,6 @@ exit
 ><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><
 
 Notes:
-1. To display by region... maybe later. 
-tempvar todisp
-bysort regioncode (countrycode): gen `todisp' = 1 if _n < `n2disp'
-levelsof regioncode, local(regions)
-noi di as res _n _col(30) "Display first `n2disp' obs in " _c
-foreach region of local regions {
-	noi tabdisp year if( regioncode == "`region'" & `todisp' == 1) , c(headcount mean median)  by(countrycode) concise missing
-	
-	2.
-	noi disp in y "Note: " in w "{cmd:povcalnet} requires the packages " ///
-	"below from Github: " _n in g "`git_cmds'"
-	
-	foreach cmd of local git_cmds {
-		capture which `cmd'
-		if (_rc != 0) {
-			
-			if ("`cmd'" == "github") {
-				net install github, from("https://haghish.github.io/github/")
-				continue
-			}
-			else {
-				mata: povcalnet_source("`cmd'")
-				
-				if regexm("`src'", "\.io/") {  // if site
-					if regexm("`src'", "://([^ ]+)\.github") {
-						local repo = regexs(1) + "/`cmd'"
-					}
-				}
-				else {  // if branch
-					if regexm("`src'", "\.com/([^ ]+)(/`cmd')") {
-						local repo = regexs(1) + regexs(2) 
-					}
-				}
-				
-				cap github install `repo'
-				if (_rc == 0) noi disp in g "{cmd:`cmd'} " in w _col(15) "installed"
-				else noi disp as err "error installing `cmd' from Github"
-				
-			} // end of condition to other commands besides github
-		} // end if command does not exist
 		
-		
-		
-		
-		3.
-		
-		
-		Version Control:
-		
-		
+Version Control:
+
