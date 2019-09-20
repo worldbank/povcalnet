@@ -533,7 +533,7 @@ mata:
 // function to look for source of code
 void povcalnet_source(string scalar cmd) {
 	
-	cmd =  cmd :+ ".pkg"
+	cmd =  cmd :+ "\.pkg"
 	
 	fh = _fopen("`fn'", "r")
 	
@@ -573,3 +573,42 @@ Notes:
 		
 Version Control:
 
+
+*##s
+
+findfile stata.trk
+local fn = "`r(fn)'"
+
+mata:
+cmd = "povcalnet"
+cmd =  cmd :+ "\.pkg"
+	
+	fh = _fopen("`fn'", "r")
+	
+	pos_a = ftell(fh)
+	pos_b = 0
+	while ((line=strtrim(fget(fh)))!=J(0,0,"")) {
+		if (regexm(strtrim(line), cmd)) {
+			fseek(fh, pos_b, -1)
+			break
+		}
+		pos_b = pos_a
+		pos_a = ftell(fh)
+	}
+	
+	src = strtrim(fget(fh))
+	if (rows(src) > 0) {
+		src = substr(src, 3)
+		st_local("src", src)
+	} 
+	else {
+		st_local("src", "NotFound")
+	}
+	
+	fclose(fh)
+	src
+	
+end 
+
+
+*##e
