@@ -68,6 +68,8 @@ replace coveragetype = 2 if countrycode == "COL" &  year == 1991
 
 replace coveragetype = 1 if countrycode == "ETH" &  year == 1981
 
+order countrycode year coveragetype datatype comparability
+
 saveold "_tests/povcalnet_metadata.dta", replace
 export delimited using "_tests/povcalnet_metadata.csv", /* 
  */ replace delimiter(",")
