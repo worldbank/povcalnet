@@ -24,7 +24,7 @@ The underlying welfare aggregate is per capita household income or consumption e
 For more information on the definition of the indicators, click [here](http://iresearch.worldbank.org/PovcalNet/Docs/dictionary.html)
 For more information on the methodology, click [here](http://iresearch.worldbank.org/PovcalNet/methodology.aspx)
 
-[This note](http://documents.worldbank.org/curated/en/docsearch/collection-title/Global%2520Poverty%2520Monitoring%2520Technical%2520Note?colT=Global%2520Poverty%2520Monitoring%2520Technical%2520Note) provides more detail on the Stata command and summarizes key features of the PovcalNet methodology
+[This note](http://documents.worldbank.org/curated/en/836101568994246528/) provides more detail on the Stata command and summarizes key features of the PovcalNet methodology
 
 To download `povcalnet` R package click [here](https://worldbank.github.io/povcalnetR/)
 
