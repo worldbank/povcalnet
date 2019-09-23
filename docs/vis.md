@@ -115,26 +115,30 @@ alt="LAC" width="550" height="500" />
 </center>
 
 
-## Growth Incidence Curves  for Argentina, Ghana and Thailand
+## Growth Incidence Curves  for Chile, Ghana, and Togo
 
 ```stata
-povcalnet, country(arg gha tha) year(all)  clear
-reshape long decile, i(countrycode datayear) j(dec)
-egen panelid=group(countrycode dec)
-replace datayear=int(datayear)
-xtset panelid datayear
-replace decile=10*decile*mean
-gen g=(((decile/L5.decile)^(1/5))-1)*100
-replace g=(((decile/L7.decile)^(1/7))-1)*100 if countrycode=="GHA"
-replace dec=10*dec
-twoway 	(sc g dec if datayear==2016 & countrycode=="ARG", c(l)) ///
-(sc g dec if datayear==2005 & countrycode=="GHA", c(l)) ///
-(sc g dec if datayear==2015 & countrycode=="THA", c(l)) ///
-, yti("Annual growth in decile average income (%)" " ", size(small))  ///
-xlabel(0(10)100,labs(small)) xtitle("Decile group", size(small))  ///
-graphregion(c(white)) ///
-legend(order(1 "Argentina(2011-2016)"  2 "Ghana(1998-2005)" //
-3 "Thailand(2010-2015)") si(vsmall) row(1)) scheme(s2color)
+ povcalnet, country(chl gha tgo) year(all)  clear
+ reshape long decile, i(countrycode datayear) j(dec)
+ egen panelid=group(countrycode dec)
+ replace datayear=int(datayear)
+ xtset panelid datayear
+ replace decile=10*decile*mean
+ gen g =(((decile/L6.decile)^(1/6))-1)*100		
+ replace g =(((decile/L7.decile)^(1/7))-1)*100 if countrycode =="GHA"
+ replace g =(((decile/L4.decile)^(1/4))-1)*100 if countrycode =="TGO"
+
+ replace dec=10*dec
+ 
+ twoway (sc g dec if datayear==2017 & countrycode=="CHL", c(l)) ///
+ 		(sc g dec if datayear==2005 & countrycode=="GHA", c(l))    ///
+ 		(sc g dec if datayear==2015 & countrycode=="TGO", c(l)),   ///
+ 		yti("Annual growth in decile average income (%)" " ",      ///
+ 		size(small))  xlabel(0(10)100,labs(small))                 ///
+ 		xtitle("Decile group", size(small)) graphregion(c(white))  ///
+ 		legend(order(1 "Chile (2011-2017)"                      ///
+ 		2 "Ghana(1998-2005)" 3 "Togo (2011-2015)")              ///
+ 		si(vsmall) row(1)) scheme(s2color)
 ```
 <center>
 <img src="/povcalnet/img/Income_growth.png" 
@@ -142,18 +146,20 @@ alt="Income_growth" width="550" height="500" />
 </center>
 
 
-## Gini Indices for Argentina, Ghana, and Thailand
+## Gini Indices for Chile, Ghana, and Togo
 
 ```stata
-povcalnet, country(arg gha tha) year(all) clear server("http://wbgmsrech001")
-replace gini = gini * 100
-twoway (connected gini datayear if countrycode == "ARG" & datayear > 1989)  ///
-(connected gini datayear if countrycode == "GHA" & datayear > 1989)  ///
-(connected gini datayear if countrycode == "THA" & datayear > 1989),  /// 
-ytitle("Gini Index" " ", size(small)) xtitle(" " "", size(small))  ///
-ylabel(,labs(small) nogrid angle(verticle)) xlabel(,labs(small)) ///
-graphregion(c(white)) scheme(s2color)   ///
-legend(order(1 "Argentina" 2 "Ghana" 3 "Thailand") si(small) row(1)) 
+povcalnet,  country(chl gha tgo) year(all) clear
+	replace gini = gini * 100
+	keep if datayear > 1989
+	twoway (connected gini datayear if countrycode == "CHL")  ///
+		(connected gini datayear if countrycode == "GHA")       ///
+		(connected gini datayear if countrycode == "TGO"),      /// 
+		ytitle("Gini Index" " ", size(small))                   ///
+		xtitle(" " "", size(small)) ylabel(,labs(small) nogrid  ///
+		angle(verticle)) xlabel(,labs(small))                   ///
+		graphregion(c(white)) scheme(s2color)                   ///
+		legend(order(1 "Chile" 2 "Ghana" 3 "Togo") si(small) row(1)) 
 ```
 
 <center>
