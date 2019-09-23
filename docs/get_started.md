@@ -6,10 +6,10 @@ Here are some examples on how to use the `povcalnet` command.
 
 ## Default Options
 
-Be default `povcalnet` returns poverty estimates at \$1.9 usd a day in 2011 PPP for all the surveys available at three different levels of coverage depending on availability; national, urban, and rural areas. 
+Be default, `povcalnet` returns poverty estimates at \$1.9 usd a day in 2011 PPP for all the surveys available. 
 
 ```stata
-povclanet, clear
+povcanet, clear
 *.     +--------------------------------------------------------------------+
 *.     | countrycode   year   povertyline   headcount       mean     median |
 *.     |--------------------------------------------------------------------|
@@ -130,44 +130,43 @@ povcalnet, country("ALB CHN") povline(5.5) clear
 
 ### Get estimates for references years when survey years are not available
 
-The `fillgaps` option triggers the interpolation / extrapolation of poverty estimates in reference years when survey year is not available
+The `fillgaps` option triggers the interpolation/extrapolation of poverty estimates to reference years even when survey years are not available
 
 ```stata
 * 
-povcalnet, countr(HTI) clear
+povcalnet, countr(AGO) clear
 *.     +----------------------------------------------------------------------------------+
 *.     | countrycode   year   povertyline   headcount       mean     median      datatype |
 *.     |----------------------------------------------------------------------------------|
-*.  1. |         HTI   2001           1.9    .5609249   98.62671   50.42543        Income |
-*.  2. |         HTI   2012           1.9     .250244   127.1753   95.98644   Consumption |
-*.  3. |         HTI   2012           1.9     .539098   104.7003   51.16564        Income |
+*.  1. |         AGO   2000           1.9    .3227822   136.7125   86.47519   Consumption |
+*.  2. |         AGO   2008           1.9    .3008292   120.7577   87.02627   Consumption |
 *.     +----------------------------------------------------------------------------------+
 
-povcalnet, countr(HTI) clear fillgaps
+povcalnet, countr(AGO) clear fillgaps
 
 *.     +----------------------------------------------------------------------------------+
 *.     | countrycode   year   povertyline   headcount       mean     median      datatype |
 *.     |----------------------------------------------------------------------------------|
-*.  1. |         HTI   1981           1.9    .3688352   156.3377   79.93164        Income |
-*.  2. |         HTI   1984           1.9    .4061127   142.2825   72.74559        Income |
-*.  3. |         HTI   1987           1.9    .4376994   132.1854   67.58315        Income |
-*.  4. |         HTI   1990           1.9     .467399   122.0726   62.41275        Income |
-*.  5. |         HTI   1993           1.9     .534257   105.0003   53.68411        Income |
-*.  6. |         HTI   1996           1.9    .5523341   100.0336   51.14476        Income |
-*.  7. |         HTI   1999           1.9    .5454523   102.1958   52.25024        Income |
-*.  8. |         HTI   2002           1.9     .562766   97.97414          .        Income |
-*.  9. |         HTI   2005           1.9    .5740808   95.43351          .        Income |
-*. 10. |         HTI   2008           1.9     .555704   100.4467          .        Income |
-*. 11. |         HTI   2010           1.9    .5685747   97.09933          .        Income |
-*. 12. |         HTI   2011           1.9    .5492141   102.1022          .        Income |
-*. 13. |         HTI   2012           1.9     .250244   127.1753   95.98644   Consumption |
-*. 14. |         HTI   2013           1.9     .238203   130.7483   98.68321   Consumption |
-*. 15. |         HTI   2015           1.9    .2348435   132.5032   100.0078   Consumption |
+*.  1. |         AGO   1981           1.9    .2528001   170.9316   108.1199   Consumption |
+*.  2. |         AGO   1984           1.9     .254005   169.8243   107.4195   Consumption |
+*.  3. |         AGO   1987           1.9    .2502811     172.46   109.0867   Consumption |
+*.  4. |         AGO   1990           1.9      .26458    162.944   103.0675   Consumption |
+*.  5. |         AGO   1993           1.9    .4281284   106.9601   67.65576   Consumption |
+*.  6. |         AGO   1996           1.9    .3468005   129.2098   81.72945   Consumption |
+*.  7. |         AGO   1999           1.9    .3235836   136.4937   86.33674   Consumption |
+*.  8. |         AGO   2002           1.9    .3340467   136.1805          .   Consumption |
+*.  9. |         AGO   2005           1.9    .3372437   131.0922          .   Consumption |
+*. 10. |         AGO   2008           1.9    .2862413   128.7009          .   Consumption |
+*. 11. |         AGO   2010           1.9    .3015225   120.5281   86.86079   Consumption |
+*. 12. |         AGO   2011           1.9    .3020035   120.3387   86.72429   Consumption |
+*. 13. |         AGO   2012           1.9    .2824827   126.0506   90.84069   Consumption |
+*. 14. |         AGO   2013           1.9    .2733269    127.705   92.03295   Consumption |
+*. 15. |         AGO   2015           1.9    .2820334   126.1005   90.87667   Consumption |
 *.     +----------------------------------------------------------------------------------+
 
 ```
 ### Compute custom aggregates
-The `aggregate` option computes aggregate welfare statistics of custom group of countries
+The `aggregate` option computes aggregate welfare statistics of custom group of countries using the reference year estimates (i.e. including the interpolation/extrapolation)
 
 ```stata
 povcalnet, aggregate clear countr(CHL ARG BOL)
