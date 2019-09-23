@@ -2,7 +2,7 @@
 
 # Visualization Examples
 
-## Global Poverty Trends 1990-2015
+## Global Poverty Trends 1990-2015 (reference year)
 
 ```stata
 povcalnet wb,  clear 
@@ -115,7 +115,7 @@ alt="LAC" width="550" height="500" />
 </center>
 
 
-## Income or Consumption Growth for Argentina, Ghana and Thailand, by Decile Group
+## Growth Incidence Curves  for Argentina, Ghana and Thailand
 
 ```stata
 povcalnet, country(arg gha tha) year(all)  clear
