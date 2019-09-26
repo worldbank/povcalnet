@@ -71,7 +71,7 @@ ytitle("Millions of Poor" " ", size(small))  ///
 xtitle(" " "", size(small)) scheme(s2color)  ///
 graphregion(c(white)) ysize(7) xsize(8)  ///
 ylabel(,labs(small) nogrid angle(verticle)) xlabel(,labs(small)) ///
-legend(order(`legend') si(vsmall))
+legend(order(`legend') si(vsmall) symxsize(*.5) symysize(*.5))
 ```
 
 <center>
