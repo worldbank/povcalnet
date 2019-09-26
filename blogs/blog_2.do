@@ -35,18 +35,18 @@ ylab(,labs(small) nogrid angle(0)) scheme(s2color)
 
 graph bar (mean) percentage if regioncode=="SSA" & year>=1990, inten(*0.7) o(category) ///
 o(year, lab(labsi(small) angle(vertical))) stack asy /// 
-blab(bar, pos(center) format(%3.1f) size(8pt)) /// 
+blab(bar, pos(center) format(%3.1f) size(7pt)) /// 
 ti("Distribution of Income in Sub-Saharan Africa over time", si(small)) ///
-graphregion(c(white)) ysize(6) xsize(6.5) legend(si(vsmall) r(3))  ///
+graphregion(c(white)) ysize(6) xsize(6.5) legend(si(vsmall) r(2) symxsize(*.4))  ///
 yti("Population share in each income category (%)", si(small)) ///
 ylab(,labs(small) nogrid angle(0)) scheme(s2color) name(ssa, replace)
 graph export ssa.png, as(png) hei(1000) replace
 
 graph bar (mean) percentage if regioncode=="EAP" & year>=1990, inten(*0.7) o(category) ///
 o(year, lab(labsi(small) angle(vertical))) stack asy /// 
-blab(bar, pos(center) format(%3.1f) size(8pt)) /// 
+blab(bar, pos(center) format(%3.1f) size(7pt)) /// 
 ti("Distribution of Income in East Asia and Pacific over time", si(small)) ///
-graphregion(c(white)) ysize(6) xsize(6.5) legend(si(vsmall) r(3))  ///
+graphregion(c(white)) ysize(6) xsize(6.5) legend(si(vsmall) r(2) symxsize(*.4)) ///
 yti("Population share in each income category (%)", si(small)) ///
 ylab(,labs(small) nogrid angle(0)) scheme(s2color) name(eap, replace)
 graph export eap.png, as(png) hei(1000) replace
