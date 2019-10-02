@@ -214,7 +214,7 @@ gen percentage_4 = 100 - headcount1500
 keep regioncode region year  percentage_*
 reshape long  percentage_,i(year regioncode region  ) j(category) 
 la define category 0 "Poor IPL (<$1.9)" 1 "Poor LMIC ($1.9-$3.2)" 2 "Poor UMIC ($3.2-$5.5)" ///
-3 "Non-poor ($5.5-$15)" 4 "Middle class (>$15)"
+3 "$5.5-$15" 4 "Middle class (>$15)"
 la val category category
 la var category ""
 
