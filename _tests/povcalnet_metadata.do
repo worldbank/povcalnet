@@ -76,8 +76,8 @@ saveold "_tests/povcalnet_metadata_pref.dta", replace
 
 drop preferable
 
-saveold "metadata/povcalnet_metadata.dta", replace
-export delimited using "metadata/povcalnet_metadata.csv", /* 
+saveold "metadata/povcalnet_comparability.dta", replace
+export delimited using "metadata/povcalnet_comparability.csv", /* 
  */ replace delimiter(",") nolabel 
 
 exit
