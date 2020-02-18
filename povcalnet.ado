@@ -64,7 +64,7 @@ qui {
 		
 		* If povcalnet was installed from github
 		if (regexm("`src'", "github")) {
-			local git_cmds povcalnet github
+			local git_cmds povcalnet
 			
 			foreach cmd of local git_cmds {
 				
