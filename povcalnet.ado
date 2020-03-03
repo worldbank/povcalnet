@@ -194,8 +194,15 @@ qui {
 	*---------- API defaults
 	
 	if "`server'"!=""  {
-		if ("`server'" == "int") local server "http://wbgmsrech001"
-		local base="`server'/PovcalNet/PovcalNetAPI.ashx"
+		if ("`server'" == "int")     {
+			local server "http://wbgmsrech001"
+			local servname ""
+		}
+		if ("`server'" == "testing") {
+			local server "http://wbgmsrech001"
+			local servname "-testing"
+		}
+		local base="`server'/PovcalNet`servname'/PovcalNetAPI.ashx"
 	} 
 	else {
 		local serveri    = "http://iresearch.worldbank.org"
