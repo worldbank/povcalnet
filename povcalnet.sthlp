@@ -133,7 +133,7 @@ The underlying welfare aggregate is per capita household income or consumption
 The PovcalNet API allows two types of calculations:
 
 {phang}
-{opt Survey-year}: Will load poverty measures for a reference year that is common
+{opt Survey-year}: Will load estimates in the survey-year. Will load poverty measures for a reference year that is common
 across countries. Regional and global aggregates are calculated only for
 reference-years. Countries without a survey in the
 
