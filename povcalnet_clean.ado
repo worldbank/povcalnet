@@ -22,8 +22,10 @@ syntax anything(name=type),      ///
 								year(string)     ///
 								region(string)   ///
 								iso              ///
+								wb				///
+								nocensor			///
 								rc(string)       ///
-								pause						 ///
+								pause			///
              ]
 
 if ("`pause'" == "pause") pause on
@@ -213,6 +215,21 @@ if ("`type'" == "2") {
 		local ++i
 		rename `var' `: word `i' of `Rnames''
 	}
+	
+	* Censor giving coverage 
+	if ("`wb'" != ""){
+		preserve
+		qui povcalnet_get_coverage, clear
+		tempfile coverage
+		save `coverage', replace
+		restore
+		merge m:1  regioncode year using `coverage', keep(match) nogen
+		tempvar censor
+		gen censor = (share < 40)
+		drop if censor == 1
+	}
+	
+	
 	
 } // end of type 2
 

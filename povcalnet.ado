@@ -464,7 +464,7 @@ qui {
 		
 		*---------- Clean data
 		povcalnet_clean `rtype', year("`year'") `iso' /* 
-		*/ rc(`rc') region(`region') `pause'
+		*/ rc(`rc') region(`region') `pause' `wb'
 		
 		pause after cleaning
 		
