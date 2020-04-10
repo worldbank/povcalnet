@@ -225,8 +225,8 @@ if ("`type'" == "2") {
 		restore
 		merge m:1  regioncode year using `coverage', keep(match) nogen
 		tempvar censor
-		gen censor = (share < 40)
-		drop if censor == 1
+		gen `censor' = (share < 40)
+		drop if `censor' == 1
 	}
 	
 	
