@@ -224,9 +224,11 @@ if ("`type'" == "2") {
 		save `coverage', replace
 		restore
 		merge m:1  regioncode year using `coverage', keep(match) nogen
-		tempvar censor
-		gen `censor' = (share < 40)
-		drop if `censor' == 1
+		ds year region regioncode povertyline share, not
+		loc varlist `r(varlist)'
+		foreach var of local varlist {
+			replace `var' = . if share < 40
+		}
 	}
 	
 	
