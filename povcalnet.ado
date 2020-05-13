@@ -202,6 +202,11 @@ qui {
 			local server "http://wbgmsrech001"
 			local servname "-testing"
 		}
+		if (upper("`server'") == "AR") {
+			local server "http://wbgmsrech001"
+			local servname "-AR"
+		}
+		
 		local base="`server'/PovcalNet`servname'/PovcalNetAPI.ashx"
 	} 
 	else {
@@ -472,7 +477,7 @@ qui {
 		Display Query
 		==================================================*/
 		
-		if ("`dipsquery'" == "") {
+		if ("`dipsquery'" == "" & "`rc'" == "0") {
 			noi di as res _n "{ul: Query at \$`i_povline' poverty line}"
 			noi di as res "{hline}"
 			if ("`query_ys'" != "") noi di as res "Year:"         as txt "{p 4 6 2} `query_ys' {p_end}"
