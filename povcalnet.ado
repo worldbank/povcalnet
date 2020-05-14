@@ -204,7 +204,7 @@ qui {
 		}
 		if (upper("`server'") == "AR") {
 			local server "http://wbgmsrech001"
-			local servname "-AR"
+			local servname "-AR/API"
 		}
 		
 		local base="`server'/PovcalNet`servname'/PovcalNetAPI.ashx"
@@ -229,7 +229,8 @@ qui {
 			error
 		}
 		local fq = "`base'?${pcn_query}"
-		view browse "`fq'"
+		noi disp in y "quering" in w _n "`fq'"
+		noi view browse "`fq'"
 		exit
 	}
 	
