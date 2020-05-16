@@ -194,20 +194,28 @@ qui {
 	*---------- API defaults
 	
 	if "`server'"!=""  {
-		if ("`server'" == "int")     {
-			local server "http://wbgmsrech001"
-			local servname ""
+		
+		if !inlist(lower("`server'"), "int", "testing", "ar") {
+			noi disp in red "the server requested does not exist" 
+			error
 		}
-		if ("`server'" == "testing") {
-			local server "http://wbgmsrech001"
-			local servname "-testing"
+	
+		if (lower("`server'") == "int")     {
+			local server "${pcn_svr_in}"
+		}
+		if (lower("`server'") == "testing") {
+			local server "${pcn_svr_ts}"
 		}
 		if (upper("`server'") == "AR") {
-			local server "http://wbgmsrech001"
-			local servname "-AR/API"
+			local server "${pcn_svr_ar}"
 		}
 		
-		local base="`server'/PovcalNet`servname'/PovcalNetAPI.ashx"
+		if ("`server'" == "") {
+		 noi disp in red "You don't have access to internal servers"
+		 error 
+		}
+		
+		local base = "`server'/PovcalNetAPI.ashx"
 	} 
 	else {
 		local serveri    = "http://iresearch.worldbank.org"
