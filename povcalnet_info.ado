@@ -7,7 +7,7 @@ program def povcalnet_info, rclass
 
 version 11.0
 
-syntax    [,         ///
+syntax    [,       ///
 COUntry(string)    ///
 REGion             ///
 AGGregate          ///
