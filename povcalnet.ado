@@ -87,6 +87,15 @@ qui {
 				
 				qui github version `cmd'
 				local crrtversion =  "`r(version)'"
+				
+				foreach x in repo cmd {
+					local `x' : subinstr local `x' "." "", all 
+					local `x' : subinstr local `x' "-" ".", all 
+					if regexm("``x''", "v([0-9]+)(\.)?([a-z]+)?([0-9]?)") {
+					 disp regexs(1) regexs(2) regexs(4)
+				  }
+					
+				}
 
 				* force installation 
 				if ("`crrtversion'" == "") {
