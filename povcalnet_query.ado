@@ -11,6 +11,7 @@ version 11.0
 				COUntry(string)       ///
         REGion(string)         ///
         POVLine(string)        ///
+		POPShare(string)	   ///
         PPP(string)            ///
         NOSUMmary              ///
         ISO                    ///
@@ -179,9 +180,17 @@ quietly {
 	}
 	return local query_ct = "`country_q'"
 	
-	*---------- Poverty lines query
-	local povline_q = "PovertyLine=`povline'"
-	return local query_pl = "`povline_q'"
+	if ("`popshare'" != ""){
+		*----------Poppulation share query 
+		local popshare_q = "QP=`popshare'"
+		return local query_ps = "`popshare_q'"
+	}
+	else {
+		*---------- Poverty lines query
+		local povline_q = "PovertyLine=`povline'"
+		return local query_pl = "`povline_q'"
+	
+	}
 	
 	
 } // end of qui

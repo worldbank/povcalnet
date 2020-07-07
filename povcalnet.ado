@@ -31,6 +31,7 @@ COUNtry(string)              ///
 REGion(string)               ///
 YEAR(string)                 /// 
 POVline(numlist)             /// 
+POPShare(numlist)	   			///
 PPP(numlist)                 /// 
 AGGregate                    ///
 CLEAR                        ///
@@ -258,8 +259,26 @@ qui {
 		}
 	}
 	
-	*---------- Poverty line
-	if ("`povline'" == "") local povline = 1.9
+	*---------- Poverty line/population share
+	if ("`popshare'" != ""){
+		if ("`povline'" != ""){
+			oi disp as err "povline and popshare cannot be used at the same time"
+			error
+		}
+		else{
+			loc povline = ""
+			loc pcall = "popshare"
+		}
+	}
+	else if ("`povline'" == "") {
+		loc popshare = ""
+		loc povline = 1.9
+		loc pcall = "povline"
+	}
+	else{
+		loc popshare = ""
+		loc pcall = "povline"
+	}
 	
 	*---------- Info
 	if regexm("`subcommand'", "^info")	{
@@ -382,7 +401,7 @@ qui {
 	
 	local f = 0
 	
-	foreach i_povline of local povline {	
+	foreach i_povline of local `pcall' {	
 		local ++f 
 		
 		/*==================================================
@@ -392,6 +411,7 @@ qui {
 		region("`region'")                     ///
 		year("`year'")                         ///
 		povline("`i_povline'")                 ///
+		popshare("`popshare'")	   					  ///
 		ppp("`i_ppp'")                         ///
 		coverage(`coverage')                   ///
 		server(`server')                       ///
@@ -410,16 +430,23 @@ qui {
 		local query_pl = "`r(query_pl)'"
 		local query_ds = "`r(query_ds)'"
 		local query_pp = "`r(query_pp)'"
+		local query_ps = "`r(query_ps)'"
 		
 		return local query_ys_`f' = "`query_ys'"
 		return local query_ct_`f' = "`query_ct'"
 		return local query_pl_`f' = "`query_pl'"
 		return local query_ds_`f' = "`query_ds'"
 		return local query_pp_`f' = "`query_pp'"
+		return local query_ps_`f' = "`query_ps'"
 		return local base      = "`base'"
 		
 		*---------- Query
-		local query = "`query_ys'&`query_ct'&`query_pl'`query_pp'`query_ds'&format=csv"
+		if ("`popshare'" == ""){
+			local query = "`query_ys'&`query_ct'&`query_pl'`query_pp'`query_ds'&format=csv"
+		}
+		else{
+			local query = "`query_ys'&`query_ct'&`query_ps'`query_pp'`query_ds'&format=csv"
+		}
 		return local query_`f' "`query'"
 		global pcn_query = "`query'"
 		
@@ -478,6 +505,7 @@ qui {
 			if ("`query_ys'" != "") noi di as res "Year:"         as txt "{p 4 6 2} `query_ys' {p_end}"
 			if ("`query_ct'" != "") noi di as res "Country:"      as txt "{p 4 6 2} `query_ct' {p_end}"
 			if ("`query_pl'" != "") noi di as res "Poverty line:" as txt "{p 4 6 2} `query_pl' {p_end}"
+			if ("`query_ps'" != "") noi di as res "Population share:" as txt "{p 4 6 2} `query_ps' {p_end}"
 			if ("`query_ds'" != "") noi di as res "Aggregation:"  as txt "{p 4 6 2} `query_ds' {p_end}"
 			if ("`query_pp'" != "") noi di as res "PPP:"          as txt "{p 4 6 2} `query_pp' {p_end}"
 			noi di as res _dup(20) "-"
