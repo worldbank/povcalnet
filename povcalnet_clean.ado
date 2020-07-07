@@ -22,8 +22,10 @@ syntax anything(name=type),      ///
 								year(string)     ///
 								region(string)   ///
 								iso              ///
+								wb				///
+								nocensor			///
 								rc(string)       ///
-								pause						 ///
+								pause			///
              ]
 
 if ("`pause'" == "pause") pause on
@@ -34,18 +36,17 @@ else                      pause off
 ==================================================*/
 
 if ("`rc'" == "copy") {
+	noi dis ""
+	noi dis in red "It was not possible to download data from the PovcalNet API."
+	noi dis ""
+	noi dis in white `"(1) Please check your internet connection by "' _c 
+	noi dis in white  `"{browse "http://iresearch.worldbank.org/PovcalNet/home.aspx" :clicking here}"'
+	noi dis in white `"(2) Please consider ajusting your Stata timeout parameters. For more details see {help netio}"'
+	noi dis in white `"(3) Please send us an email to:"'
+	noi dis in white _col(8) `"email: data@worldbank.org"'
+	noi dis in white _col(8) `"subject: povcalnet query error 20 on `c(current_date)' `c(current_time)'"'
 	noi di ""
-	noi di as err "{p 4 4 2} It was not possible to download data from the PovcalNet API. {p_end}"
-	noi di ""
-	noi dis as text `"{p 4 4 2} (1) Please check your internet connection by {browse "http://iresearch.worldbank.org/PovcalNet/home.aspx" :clicking here}{p_end}"'
-	noi dis as text `"{p 4 4 2} (3) Please consider ajusting your Stata timeout parameters. For more details see {help netio}. {p_end}"'
-	noi dis as text `"{p 4 4 2} (4) Please send us an email to report this error by {browse "mailto:data@worldbank.org, ?subject= povcalnet query error 20 at `c(current_date)' `c(current_time)': `queryspec' "  :clicking here} or writing to:  {p_end}"'
-	noi dis as result `"{p 12 4 2} email: " as input "data@worldbank.org  {p_end}"'
-	noi dis as result `"{p 12 4 2} subject: " as input "povcalnet query error 20 at `c(current_date)' `c(current_time)': `queryspec'  {p_end}"'
-	noi di ""
-	noi di ""
-	break
-	exit
+	error 673
 }
 
 if ("`rc'" == "in" | c(N) == 0) {
@@ -213,6 +214,22 @@ if ("`type'" == "2") {
 		local ++i
 		rename `var' `: word `i' of `Rnames''
 	}
+	
+	
+	* Censor giving coverage 
+	* if ("`wb'" != ""){
+		* preserve
+		* qui povcalnet_get_coverage, clear
+		* tempfile coverage
+		* save `coverage', replace
+		* restore
+		* merge m:1  regioncode year using `coverage', keep(match) nogen
+		* ds year region regioncode povertyline share, not
+		* loc varlist `r(varlist)'
+		* foreach var of local varlist {
+			* replace `var' = . if share < 40
+		* }
+	* }
 	
 } // end of type 2
 

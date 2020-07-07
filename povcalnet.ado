@@ -87,6 +87,15 @@ qui {
 				
 				qui github version `cmd'
 				local crrtversion =  "`r(version)'"
+				
+				foreach x in repo cmd {
+					local `x' : subinstr local `x' "." "", all 
+					local `x' : subinstr local `x' "-" ".", all 
+					if regexm("``x''", "v([0-9]+)(\.)?([a-z]+)?([0-9]?)") {
+					 disp regexs(1) regexs(2) regexs(4)
+				  }
+					
+				}
 
 				* force installation 
 				if ("`crrtversion'" == "") {
@@ -194,15 +203,28 @@ qui {
 	*---------- API defaults
 	
 	if "`server'"!=""  {
-		if ("`server'" == "int")     {
-			local server "http://wbgmsrech001"
-			local servname ""
+		
+		if !inlist(lower("`server'"), "int", "testing", "ar") {
+			noi disp in red "the server requested does not exist" 
+			error
 		}
-		if ("`server'" == "testing") {
-			local server "http://wbgmsrech001"
-			local servname "-testing"
+	
+		if (lower("`server'") == "int")     {
+			local server "${pcn_svr_in}"
 		}
-		local base="`server'/PovcalNet`servname'/PovcalNetAPI.ashx"
+		if (lower("`server'") == "testing") {
+			local server "${pcn_svr_ts}"
+		}
+		if (upper("`server'") == "AR") {
+			local server "${pcn_svr_ar}"
+		}
+		
+		if ("`server'" == "") {
+		 noi disp in red "You don't have access to internal servers"
+		 error 
+		}
+		
+		local base = "`server'/PovcalNetAPI.ashx"
 	} 
 	else {
 		local serveri    = "http://iresearch.worldbank.org"
@@ -224,7 +246,8 @@ qui {
 			error
 		}
 		local fq = "`base'?${pcn_query}"
-		view browse "`fq'"
+		noi disp in y "quering" in w _n "`fq'"
+		noi view browse "`fq'"
 		exit
 	}
 	
@@ -464,7 +487,7 @@ qui {
 		
 		*---------- Clean data
 		povcalnet_clean `rtype', year("`year'") `iso' /* 
-		*/ rc(`rc') region(`region') `pause'
+		*/ rc(`rc') region(`region') `pause' `wb'
 		
 		pause after cleaning
 		
@@ -472,7 +495,7 @@ qui {
 		Display Query
 		==================================================*/
 		
-		if ("`dipsquery'" == "") {
+		if ("`dipsquery'" == "" & "`rc'" == "0") {
 			noi di as res _n "{ul: Query at \$`i_povline' poverty line}"
 			noi di as res "{hline}"
 			if ("`query_ys'" != "") noi di as res "Year:"         as txt "{p 4 6 2} `query_ys' {p_end}"
