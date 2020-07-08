@@ -291,18 +291,18 @@ qui {
 	}
 	
 	// defined popshare and defined povline = error
-	if ("`popshare'" != "" & "`povline'" != "")  {
+	else if ("`popshare'" != "" & "`povline'" != "")  {
 		noi disp as err "povline and popshare cannot be used at the same time"
 		error
 	}
 	
 	// blank popshare and defined povline
-	if ("`popshare'" == "" & "`povline'" != "")  {
+	else if ("`popshare'" == "" & "`povline'" != "")  {
 		local pcall = "povline"
 	}
 	
 	// defined popshare and blank povline
-	if ("`popshare'" != "" & "`povline'" == "")  {
+	else {
 		local pcall = "popshare"
 	}
 	
