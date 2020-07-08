@@ -39,6 +39,8 @@ Cannot be used with option {it:country()}{p_end}
 {synopt :{opt year:}(numlist|string)}list of years (accepts up to 10),  or {it:all}, or {it:last}. Default "all".{p_end}
 {synopt :{opt pov:line:}(#)}list of poverty lines (in 2011 PPP-adjusted USD) to calculate
  poverty measures (accepts up to 5). Default is 1.9.{p_end}
+{synopt :{opt pops:hare:}(#)}list of headcounts to calculate poverty lines (in 2011 PPP-adjusted USD) and poverty measures. No default. Do not combine with {opt pov:line:}{p_end}
+
 
 {synoptset 27 tabbed}{...}
 {synopthdr:Options}
@@ -201,6 +203,13 @@ for each country.
 When selecting multiple poverty lines, use less than 4 decimals and separate 
 each value with spaces. If left empty, the default poverty line of $1.9 is used.
 Poverty lines are expressed in 2011 PPP-adjusted USD per capita per day.
+
+{phang}
+{opt povline(#)} The desired population share (headcount) for which the poverty lines as poverty measures will be calculated. 
+This has not default, and should not be combined with {opt povline}. 
+The resultng poverty lines are expressed in 2011 PPP-adjusted USD per capita per day.
+
+
 
 {marker options}{...}
 {p 40 20 2}(Go up to {it:{help povcalnet##sections:Sections Menu}}){p_end}
