@@ -283,31 +283,27 @@ qui {
 	}
 	
 	*---------- Poverty line/population share
-	if ("`popshare'" != ""){
-		if ("`povline'" != ""){
-			// defined popshare and defined povline = error
-			noi disp as err "povline and popshare cannot be used at the same time"
-			error
-		}
-		else{
-			// defined popshare and blank povline
-			loc povline = ""
-			loc pcall = "popshare"
-		}
-	}
-	else{
-		if ("`povline'" == "") {
-			// Blank popshare and blank povline = default povline 1.9
-			loc popshare = ""
-			loc povline = 1.9
-			loc pcall = "povline"
-		}
-		else{
-			// blank popshare and defined povline
-			loc popshare = ""
-			loc pcall = "povline"
-		}
 	
+	// Blank popshare and blank povline = default povline 1.9
+	if ("`popshare'" == "" & "`povline'" == "")  {
+		local povline = 1.9
+		local pcall = "povline"
+	}
+	
+	// defined popshare and defined povline = error
+	if ("`popshare'" != "" & "`povline'" != "")  {
+		noi disp as err "povline and popshare cannot be used at the same time"
+		error
+	}
+	
+	// blank popshare and defined povline
+	if ("`popshare'" == "" & "`povline'" != "")  {
+		local pcall = "povline"
+	}
+	
+	// defined popshare and blank povline
+	if ("`popshare'" != "" & "`povline'" == "")  {
+		local pcall = "popshare"
 	}
 	
 	*---------- Info
