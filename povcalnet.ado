@@ -285,22 +285,29 @@ qui {
 	*---------- Poverty line/population share
 	if ("`popshare'" != ""){
 		if ("`povline'" != ""){
-			oi disp as err "povline and popshare cannot be used at the same time"
+			// defined popshare and defined povline = error
+			noi disp as err "povline and popshare cannot be used at the same time"
 			error
 		}
 		else{
+			// defined popshare and blank povline
 			loc povline = ""
 			loc pcall = "popshare"
 		}
 	}
-	else if ("`povline'" == "") {
-		loc popshare = ""
-		loc povline = 1.9
-		loc pcall = "povline"
-	}
 	else{
-		loc popshare = ""
-		loc pcall = "povline"
+		if ("`povline'" == "") {
+			// Blank popshare and blank povline = default povline 1.9
+			loc popshare = ""
+			loc povline = 1.9
+			loc pcall = "povline"
+		}
+		else{
+			// blank popshare and defined povline
+			loc popshare = ""
+			loc pcall = "povline"
+		}
+	
 	}
 	
 	*---------- Info
@@ -424,7 +431,10 @@ qui {
 	
 	local f = 0
 	
-	foreach i_povline of local `pcall' {	
+	if ("`pcall'" == "povline") 	loc i_call "i_povline"
+	else 							loc i_call "i_popshare"
+	
+	foreach `i_call' of local `pcall' {	
 		local ++f 
 		
 		/*==================================================
@@ -434,7 +444,7 @@ qui {
 		region("`region'")                     ///
 		year("`year'")                         ///
 		povline("`i_povline'")                 ///
-		popshare("`popshare'")	   					  ///
+		popshare("`i_popshare'")	   					  ///
 		ppp("`i_ppp'")                         ///
 		coverage(`coverage')                   ///
 		server(`server')                       ///
