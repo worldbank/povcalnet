@@ -441,7 +441,7 @@ qui {
 		year("`year'")                         ///
 		povline("`i_povline'")                 ///
 		popshare("`i_popshare'")	   					  ///
-		ppp("`i_ppp'")                         ///
+		ppp("`ppp'")                         ///
 		coverage(`coverage')                   ///
 		server(`server')                       ///
 		`clear'                                ///
