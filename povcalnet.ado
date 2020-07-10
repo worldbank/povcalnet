@@ -85,9 +85,15 @@ qui {
 						
 				qui github query `repo'
 				local latestversion = "`r(latestversion)'"
+				local lastMajor = regexs(1) if regexm("`r(latestversion)'", "v([0-9]+).([0-9]+).([0-9]+)")
+				local lastMinor = regexs(2) if regexm("`r(latestversion)'", "v([0-9]+).([0-9]+).([0-9]+)")
+				local lastPatch = regexs(3) if regexm("`r(latestversion)'", "v([0-9]+).([0-9]+).([0-9]+)")			 
 				
 				qui github version `cmd'
 				local crrtversion =  "`r(version)'"
+				local crrMajor = regexs(1) if regexm("`r(version)'", "v([0-9]+).([0-9]+).([0-9]+)")
+				local crrMinor = regexs(2) if regexm("`r(version)'", "v([0-9]+).([0-9]+).([0-9]+)")
+				local crrPatch = regexs(3) if regexm("`r(version)'", "v([0-9]+).([0-9]+).([0-9]+)")
 				
 				foreach x in repo cmd {
 					local `x' : subinstr local `x' "." "", all 
@@ -106,8 +112,8 @@ qui {
 					global pcn_cmds_ssc = ""
 					exit 
 				}
-
-				if ("`latestversion'" != "`crrtversion'") {
+				
+				if (`lastMajor' > `crrMajor' | `lastMinor' > `crrMinor' | `lastPatch' > `crrPatch') {
 					cap window stopbox rusure "There is a new version of `cmd' in Github (`latestversion')." ///
 					"Would you like to install it now?"
 					
