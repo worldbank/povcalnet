@@ -16,7 +16,7 @@ harmonization of the underlying survey data.
 
 ## Installation 
 
-### From SSC
+### From SSC (version 1.0.0)
 
 ```stata
 ssc install povcalnet
