@@ -61,7 +61,9 @@ qui {
 		// Update PovcalNet 
 		// ---------------------------------------------------------------
 		
-		mata: povcalnet_source("povcalnet") // creates local src
+		* mata: povcalnet_source("povcalnet") // creates local src
+		_pcn_find_src povcalnet
+		local src = "`r(src)'"
 		
 		* If povcalnet was installed from github
 		if (regexm("`src'", "github")) {
@@ -70,7 +72,9 @@ qui {
 			foreach cmd of local git_cmds {
 				
 				* Check repository of files 
-				mata: povcalnet_source("`cmd'")
+				* mata: povcalnet_source("`cmd'")
+				_pcn_find_src povcalnet
+				local src = "`r(src)'"
 				
 				if regexm("`src'", "\.io/") {  // if site
 					if regexm("`src'", "://([^ ]+)\.github") {
@@ -85,7 +89,7 @@ qui {
 						
 				qui github query `repo'
 				local latestversion = "`r(latestversion)'"
-				if regexm("`r(latestversion)'", "v([0-9]+).([0-9]+).([0-9]+)"){
+				if regexm("`r(latestversion)'", "v([0-9]+)\.([0-9]+)\.([0-9]+)"){
 					local lastMajor = regexs(1)
 					local lastMinor = regexs(2)
 					local lastPatch = regexs(3)		 
@@ -93,7 +97,7 @@ qui {
 					
 				qui github version `cmd'
 				local crrtversion =  "`r(version)'"
-				if regexm("`r(version)'", "v([0-9]+).([0-9]+).([0-9]+)"){
+				if regexm("`r(version)'", "v([0-9]+)\.([0-9]+)\.([0-9]+)"){
 					local crrMajor = regexs(1)
 					local crrMinor = regexs(2)
 					local crrPatch = regexs(3)
@@ -116,7 +120,8 @@ qui {
 					exit 
 				}
 				
-				if (`lastMajor' > `crrMajor' | `lastMinor' > `crrMinor' | `lastPatch' > `crrPatch') {
+				* if (`lastMajor' > `crrMajor' | `lastMinor' > `crrMinor' | `lastPatch' > `crrPatch') {
+				if (`lastMajor'`lastMinor'`lastPatch' > `crrMajor'`crrMinor'`crrPatch') {
 					cap window stopbox rusure "There is a new version of `cmd' in Github (`latestversion')." ///
 					"Would you like to install it now?"
 					
@@ -591,6 +596,47 @@ qui {
 	
 } // end of qui
 end
+
+//========================================================
+// Aux programs
+//========================================================
+
+program define _pcn_find_src, rclass 
+syntax anything(name=cmd id="Package name")
+
+qui {
+	preserve
+	drop _all
+	
+	// find stata.trk file 
+	findfile stata.trk
+	local fn = "`r(fn)'"
+	
+	// create copy
+	tempfile statatrk
+	copy "`r(fn)'" "`statatrk'"
+	
+	// import copy into stata
+	import delimited using `statatrk',  bindquote(nobind)
+	
+	gen n = _n    // line number
+	
+	// find line where the package is used
+	levelsof n if regexm(v1, "`cmd'.pkg"), sep(,) loca(pklines)
+	
+	// the latest source and substract which refers to the source 
+	local sourceline = max(0, `pklines') - 1 
+	
+	// get the Soruce without the initial S
+	if regexm(v1[`sourceline'], "S (.*)") local src = regexs(1)
+	
+	// return info 
+	return local src = "`src'"
+} // end of qui
+end 
+
+
+
 
 // ------------------------------------------------------------------------
 // MATA functions
