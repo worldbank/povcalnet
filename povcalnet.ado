@@ -85,16 +85,19 @@ qui {
 						
 				qui github query `repo'
 				local latestversion = "`r(latestversion)'"
-				local lastMajor = regexs(1) if regexm("`r(latestversion)'", "v([0-9]+).([0-9]+).([0-9]+)")
-				local lastMinor = regexs(2) if regexm("`r(latestversion)'", "v([0-9]+).([0-9]+).([0-9]+)")
-				local lastPatch = regexs(3) if regexm("`r(latestversion)'", "v([0-9]+).([0-9]+).([0-9]+)")			 
-				
+				if regexm("`r(latestversion)'", "v([0-9]+).([0-9]+).([0-9]+)"){
+					local lastMajor = regexs(1)
+					local lastMinor = regexs(2)
+					local lastPatch = regexs(3)		 
+				}
+					
 				qui github version `cmd'
 				local crrtversion =  "`r(version)'"
-				local crrMajor = regexs(1) if regexm("`r(version)'", "v([0-9]+).([0-9]+).([0-9]+)")
-				local crrMinor = regexs(2) if regexm("`r(version)'", "v([0-9]+).([0-9]+).([0-9]+)")
-				local crrPatch = regexs(3) if regexm("`r(version)'", "v([0-9]+).([0-9]+).([0-9]+)")
-				
+				if regexm("`r(version)'", "v([0-9]+).([0-9]+).([0-9]+)"){
+					local crrMajor = regexs(1)
+					local crrMinor = regexs(2)
+					local crrPatch = regexs(3)
+				}
 				foreach x in repo cmd {
 					local `x' : subinstr local `x' "." "", all 
 					local `x' : subinstr local `x' "-" ".", all 
