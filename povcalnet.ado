@@ -120,13 +120,13 @@ qui {
 					exit 
 				}
 				
-				* if (`lastMajor' > `crrMajor' | `lastMinor' > `crrMinor' | `lastPatch' > `crrPatch') {
-				if (`lastMajor'`lastMinor'`lastPatch' > `crrMajor'`crrMinor'`crrPatch') {
+				if (`lastMajor' > `crrMajor' | `lastMinor' > `crrMinor' | `lastPatch' > `crrPatch') {
+				* if (`lastMajor'`lastMinor'`lastPatch' > `crrMajor'`crrMinor'`crrPatch') {
 					cap window stopbox rusure "There is a new version of `cmd' in Github (`latestversion')." ///
 					"Would you like to install it now?"
 					
 					if (_rc == 0) {
-						cap github update `cmd'
+						cap github install `repo', replace
 						if (_rc == 0) {
 							cap window stopbox note "Installation complete. please type" ///
 							"discard in your command window to finish"
@@ -135,7 +135,7 @@ qui {
 						else {
 							noi disp as err "there was an error in the installation. " _n ///
 							"please run the following to retry, " _n(2) ///
-							"{stata github update `cmd'}"
+							"{stata github install `repo', replace}"
 							local bye "error"
 						}
 					}	
@@ -643,8 +643,8 @@ end
 // ------------------------------------------------------------------------
 
 
-findfile stata.trk
-local fn = "`r(fn)'"
+* findfile stata.trk
+* local fn = "`r(fn)'"
 
 cap mata: mata drop povcalnet_*()
 mata:
