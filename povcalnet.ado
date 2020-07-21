@@ -624,11 +624,15 @@ qui {
 	// find line where the package is used
 	levelsof n if regexm(v1, "`cmd'.pkg"), sep(,) loca(pklines)
 	
-	// the latest source and substract which refers to the source 
-	local sourceline = max(0, `pklines') - 1 
+	if (`"`pklines'"' == `""') local src = "NotInstalled"
+	else {
 	
-	// get the Soruce without the initial S
-	if regexm(v1[`sourceline'], "S (.*)") local src = regexs(1)
+		// the latest source and substract which refers to the source 
+		local sourceline = max(0, `pklines') - 1 
+		
+		// get the Soruce without the initial S
+		if regexm(v1[`sourceline'], "S (.*)") local src = regexs(1)
+	}
 	
 	// return info 
 	return local src = "`src'"
