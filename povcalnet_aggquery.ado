@@ -47,6 +47,8 @@ quietly {
   }
 	
 	*---------- Make sure at least one ference year is selected
+
+	/* 
 	local ref_years 1981 1984 1987 1990 1993 1996 1999 2002 2005 2008 2010 2011 2012 2013 2015
 	
 	local ref_years_l: subinstr local ref_years " " ",", all
@@ -61,7 +63,7 @@ quietly {
 	if ("`no_ref'" != "") {
 		noi disp in y "Warning: `no_ref' is/are not part of reference years: `ref_years_l'"
 	}
-	
+	 */
 	
 	***************************************************
 	* 1. Will load guidance database
