@@ -44,16 +44,22 @@ quietly {
 	local region = upper("`region'")
 	
 	*---------- Make sure at least one reference year is selected
-	
+	 
 	if ("`year'" != "all" & ("`wb'" != "" | "`aggregate'" != "")) {	
-		local ref_years 1981 1984 1987 1990 1993 1996 1999 2002 2005 2008 2010 2011 2012 2013 2015 last
+		local  page "`server'/js/common_NET.js"
+		scalar page = fileread(`"`page'"')
+		scalar page = subinstr(page, `"""', "",.)
 		
-		local ref_years_l: subinstr local ref_years " " ",", all
+		if  regexm(page, "var AllRefYears = \[([^;]+)\]") local ref_years_l = regexs(1)
+		local ref_years_l "`ref_years_l', last"
+		
+		local ref_years: subinstr local ref_years_l ", " " ", all
 		
 		local no_ref: list year - ref_years
 		
 		if (`: list no_ref === year') {
-			noi disp as err "Not even one of the years select belong to reference years: `ref_years_l'"
+			noi disp as err "Not even one of the years select belong to the following reference years: " _n /* 
+			 */ " `ref_years_l'"
 			error
 		}
 		
@@ -61,7 +67,9 @@ quietly {
 			noi disp in y "Warning: `no_ref' is/are not part of reference years: `ref_years_l'"
 		}
 	}
-
+ 
+ 
+ 
 	***************************************************
 	* 1. Will load guidance database
 	***************************************************
