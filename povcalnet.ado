@@ -73,7 +73,7 @@ qui {
 				
 				* Check repository of files 
 				* mata: povcalnet_source("`cmd'")
-				_pcn_find_src povcalnet
+				_pcn_find_src `cmd'
 				local src = "`r(src)'"
 				
 				if regexm("`src'", "\.io/") {  // if site
@@ -247,7 +247,15 @@ qui {
 	
 	local base             = "`server'/PovcalNetAPI.ashx"	
 	return local server    = "`server'"
-
+	
+	//------------ Check internet connection
+	scalar tpage = fileread(`"`server'/js/common_NET.js"')
+	
+	if regexm(tpage, "error") {
+		noi disp in red "You may have Internet connections. Please verify"
+		error
+	}
+	
 	
 	*---------- lower case subcommand
 	local subcommand = lower("`subcommand'")
@@ -272,8 +280,8 @@ qui {
 		local wb_change 1
 		noi disp as err "Warning: " as text " {cmd:povclanet, country(all) aggregate} " /* 
 	  */	"is equivalent to {cmd:povcalnet wb}. " _n /* 
-	  */ " if you want to aggregate all countries by survey years, " /* 
-	  */ "you need to parse the list of countries in {it:country()} option. See " /*
+	  */  " if you want to aggregate all countries by survey years, " /* 
+	  */  "you need to parse the list of countries in {it:country()} option. See " /*
 	  */  "{help povcalnet##options:aggregate option description} for an example on how to do it"
 	}
 	else {
