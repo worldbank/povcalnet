@@ -235,21 +235,19 @@ qui {
 		}
 		
 		if ("`server'" == "") {
-		 noi disp in red "You don't have access to internal servers"
-		 error 
+			noi disp in red "You don't have access to internal servers" _n /* 
+					*/ "You're being redirected to public server"
+			local server "http://iresearch.worldbank.org/PovcalNet"
 		}
 		
-		local base = "`server'/PovcalNetAPI.ashx"
-	} 
+	}
 	else {
-		local serveri    = "http://iresearch.worldbank.org"
-		local site_name = "PovcalNet"
-		local handler   = "PovcalNetAPI.ashx"		
-		local base      = "`serveri'/`site_name'/`handler'"
+		local server "http://iresearch.worldbank.org/PovcalNet"
 	}
 	
-	return local server    = "`serveri'`server'"
-	return local site_name = "`site_name'"
+	local base             = "`server'/PovcalNetAPI.ashx"	
+	return local server    = "`server'"
+
 	
 	*---------- lower case subcommand
 	local subcommand = lower("`subcommand'")
