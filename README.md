@@ -5,7 +5,7 @@ Stata client to the Povcalnet API
 
 The `povcalnet` Stata command allows Stata users to compute poverty and inequality
 indicators for more than 160 countries and regions the World Bank's database of
-household surveys. It has the same functionality as the PovcalNet website. PovcalNet
+household surveys. It has the same functionality as the [PovcalNet website](http://iresearch.worldbank.org/PovcalNet/home.aspx). PovcalNet
 is a computational tool that allows users to estimate poverty rates for regions,
 sets of countries or individual countries, over time and at any poverty line.
 
