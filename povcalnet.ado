@@ -51,6 +51,17 @@ else                      pause off
 
 qui {
 	
+	
+	//========================================================
+	// Conditions
+	//========================================================
+	if ("`aggregate'" != "" & "`fillgaps'" != "") {
+		noi disp in red "options {it:aggregate} and {it:fillgaps} are mutually exclusive." _n /* 
+		 */ "Please select only one."
+		 error
+	}
+	
+	
 	// ------------------------------------------------------------------------
 	// New session procedure
 	// ------------------------------------------------------------------------
@@ -599,6 +610,52 @@ qui {
 			*/ abbreviate(12) sepby(povertyline)
 		}		
 	}
+	
+	
+	//========================================================
+	//  Create notes
+	//========================================================
+	
+	local pllabel ""
+	foreach p of local povline {
+		local pllabel "`pllabel' \$`p'"
+	}
+	local pllabel = trim("`pllabel'")
+	local pllabel: subinstr local pllabel " " ", ", all
+	
+	
+	
+	if ("`wb'" == "")   {
+		if ("`aggregate'" == "" & "`fillgaps'" == "") {
+			local lvlabel "country level"
+		} 
+		else if ("`aggregate'" != "" & "`fillgaps'" == "") {
+			local lvlabel "aggregated level"
+		} 
+		else if ("`aggregate'" == "" & "`fillgaps'" != "") {
+			local lvlabel "Country level (lined up)"
+		} 
+		else {
+			local lvlabel ""
+		}
+	}   
+	else {
+		local lvlabel "regional and global level"
+	}
+	
+	
+	local datalabel "WB poverty at `lvlabel' using `pllabel'"
+	local datalabel = substr("`datalabel'", 1, 80)
+	
+	label data "`datalabel' (`c(current_date)')"
+	
+	* citations
+	local cite `"Please cite as: Castaneda Aguilar, R. A., C. Lakner, E. B. Prydz, J. S. Lopez, R. Wu and Q. Zhao (2019) "povcalnet: Stata module to access World Bank’s Global Poverty and Inequality data," Statistical Software Components 2019, Boston College Department of Economics."'
+	notes: `cite'
+	
+	noi disp in y _n `"`cite'"'
+	
+	return local cite `"`cite'"'
 	
 } // end of qui
 end
