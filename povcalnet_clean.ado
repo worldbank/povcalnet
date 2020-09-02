@@ -51,13 +51,12 @@ if ("`rc'" == "copy") {
 
 if ("`rc'" == "in" | c(N) == 0) {
 	noi di ""
-	noi di as err "There was a problem laoding the downloaded data." /* 
+	noi di as err "There was a problem loading the downloaded data." /* 
 	 */ _n "Check that all parameters are correct and try again."
 	noi dis as text  `"{p 4 4 2} You could use the {stata povcalnet_info:guided selection} instead. {p_end}"'
-	noi dis as text  `"{p 4 4 2} References year can only be 1981, 1984, 1987, 1990, 1993, 1996, 1999, 2002, 2005, 2008, 2010, 2011, 2012, 2013 and 2015 (As of Sep 2018). Due to the constant updating of the PovCalNet databases, using the option {it:last} or {it:all} will load the years most updated year(s). {p_end}"'
 	noi di ""
 	break
-	exit 20
+	error 
 }
 
 
