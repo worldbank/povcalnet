@@ -48,7 +48,7 @@ if ("`povline'" == "")  local povline  1.9
 if ("`ppp'" == "")      local ppp      -1
 if ("`coverage'" == "") local coverage -1
 
-*---------- download guidence data
+*---------- download guidance data
 povcalnet_info, clear justdata `pause'
 gen n = _n
 levelsof country_code, local(countries) clean

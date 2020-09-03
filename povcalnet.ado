@@ -51,6 +51,17 @@ else                      pause off
 
 qui {
 	
+	
+	//========================================================
+	// Conditions
+	//========================================================
+	if ("`aggregate'" != "" & "`fillgaps'" != "") {
+		noi disp in red "options {it:aggregate} and {it:fillgaps} are mutually exclusive." _n /* 
+		 */ "Please select only one."
+		 error
+	}
+	
+	
 	// ------------------------------------------------------------------------
 	// New session procedure
 	// ------------------------------------------------------------------------
@@ -178,7 +189,7 @@ qui {
 				noi disp as result "SSC version of {cmd:povcalnet} is up to date."
 				local bye ""
 			}
-		}  // Finish checking povclanet update 
+		}  // Finish checking povcalnet update 
 		else {
 			noi disp as result "Source of {cmd:povcalnet} package not found." _n ///
 			"You won't be able to benefit from latest updates."
@@ -267,7 +278,7 @@ qui {
 			error
 		}
 		local fq = "`base'?${pcn_query}"
-		noi disp in y "quering" in w _n "`fq'"
+		noi disp in y "querying" in w _n "`fq'"
 		noi view browse "`fq'"
 		exit
 	}
@@ -278,7 +289,7 @@ qui {
 		local aggregate ""
 		local subcommand "wb"
 		local wb_change 1
-		noi disp as err "Warning: " as text " {cmd:povclanet, country(all) aggregate} " /* 
+		noi disp as err "Warning: " as text " {cmd:povcalnet, country(all) aggregate} " /* 
 	  */	"is equivalent to {cmd:povcalnet wb}. " _n /* 
 	  */  " if you want to aggregate all countries by survey years, " /* 
 	  */  "you need to parse the list of countries in {it:country()} option. See " /*
@@ -386,7 +397,7 @@ qui {
 	
 	*---------- Country and region
 	if  ("`country'" != "") & ("`region'" != "") {
-		noi disp in r "options {it:country()} and {it:region()} are mutally exclusive"
+		noi disp in r "options {it:country()} and {it:region()} are mutually exclusive"
 		error
 	}
 	
@@ -536,7 +547,7 @@ qui {
 			local rtype 2
 		}
 		
-		pause after downdload
+		pause after download
 		
 		*---------- Clean data
 		povcalnet_clean `rtype', year("`year'") `iso' /* 
@@ -600,6 +611,52 @@ qui {
 		}		
 	}
 	
+	
+	//========================================================
+	//  Create notes
+	//========================================================
+	
+	local pllabel ""
+	foreach p of local povline {
+		local pllabel "`pllabel' \$`p'"
+	}
+	local pllabel = trim("`pllabel'")
+	local pllabel: subinstr local pllabel " " ", ", all
+	
+	
+	
+	if ("`wb'" == "")   {
+		if ("`aggregate'" == "" & "`fillgaps'" == "") {
+			local lvlabel "country level"
+		} 
+		else if ("`aggregate'" != "" & "`fillgaps'" == "") {
+			local lvlabel "aggregated level"
+		} 
+		else if ("`aggregate'" == "" & "`fillgaps'" != "") {
+			local lvlabel "Country level (lined up)"
+		} 
+		else {
+			local lvlabel ""
+		}
+	}   
+	else {
+		local lvlabel "regional and global level"
+	}
+	
+	
+	local datalabel "WB poverty at `lvlabel' using `pllabel'"
+	local datalabel = substr("`datalabel'", 1, 80)
+	
+	label data "`datalabel' (`c(current_date)')"
+	
+	* citations
+	local cite `"Please cite as: Castaneda Aguilar, R. A., C. Lakner, E. B. Prydz, J. S. Lopez, R. Wu and Q. Zhao (2019) "povcalnet: Stata module to access World Bank’s Global Poverty and Inequality data," Statistical Software Components 2019, Boston College Department of Economics."'
+	notes: `cite'
+	
+	noi disp in y _n `"`cite'"'
+	
+	return local cite `"`cite'"'
+	
 } // end of qui
 end
 
@@ -633,10 +690,10 @@ qui {
 	if (`"`pklines'"' == `""') local src = "NotInstalled"
 	else {
 	
-		// the latest source and substract which refers to the source 
+		// the latest source and subtract which refers to the source 
 		local sourceline = max(0, `pklines') - 1 
 		
-		// get the Soruce without the initial S
+		// get the source without the initial S
 		if regexm(v1[`sourceline'], "S (.*)") local src = regexs(1)
 	}
 	

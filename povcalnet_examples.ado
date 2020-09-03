@@ -25,7 +25,7 @@ end
 *  ----------------------------------------------------------------------------
 *  World Poverty Trend (reference year)
 *  ----------------------------------------------------------------------------
-program define example01
+program define pcn_example01
 
 	povcalnet wb,  clear
 
@@ -54,7 +54,7 @@ end
 *  ----------------------------------------------------------------------------
 *  Millions of poor by region (reference year) 
 *  ----------------------------------------------------------------------------
-program define example02
+program define pcn_example02
 	povcalnet wb, clear
 	keep if year > 1989
 	gen poorpop = headcount * population 
@@ -91,7 +91,7 @@ end
 *  ----------------------------------------------------------------------------
 *  Categories of income and poverty in LAC
 *  ----------------------------------------------------------------------------
-program example03
+program pcn_example03
 	povcalnet, region(lac) year(last) povline(3.2 5.5 15) clear 
 	keep if datatype==2 & year>=2014             // keep income surveys
 	keep povertyline countrycode countryname year headcount
@@ -128,7 +128,7 @@ end
 *  ----------------------------------------------------------------------------
 * Trend of Gini 
 *  ----------------------------------------------------------------------------
-program example04
+program pcn_example04
 povcalnet, country(arg gha tha) year(all) clear
 	replace gini = gini * 100
 	keep if datayear > 1989
@@ -146,7 +146,7 @@ end
 *  ----------------------------------------------------------------------------
 *  Growth incidence curves
 *  ----------------------------------------------------------------------------
-program example05
+program pcn_example05
   povcalnet, country(arg gha tha) year(all)  clear
 	reshape long decile, i(countrycode datayear) j(dec)
 	
@@ -175,7 +175,7 @@ end
 *  ----------------------------------------------------------------------------
 *  Gini & per capita GDP
 *  ----------------------------------------------------------------------------
-program example06
+program pcn_example06
 	set checksum off
 	wbopendata, indicator(NY.GDP.PCAP.PP.KD) long clear
 	tempfile PerCapitaGDP
@@ -204,7 +204,7 @@ end
 *  ----------------------------------------------------------------------------
 *  Regional Poverty Evolution
 *  ----------------------------------------------------------------------------
-program define example07
+program define pcn_example07
 	povcalnet wb, povline(1.9 3.2 5.5) clear
 	drop if inlist(regioncode, "OHI", "WLD") | year<1990 
 	keep povertyline region year headcount
@@ -236,8 +236,7 @@ end
 // National level and longest available series (temporal change in welfare)
 // ------------------------------------------------------------------------
 
-capture program drop example08
-program define example08
+program define pcn_example08
 
 povcalnet, clear
 
@@ -258,7 +257,7 @@ bysort countrycode datatype: egen _type_length = count(year) // length of type s
 bysort countrycode: egen _type_max = max(_type_length)   // longest type series
 replace _type_max = (_type_max == _type_length)
 
-* in case of same elngth in series, keep consumption
+* in case of same length in series, keep consumption
 by countrycode _type_max, sort:  gen _ntmax = _n == 1
 by countrycode : replace _ntmax = sum(_ntmax)
 by countrycode : replace _ntmax = _ntmax[_N]  // number of datatype per country
@@ -273,15 +272,11 @@ drop _*
 
 end
 
-
-
-capture program drop example09
-program define example09
-
-
 // ------------------------------------------------------------------------
 // National level and longest available series of same welfare type
 // ------------------------------------------------------------------------
+
+program define pcn_example09
 
 povcalnet, clear
 
@@ -300,7 +295,7 @@ bysort countrycode datatype: egen _type_length = count(year)
 bysort countrycode: egen _type_max = max(_type_length)
 replace _type_max = (_type_max == _type_length)
 
-* in case of same elngth in series, keep consumption
+* in case of same length in series, keep consumption
 by countrycode _type_max, sort:  gen _ntmax = _n == 1
 by countrycode : replace _ntmax = sum(_ntmax)
 by countrycode : replace _ntmax = _ntmax[_N]  // max 

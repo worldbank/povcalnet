@@ -13,7 +13,7 @@ REGion             ///
 AGGregate          ///
 clear              ///
 justdata           /// programmers option
-pause              /// debuggin
+pause              /// debugging
 server(string)     ///
 ] 
 
@@ -63,7 +63,7 @@ qui {
 	
 	
 	/*==================================================
-	Data wragling 
+	Data wrangling 
 	==================================================*/
 	
 	
