@@ -12,7 +12,7 @@
 {viewerjumpto "Disclaimer"   "povcalnet##disclaimer"}{...}
 {viewerjumpto "How to cite"   "povcalnet##howtocite"}{...}
 {viewerjumpto "References"   "povcalnet##references"}{...}
-{viewerjumpto "Acknowledgements"   "povcalnet##acknowled"}{...}
+{viewerjumpto "Acknowledgments"   "povcalnet##acknowled"}{...}
 {viewerjumpto "Authors"   "povcalnet##authors"}{...}
 {viewerjumpto "Regions" "povcalnet_countries##regions"}{...}
 {viewerjumpto "Countries" "povcalnet_countries##countries"}{...}
@@ -39,7 +39,7 @@ Cannot be used with option {it:country()}{p_end}
 {synopt :{opt year:}(numlist|string)}list of years (accepts up to 10),  or {it:all}, or {it:last}. Default "all".{p_end}
 {synopt :{opt pov:line:}(#)}list of poverty lines (in 2011 PPP-adjusted USD) to calculate
  poverty measures (accepts up to 5). Default is 1.9.{p_end}
-{synopt :{opt pops:hare:}(#)}list of headcounts to calculate poverty lines (in 2011 PPP-adjusted USD) and poverty measures. No default. Do not combine with {opt pov:line:}{p_end}
+{synopt :{opt pops:hare:}(#)}list of population shares to calculate poverty lines (in 2011 PPP-adjusted USD) and poverty measures. No default. Do not combine with {opt pov:line:}{p_end}
 
 
 {synoptset 27 tabbed}{...}
@@ -53,7 +53,7 @@ groups of countries instead of country-level estimated.{p_end}
 {synopt :{opt info:rmation}} presents a clickable version of the available surveys, countries and regions.{p_end}
 {synopt :{opt ppp}{cmd:(#)}} allows the selection of PPP. {p_end}
 {synopt :{opt querytimes(integer)}} Number of times the API is hit before defaulting to failure. 
-Default is 5. {it:Advance option. Just use it if internet connection is poor}{p_end}
+Default is 5. {it:Advance option. Just use it if Internet connection is poor}{p_end}
 
 {synoptset 27 tabbed}{...}
 {synopthdr:subcommands}
@@ -63,7 +63,7 @@ countries and regions. Same as option {it:information}{p_end}
 {synopt :{opt cl}} {it:country-level} query that changes the default combinatorial 
 arrangement of parameters for a one-on-one correspondence. 
 See{help povcalnet##typesq: below} for a detailed explanation.{p_end}
-{synopt :{opt wb}}downloads World Bank's regional and global aggegation{p_end}
+{synopt :{opt wb}}downloads World Bank's regional and global aggregation{p_end}
 {synopt :{opt test}}executes the last query in browser regardless of failure by 
 {cmd:povcalnet}.{p_end}
 
@@ -75,7 +75,7 @@ See{help povcalnet##typesq: below} for a detailed explanation.{p_end}
 {synoptline}
 
 {pstd}
-{bf:Note}: {cmd:povcalnet} requires internet connection.
+{bf:Note}: {cmd:povcalnet} requires Internet connection.
 
 {marker sections}{...}
 {title:Sections}
@@ -91,7 +91,7 @@ Sections are presented under the following headings:
 		{it:{help povcalnet##Examples:Examples}}
 		{it:{help povcalnet##disclaimer:Disclaimer}}
 		{it:{help povcalnet##references:References}}
-		{it:{help povcalnet##acknowled:Acknowledgements}}
+		{it:{help povcalnet##acknowled:Acknowledgments}}
 		{it:{help povcalnet##authors:Authors}}
 		{it:{help povcalnet##contact:Contact}}
 		{it:{help povcalnet##howtocite:How to cite}}
@@ -116,7 +116,7 @@ PovcalNet is managed jointly by the Data and Research Group in the World Bank's
 
 {pstd}
     In addition to the mean and median, {cmd:povcalnet} reports the following measures
-		for poverty (at achosen poverty line) and inequality:
+		for poverty (at chosen poverty line) and inequality:
 
 		{hline 43}
 		Poverty measures{col 40}Inequality measures
@@ -213,7 +213,7 @@ Poverty lines are expressed in 2011 PPP-adjusted USD per capita per day.
 {phang}
 {opt povline(#)} The desired population share (headcount) for which the poverty lines as poverty measures will be calculated. 
 This has not default, and should not be combined with {opt povline}. 
-The resultng poverty lines are expressed in 2011 PPP-adjusted USD per capita per day.
+The resulting poverty lines are expressed in 2011 PPP-adjusted USD per capita per day.
 
 
 
@@ -261,7 +261,7 @@ works if one, and only one, country is selected.
 {phang}
 {opt coverage(string)} Selects coverage level of estimates. By default, all coverage
 levels are loaded, but the user may select "national", "urban", or "rural". 
-Only one level of covarege can be selected per query. 
+Only one level of coverage can be selected per query. 
 
 {marker optinfo}{...}
 {phang}
@@ -335,7 +335,7 @@ poverty lines included in {it:povlines()}:
 {synopt:{cmd:r(handler)}}Action handler{p_end}
 {synopt:{cmd:r(base)}}concatenation of server, site_name, and handler{p_end}
 
-{p2col 5 20 24 2: addtional info}{p_end}
+{p2col 5 20 24 2: additional info}{p_end}
 {synopt:{cmd:r(queryfull_{it:#})}}Complete query{p_end}
 {synopt:{cmd:r(npl)}}Number of poverty lines{p_end}
 {synopt:{cmd:pcn_query}}Global macro with query information in case {cmd:povcalnet} fails. 
@@ -388,7 +388,7 @@ poverty lines included in {it:povlines()}:
 {stata povcalnet, country(COL BRA ARG IND) year(2015) clear  aggregate}
 
 {phang}
-2.4. World Bank aggregation ({it:country()} is not avialable)
+2.4. World Bank aggregation ({it:country()} is not available)
 
 {phang2}
 {stata povcalnet wb, clear  year(2015)}{p_end}
@@ -634,7 +634,7 @@ Note, No. 9, World Bank, Washington, DC
 {browse "http://documents.worldbank.org/curated/en/docsearch/collection-title/Global%2520Poverty%2520Monitoring%2520Technical%2520Note?colT=Global%2520Poverty%2520Monitoring%2520Technical%2520Note":Link}{p_end}
 
 {marker acknowled}{...}
-{title:Acknowledgements}
+{title:Acknowledgments}
 {p 40 20 2}(Go up to {it:{help povcalnet##sections:Sections Menu}}){p_end}
 
 {pstd}

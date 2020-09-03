@@ -39,9 +39,9 @@ if ("`rc'" == "copy") {
 	noi dis ""
 	noi dis in red "It was not possible to download data from the PovcalNet API."
 	noi dis ""
-	noi dis in white `"(1) Please check your internet connection by "' _c 
+	noi dis in white `"(1) Please check your Internet connection by "' _c 
 	noi dis in white  `"{browse "http://iresearch.worldbank.org/PovcalNet/home.aspx" :clicking here}"'
-	noi dis in white `"(2) Please consider ajusting your Stata timeout parameters. For more details see {help netio}"'
+	noi dis in white `"(2) Please consider adjusting your Stata timeout parameters. For more details see {help netio}"'
 	noi dis in white `"(3) Please send us an email to:"'
 	noi dis in white _col(8) `"email: data@worldbank.org"'
 	noi dis in white _col(8) `"subject: povcalnet query error 20 on `c(current_date)' `c(current_time)'"'
@@ -175,7 +175,7 @@ if ("`type'" == "2") {
 		keep if `keep_this' == 1 
 	}
 	
-	pause clean - after droping by region 
+	pause clean - after dropping by region 
 	
 	if  ("`year'" == "last") {
 		tempvar maximum_y
@@ -184,7 +184,7 @@ if ("`type'" == "2") {
 	}
 	
 	***************************************************
-	* 4. Renaming and labelling
+	* 4. Renaming and labeling
 	***************************************************
 	
 

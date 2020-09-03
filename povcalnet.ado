@@ -189,7 +189,7 @@ qui {
 				noi disp as result "SSC version of {cmd:povcalnet} is up to date."
 				local bye ""
 			}
-		}  // Finish checking povclanet update 
+		}  // Finish checking povcalnet update 
 		else {
 			noi disp as result "Source of {cmd:povcalnet} package not found." _n ///
 			"You won't be able to benefit from latest updates."
@@ -278,7 +278,7 @@ qui {
 			error
 		}
 		local fq = "`base'?${pcn_query}"
-		noi disp in y "quering" in w _n "`fq'"
+		noi disp in y "querying" in w _n "`fq'"
 		noi view browse "`fq'"
 		exit
 	}
@@ -289,7 +289,7 @@ qui {
 		local aggregate ""
 		local subcommand "wb"
 		local wb_change 1
-		noi disp as err "Warning: " as text " {cmd:povclanet, country(all) aggregate} " /* 
+		noi disp as err "Warning: " as text " {cmd:povcalnet, country(all) aggregate} " /* 
 	  */	"is equivalent to {cmd:povcalnet wb}. " _n /* 
 	  */  " if you want to aggregate all countries by survey years, " /* 
 	  */  "you need to parse the list of countries in {it:country()} option. See " /*
@@ -397,7 +397,7 @@ qui {
 	
 	*---------- Country and region
 	if  ("`country'" != "") & ("`region'" != "") {
-		noi disp in r "options {it:country()} and {it:region()} are mutally exclusive"
+		noi disp in r "options {it:country()} and {it:region()} are mutually exclusive"
 		error
 	}
 	
@@ -547,7 +547,7 @@ qui {
 			local rtype 2
 		}
 		
-		pause after downdload
+		pause after download
 		
 		*---------- Clean data
 		povcalnet_clean `rtype', year("`year'") `iso' /* 
@@ -690,10 +690,10 @@ qui {
 	if (`"`pklines'"' == `""') local src = "NotInstalled"
 	else {
 	
-		// the latest source and substract which refers to the source 
+		// the latest source and subtract which refers to the source 
 		local sourceline = max(0, `pklines') - 1 
 		
-		// get the Soruce without the initial S
+		// get the source without the initial S
 		if regexm(v1[`sourceline'], "S (.*)") local src = regexs(1)
 	}
 	

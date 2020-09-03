@@ -257,7 +257,7 @@ bysort countrycode datatype: egen _type_length = count(year) // length of type s
 bysort countrycode: egen _type_max = max(_type_length)   // longest type series
 replace _type_max = (_type_max == _type_length)
 
-* in case of same elngth in series, keep consumption
+* in case of same length in series, keep consumption
 by countrycode _type_max, sort:  gen _ntmax = _n == 1
 by countrycode : replace _ntmax = sum(_ntmax)
 by countrycode : replace _ntmax = _ntmax[_N]  // number of datatype per country
@@ -295,7 +295,7 @@ bysort countrycode datatype: egen _type_length = count(year)
 bysort countrycode: egen _type_max = max(_type_length)
 replace _type_max = (_type_max == _type_length)
 
-* in case of same elngth in series, keep consumption
+* in case of same length in series, keep consumption
 by countrycode _type_max, sort:  gen _ntmax = _n == 1
 by countrycode : replace _ntmax = sum(_ntmax)
 by countrycode : replace _ntmax = _ntmax[_N]  // max 

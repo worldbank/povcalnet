@@ -169,7 +169,7 @@ quietly {
 	Create Queries
 	==================================================*/
 	
-	*---------- Year and Disply query
+	*---------- Year and Display query
 	local y_comma: subinstr  local year " " ",", all
 	if ("`year'" == "last")  local y_comma = "all"
 	
@@ -207,7 +207,7 @@ quietly {
 	return local query_ct = "`country_q'"
 	
 	if ("`popshare'" != ""){
-		*----------Poppulation share query 
+		*----------Population share query 
 		local popshare_q = "QP=`popshare'"
 		return local query_ps = "`popshare_q'"
 	}
