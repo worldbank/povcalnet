@@ -66,6 +66,12 @@ See{help povcalnet##typesq: below} for a detailed explanation.{p_end}
 {synopt :{opt wb}}downloads World Bank's regional and global aggegation{p_end}
 {synopt :{opt test}}executes the last query in browser regardless of failure by 
 {cmd:povcalnet}.{p_end}
+
+{synoptset 27 tabbed}{...}
+{synopthdr:Internal options}
+{synoptline}
+{synopt :{opt server(string)}}This option is only available for developers of the 
+{cmd:povcalnet} package.{p_end}
 {synoptline}
 
 {pstd}
@@ -436,7 +442,7 @@ poverty lines included in {it:povlines()}:
 	. keep if _tokeepl == 1
 	. drop _*
 
-{txt}      ({stata "povcalnet_examples example08":click to run})
+{txt}      ({stata "povcalnet_examples pcn_example08":click to run})
 
 {phang2}
 {ul:3.2} National coverage (when available) and longest possible time series for each country, restrict to same welfare type throughout.
@@ -469,7 +475,7 @@ poverty lines included in {it:povlines()}:
 	. keep if _tokeepl == 1
 	. drop _*
 
-{txt}      ({stata "povcalnet_examples example09":click to run})
+{txt}      ({stata "povcalnet_examples pcn_example09":click to run})
 
 {dlgtab: 4. Analytical examples}
 
@@ -500,7 +506,7 @@ poverty lines included in {it:povlines()}:
 	.        2 "Number of people who live below $1.90") si(vsmall)  ///
 	.        row(2)) scheme(s2color)
 	
-{txt}      ({stata "povcalnet_examples example01":click to run})
+{txt}      ({stata "povcalnet_examples pcn_example01":click to run})
 
 {phang2}
 {ul:4.2} Graph of trends in poverty headcount ratio by region, multiple poverty lines ($1.9, $3.2, $5.5)
@@ -527,7 +533,7 @@ poverty lines included in {it:povlines()}:
 	.        yti("Poverty headcount (%)", si(vsmall))                      ///
 	.        leg(order(1 "$1.9" 2 "$3.2" 3 "$5.5") r(1) si(vsmall))        ///
 	.        sub(, si(small))	scheme(s2color)
-{txt}      ({stata "povcalnet_examples example07":click to run})
+{txt}      ({stata "povcalnet_examples pcn_example07":click to run})
 
 {phang2}
 {ul:4.3} Millions of poor by region
@@ -564,7 +570,7 @@ poverty lines included in {it:povlines()}:
 	. 	graphregion(c(white)) ysize(7) xsize(8)                ///
 	. 	ylabel(,labs(small) nogrid angle(verticle)) xlabel(,labs(small)) ///
 	. 	legend(order(`legend') si(vsmall))
-{txt}      ({stata "povcalnet_examples example02":click to run})
+{txt}      ({stata "povcalnet_examples pcn_example02":click to run})
 
 {phang2}
 {ul:4.4} Graph of population distribution across income categories in Latin America, by country
@@ -601,7 +607,7 @@ poverty lines included in {it:povlines()}:
 	. 	graphregion(c(white)) ysize(6) xsize(6.5)                         ///
 	. 		legend(si(vsmall) r(3))  yti("`yti'", si(small))                ///
 	. 	ylab(,labs(small) nogrid angle(0)) scheme(s2color)
-{txt}      ({stata "povcalnet_examples example03":click to run})
+{txt}      ({stata "povcalnet_examples pcn_example03":click to run})
 
 
 
