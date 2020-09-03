@@ -214,22 +214,6 @@ if ("`type'" == "2") {
 		rename `var' `: word `i' of `Rnames''
 	}
 	
-	
-	* Censor giving coverage 
-	* if ("`wb'" != ""){
-		* preserve
-		* qui povcalnet_get_coverage, clear
-		* tempfile coverage
-		* save `coverage', replace
-		* restore
-		* merge m:1  regioncode year using `coverage', keep(match) nogen
-		* ds year region regioncode povertyline share, not
-		* loc varlist `r(varlist)'
-		* foreach var of local varlist {
-			* replace `var' = . if share < 40
-		* }
-	* }
-	
 } // end of type 2
 
 
