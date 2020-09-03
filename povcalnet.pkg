@@ -1,15 +1,14 @@
 v 3
-d 'POVCALNET': povcalnet
+d 'POVCALNET': PovcalNet
 d 
-d Distribution-Date: 14aug2019
-d License: MIT
+d Distribution-Date: 03sep2020
+d License: None
 d 
-F povcalnet.ado     
-F povcalnet.sthlp   
-F povcalnet_countries.sthlp
-F povcalnet_aggquery.ado
-F povcalnet_cl.ado  
+F povcalnet.ado
+F povcalnet.sthlp
+F povcalnet_cl.ado
 F povcalnet_clean.ado
+F povcalnet_countries.sthlp
 F povcalnet_examples.ado
 F povcalnet_info.ado
 F povcalnet_query.ado
