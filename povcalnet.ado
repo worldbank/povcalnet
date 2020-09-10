@@ -61,6 +61,12 @@ qui {
 		 error
 	}
 	
+	if ("`popshare'" != "" &  (lower("`subcommand'") == "wb" | "`aggregate'" != "")) {
+		noi disp in red "option {it:popshare} can't be combined with option {it:aggregate}" _c /* 
+		 */ " or with subcommand {it:wb}" _n
+		 error
+	}
+	
 	
 	// ------------------------------------------------------------------------
 	// New session procedure
@@ -263,7 +269,7 @@ qui {
 	scalar tpage = fileread(`"`server'/js/common_NET.js"')
 	
 	if regexm(tpage, "error") {
-		noi disp in red "You may have Internet connections. Please verify"
+		noi disp in red "You may not have Internet connections. Please verify"
 		error
 	}
 	
