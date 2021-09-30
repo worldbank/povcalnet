@@ -316,8 +316,71 @@ end
 
 program define pcn_example10
 
+
+//1.4 Population regional
+insheet using "http://iresearch.worldbank.org/PovcalNet/js/regionalpopulation.js", clear
+split v1, p(, ]) g(a)
+drop v1
+drop if _n==1
+
+replace a1="regioncode" if _n==1
+drop if a1=="null"
+renvars, map("population"+word(@[1], 1))
+renvars populationregioncode, map(substr("@", 11, .))
+drop population
+drop if _n==1
+
+reshape long population, i(regioncode) j(year)
+destring population, replace
+keep if year>1980 & year<2020
+tempfile pop
+save `pop'
+
+//regioncodes
+povcalnet, clear year(last)
+keep regioncode countrycode 
+duplicates drop
+tempfile regions
+save `regions'
+
 *******************************************************************************
-//					1.PREPARE DATA			//
+//					2.REGIONAL AND GLOBAL AGGREGATES			//
+*******************************************************************************
+//line-up country-level headcounts from povcalnet 
+povcalnet, fillgaps clear 
+keep if coveragetype==3 | coveragetype==4 | countrycode=="ARG" | countrycode=="SUR"
+keep countrycode year headcount population
+
+//merge regioncodes
+merge m:1 countrycode using `regions', nogen
+
+keep regioncode countrycode year headcount population  
+ 
+collapse headcount [aw=population] , by(regioncode year)
+sort year regioncode
+
+merge 1:1 regioncode year using `pop', nogen
+gen poorpop=headcount*population
+
+tempfile regional
+save `regional'
+bys year: egen globalpop=sum(population)
+
+collapse globalpop (mean) headcount [aw=population], by(year)
+ren globalpop population
+gen poorpop=headcount*population
+append using `regional'
+
+replace regioncode="WLD" if regioncode==""
+
+sort year regioncode
+br if year==2017
+tempfile aggregates
+
+save `aggregates', replace 
+
+*******************************************************************************
+//					3.PREPARE POP DATA	FOR COVERAGE CALCULATIONS		//
 *******************************************************************************
 //1.1 Population all countries: this includes countries with no poverty estimates for which regional headcount is assumed
 *requires renvars
@@ -391,71 +454,8 @@ tab countrycode if year==1981
 tempfile population
 save `population' , replace
 
-//1.4 Population regional
-insheet using "http://iresearch.worldbank.org/PovcalNet/js/regionalpopulation.js", clear
-split v1, p(, ]) g(a)
-drop v1
-drop if _n==1
-
-replace a1="regioncode" if _n==1
-drop if a1=="null"
-renvars, map("population"+word(@[1], 1))
-renvars populationregioncode, map(substr("@", 11, .))
-drop population
-drop if _n==1
-
-reshape long population, i(regioncode) j(year)
-destring population, replace
-keep if year>1980 & year<2020
-tempfile pop
-save `pop'
-
-//regioncodes
-povcalnet, clear year(last)
-keep regioncode countrycode 
-duplicates drop
-tempfile regions
-save `regions'
-
 *******************************************************************************
-//					2.REGIONAL AND GLOBAL AGGREGATES			//
-*******************************************************************************
-//line-up country-level headcounts from povcalnet 
-povcalnet, fillgaps clear 
-keep if coveragetype==3 | coveragetype==4 | countrycode=="ARG" | countrycode=="SUR"
-keep countrycode year headcount population
-
-//merge regioncodes
-merge m:1 countrycode using `regions', nogen
-
-keep regioncode countrycode year headcount population  
- 
-collapse headcount [aw=population] , by(regioncode year)
-sort year regioncode
-
-merge 1:1 regioncode year using `pop', nogen
-gen poorpop=headcount*population
-
-tempfile regional
-save `regional'
-bys year: egen globalpop=sum(population)
-
-collapse globalpop (mean) headcount [aw=population], by(year)
-ren globalpop population
-gen poorpop=headcount*population
-append using `regional'
-
-replace regioncode="WLD" if regioncode==""
-
-sort year regioncode
-br if year==2017
-tempfile aggregates
-
-save `aggregates', replace 
-
-
-*******************************************************************************
-//					3.COVERAGE RULE							//
+//					4.COVERAGE RULE							//
 *******************************************************************************
 //income group classification data
 import excel using "https://databank.worldbank.org/data/download/site-content/OGHIST.xls", clear sheet ("Country Analytical History") cellrange(A5:AI240) firstrow

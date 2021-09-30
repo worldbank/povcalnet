@@ -611,9 +611,9 @@ poverty lines included in {it:povlines()}:
 
 {dlgtab: 5. Calculating global and regional aggregates using country-level lined-up data}
 {phang2}
-{p 4 4 2} The povcalnet command can also be used to replicate the global and regional estimates published by the World Bank starting from country-level lined-up estimates. The user can access the code for this example here {browse "https://povcalnet-team.github.io/Global-Regional-Estimates/"}. 
-{p_end}
-{txt}      ({stata "povcalnet_examples pcn_example10":click to run})
+{p 4 4 2} The povcalnet command can also be used to replicate the global and regional estimates published by the World Bank starting from country-level lined-up estimates. The user can access the code for this example here {browse "https://povcalnet-team.github.io/Global-Regional-Estimates/"}.
+{cmd}
+{txt}   ({stata "povcalnet_examples pcn_example10":click to run})
 
 {marker disclaimer}{...}
 {title:Disclaimer}
