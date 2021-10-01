@@ -315,8 +315,17 @@ end
 // ------------------------------------------------------------------------
 
 program define pcn_example10
+
+/*==================================================
 // Install necessary packages
-ssc install renvars
+==================================================*/
+
+local cmds "renvars povcalnet _gwtmean"
+
+foreach cmd of local cmds {
+	cap which `cmd'
+	if (_rc) ssc install `cmd'
+}
 
 //1.4 Population regional
 insheet using "http://iresearch.worldbank.org/PovcalNet/js/regionalpopulation.js", clear
