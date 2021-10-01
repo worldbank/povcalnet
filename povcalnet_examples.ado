@@ -315,7 +315,8 @@ end
 // ------------------------------------------------------------------------
 
 program define pcn_example10
-
+// Install necessary packages
+ssc install renvars
 
 //1.4 Population regional
 insheet using "http://iresearch.worldbank.org/PovcalNet/js/regionalpopulation.js", clear
@@ -521,8 +522,8 @@ label var year "Year"
 
 isid code year
 ren code countrycode
-
-save "CLASS.dta", replace
+tempfile class
+save `class' , replace
 
 
 ********************************************************************************
@@ -546,7 +547,7 @@ forvalues y=1981/2019{
 	
 	//merge income classification
 		
-		use CLASS.dta, clear
+		use `class' , clear
 		keep if year==`y'
 		
 		merge 1:m countrycode using `surveyyears' ,nogen
@@ -561,7 +562,7 @@ forvalues y=1981/2019{
 		tempfile covered 
 		save `covered'
 
-		use CLASS.dta, clear
+		use `class', clear
 		keep if year==`y'
 		merge 1:m countrycode year using `population' 
 		drop if _merge==2 //keep only reference year
