@@ -610,22 +610,34 @@ poverty lines included in {it:povlines()}:
 {txt}      ({stata "povcalnet_examples pcn_example03":click to run})
 
 {dlgtab: 5. Calculating global and regional aggregates using country-level lined-up data}
-{phang2}
-{p 4 4 2} The povcalnet command can also be used to replicate the global and regional estimates published by the World Bank starting from country-level lined-up estimates. The user can access the code for this example here {browse "https://povcalnet-team.github.io/Global-Regional-Estimates/"}.
-{cmd}
+
+{pstd}
+The povcalnet command can also be used to replicate the global and
+regional estimates published by the World Bank starting from country-level 
+lined-up estimates. The user can access the code for this example here 
+{browse "https://povcalnet-team.github.io/Global-Regional-Estimates/"}.
+
 {txt}   ({stata "povcalnet_examples pcn_example10":click to run})
 
 {marker disclaimer}{...}
 {title:Disclaimer}
 {p 40 20 2}(Go up to {it:{help povcalnet##sections:Sections Menu}}){p_end}
 
-{p 4 4 2}PovcalNet was developed for the sole purpose of public replication of the World Bank’s poverty measures for its widely used international poverty lines, including $1.90 a day and $3.20 a day in 2011 PPP. 
+{p 4 4 2}PovcalNet was developed for the sole purpose of public replication of the
+World Bank’s poverty measures for its widely used international poverty lines,
+including $1.90 a day and $3.20 a day in 2011 PPP. 
 The methods built into PovcalNet are considered reliable for that purpose. 
 {p_end}
-{p 4 4 2}However, we cannot be confident that the methods work well for other purposes, including tracing out the entire distribution of income. 
-We would especially warn that estimates of the densities near the bottom and top tails of the distribution could be quite unreliable, and no attempt has been made by the World Bank’s staff to validate the tool for such purposes.
+
+{p 4 4 2}However, we cannot be confident that the methods work well for other
+purposes, including tracing out the entire distribution of income. We would
+{err:especially warn} that estimates of the densities near the bottom and top
+tails of the distribution could be quite unreliable, and no attempt has been made
+by the World Bank’s staff to validate the tool for such purposes.
 {p_end}
-{p 4 4 2}The term country, used interchangeably with economy, does not imply political independence but refers to any territory for which authorities report separate social or economic statistics.
+{p 4 4 2}The term country, used interchangeably with economy, does not imply
+political independence but refers to any territory for which authorities report
+separate social or economic statistics.
 {p_end}
 
 {marker references}{...}
