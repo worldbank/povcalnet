@@ -16,6 +16,7 @@
 capture program drop povcalnet_examples
 program povcalnet_examples
 version 11.0
+
 args EXAMPLE
 set more off
 `EXAMPLE'
@@ -316,16 +317,11 @@ end
 
 program define pcn_example10
 
-/*==================================================
-// Install necessary packages
-==================================================*/
+version 14.0
+*******************************************************************************
+//					1.PREPARE DATA			//
+*******************************************************************************
 
-local cmds "renvars povcalnet _gwtmean"
-
-foreach cmd of local cmds {
-	cap which `cmd'
-	if (_rc) ssc install `cmd'
-}
 
 //1.4 Population regional
 insheet using "http://iresearch.worldbank.org/PovcalNet/js/regionalpopulation.js", clear
@@ -389,8 +385,9 @@ tempfile aggregates
 
 save `aggregates', replace 
 
+
 *******************************************************************************
-//					3.PREPARE POP DATA	FOR COVERAGE CALCULATIONS		//
+//					3.COVERAGE RULE							//
 *******************************************************************************
 //1.1 Population all countries: this includes countries with no poverty estimates for which regional headcount is assumed
 *requires renvars
@@ -456,7 +453,7 @@ drop _merge
 
 gen pop_rural=population-pop_urban
 keep regioncode countrycode year pop_rural 
-renam pop_rural population
+rename pop_rural population
 
 append using `all'
 tab countrycode if year==1981
@@ -464,9 +461,6 @@ tab countrycode if year==1981
 tempfile population
 save `population' , replace
 
-*******************************************************************************
-//					4.COVERAGE RULE							//
-*******************************************************************************
 //income group classification data
 import excel using "https://databank.worldbank.org/data/download/site-content/OGHIST.xls", clear sheet ("Country Analytical History") cellrange(A5:AI240) firstrow
 
@@ -532,7 +526,7 @@ label var year "Year"
 isid code year
 ren code countrycode
 tempfile class
-save `class' , replace
+save `class', replace
 
 
 ********************************************************************************
@@ -556,7 +550,7 @@ forvalues y=1981/2019{
 	
 	//merge income classification
 		
-		use `class' , clear
+		use `class', clear
 		keep if year==`y'
 		
 		merge 1:m countrycode using `surveyyears' ,nogen
@@ -630,7 +624,13 @@ replace headcount=. if coverage==0
 replace poorpop=. if coverage==0
 drop coverage
 sort year regioncode
+label var headcount "Poverty Headcount Rate US$1.90"
+label var poorpop "Millions of Poor US$1.90"
+label var regioncode "PovcalNet Region"
+label var population "Population"
+label var year "Year"
 
 br 
 
 end 
+
