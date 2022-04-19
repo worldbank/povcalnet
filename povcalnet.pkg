@@ -1,8 +1,10 @@
-v 3
-d 'POVCALNET': PovcalNet
+v 1.2.0
+d 'POVCALNET': PovcalNet Stata wrapper
 d 
-d Distribution-Date: 03sep2020
-d License: None
+d World Bank PovcalNet API Stata wrapper
+d 
+d Distribution-Date:   20220419
+d License: MIT
 d 
 F povcalnet.ado
 F povcalnet.sthlp

@@ -1,5 +1,3 @@
-*! version 1.0.0  	<sept2018>
-*! version 1.1.8  	<Oct2021>
 /*=======================================================
 Program Name: povcalnet.ado
 Author:		  
@@ -51,6 +49,11 @@ if ("`pause'" == "pause") pause on
 else                      pause off
 
 qui {
+	dis as text "{hline}"
+	noi disp in red "WARNING:" 
+	noi dis as text  `"{p 6 4 0 80}The povcalnet command and website have been replaced with the new pip command and the Poverty and Inequality Portal, {browse "https://pip.worldbank.org/"}. Povcalnet will remain functional until the end of 2022, but its data is now  {bf:outdated}. Once retired, you will no longer be able to access these data. If you anticipate needing to reproduce existing analysis based on PovcalNet data, you will want to save a version of the data. Moving forward, we encourage you to  use the new PIP site and its corresponding {browse "https://github.com/worldbank/pip": pip} Stata command, with the latest data and many new features.{p_end}"'
+	dis as text "{hline}" _n
+	
 	
 	
 	//========================================================
@@ -660,6 +663,11 @@ qui {
 	local cite `"Please cite as: Castaneda Aguilar, R. A., C. Lakner, E. B. Prydz, J. S. Lopez, R. Wu and Q. Zhao (2019) "povcalnet: Stata module to access World Bank’s Global Poverty and Inequality data," Statistical Software Components 2019, Boston College Department of Economics."'
 	notes: `cite'
 	
+		dis as text "{hline}"
+	noi disp in red "WARNING:" 
+	noi dis as text  `"{p 6 4 0 80}The povcalnet command and website have been replaced with the new pip command and the Poverty and Inequality Portal, {browse "https://pip.worldbank.org/"}. Povcalnet will remain functional until the end of 2022, but its data is now  {bf:outdated}. Once retired, you will no longer be able to access these data. If you anticipate needing to reproduce existing analysis based on PovcalNet data, you will want to save a version of the data. Moving forward, we encourage you to  use the new PIP site and its corresponding {browse "https://github.com/worldbank/pip": pip} Stata command, with the latest data and many new features.{p_end}"'
+	dis as text "{hline}" _n
+	
 	noi disp in y _n `"`cite'"'
 	
 	return local cite `"`cite'"'
@@ -766,42 +774,6 @@ Notes:
 		
 Version Control:
 
-
-*##s
-
-findfile stata.trk
-local fn = "`r(fn)'"
-
-mata:
-cmd = "povcalnet"
-cmd =  cmd :+ "\.pkg"
-	
-	fh = _fopen("`fn'", "r")
-	
-	pos_a = ftell(fh)
-	pos_b = 0
-	while ((line=strtrim(fget(fh)))!=J(0,0,"")) {
-		if (regexm(strtrim(line), cmd)) {
-			fseek(fh, pos_b, -1)
-			break
-		}
-		pos_b = pos_a
-		pos_a = ftell(fh)
-	}
-	
-	src = strtrim(fget(fh))
-	if (rows(src) > 0) {
-		src = substr(src, 3)
-		st_local("src", src)
-	} 
-	else {
-		st_local("src", "NotFound")
-	}
-	
-	fclose(fh)
-	src
-	
-end 
-
-
-*##e
+*! version 1.2.0  	<Apr2022>
+*! version 1.1.8  	<Oct2021>
+*! version 1.0.0  	<sept2018>
